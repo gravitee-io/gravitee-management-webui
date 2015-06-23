@@ -1,5 +1,7 @@
 # Gravitee-IO
 
+[![Join the chat at https://gitter.im/gravitee-io/gateway-admin-web](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gravitee-io/gateway-admin-web?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 # Install
 
 - Install [nodejs] [1]
