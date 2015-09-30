@@ -1,6 +1,8 @@
 [![Build Status](http://build.gravitee.io/jenkins/buildStatus/icon?job=gravitee-management-webui)](http://build.gravitee.io/jenkins/view/Tous/job/gravitee-management-webui/)
 # Gravitee Management Webui
 
+[![Join the chat at https://gitter.im/gravitee-io/gateway-admin-web](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gravitee-io/gateway-admin-web?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 # Install
 
 - Install [nodejs] [1]
