@@ -17,6 +17,7 @@ class InstanceMonitoringController {
   constructor(resolvedMonitoringData, $stateParams, resolvedInstance, InstancesService) {
     'ngInject';
     this.monitoringData = resolvedMonitoringData.data;
+    this.instanceStarted = resolvedInstance.data.state === 'started';
 
     var that = this;
     setInterval(function () {

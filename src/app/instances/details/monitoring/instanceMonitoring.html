@@ -15,7 +15,10 @@
     limitations under the License.
 
 -->
-<div layout="column">
+<div ng-if="!instanceMonitoringCtrl.instanceStarted" style="text-align:center; color: #424E5A; fill: #424E5A;">
+  <h1><ng-md-icon size="48" icon="error"></ng-md-icon> There is no data for stopped gateway instance</h1>
+</div>
+<div layout="column" ng-if="instanceMonitoringCtrl.instanceStarted">
   <div layout="row">
     <md-card flex="25">
       <md-card-content>
