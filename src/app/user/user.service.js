@@ -55,7 +55,7 @@ class UserService {
 
 	  var rolesAllowed = false;
 	  _.forEach(roles, function(role) {
-	    _.forEach(authenticatedUser.principal.authorities, function(authority) {
+	    _.forEach(authenticatedUser.authorities, function(authority) {
 	      if (authority.authority === role) {
 	        rolesAllowed = true;
 	        return;

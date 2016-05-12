@@ -16,15 +16,14 @@
 /* global setInterval:false, clearInterval:false, screen:false */
 function runBlock($rootScope, $window, $http, $cookieStore, $mdSidenav) {
   'ngInject';
-  var graviteeAuthenticationKey = 'GraviteeAuthentication';
-
+  var graviteeAuthenticationKey = 'Authorization';
+  
   function setAuthorization() {
-    var graviteeAuthentication = $cookieStore.get(graviteeAuthenticationKey);
-    if (graviteeAuthentication) {
-      $http.defaults.headers.common.Authorization = 'Basic ' + graviteeAuthentication;
+    var graviteeAuthorization = $cookieStore.get(graviteeAuthenticationKey);
+    if (graviteeAuthorization) {
+      $http.defaults.headers.common.Authorization = graviteeAuthorization;
       $rootScope.authenticated = true;
     } else {
-      $http.defaults.headers.common.Authorization = '';
       $rootScope.authenticated = false;
     }
   }
@@ -37,7 +36,7 @@ function runBlock($rootScope, $window, $http, $cookieStore, $mdSidenav) {
     $rootScope.authenticated = false;
     setAuthorization();
     $mdSidenav('left').close();
-    $window.location.reload();
+    $window.location.href = '/';
   });
 
   // Progress Bar

@@ -20,12 +20,16 @@ function interceptorConfig($httpProvider) {
   var interceptorUnauthorized = function ($q, $injector) {
     return {
       responseError: function (error) {
-        var isHomePage = $injector.get('$state').current.name === 'home';
         var unauthorizedError = !error || error.status === 401;
         var errorMessage = '';
 
-        if (unauthorizedError && isHomePage) {
-          errorMessage = 'Wrong user or password';
+        if (unauthorizedError) {
+          var $rootScope = $injector.get('$rootScope');
+          if ($rootScope.authenticated) {
+            $rootScope.$broadcast('graviteeLogout');
+          } else {
+            errorMessage = 'Wrong user or password';
+          }
         } else if (error.status === 500) {
           errorMessage = 'Unexpected error';
         } else if (error.status === 503) {

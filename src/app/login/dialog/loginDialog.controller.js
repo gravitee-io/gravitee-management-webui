@@ -24,8 +24,7 @@ function DialogLoginController($scope, $mdDialog, $cookieStore, $window, LoginSe
 
 	$scope.login = function () {
     LoginService.login($scope.user).then(function(response) {
-			$cookieStore.put('GraviteeAuthentication', btoa($scope.user.username + ":" + $scope.user.password));
-			$cookieStore.put('authenticatedUser', response.data);
+      $cookieStore.put('authenticatedUser', response.data);
       $window.location.reload();
     });
 	};
