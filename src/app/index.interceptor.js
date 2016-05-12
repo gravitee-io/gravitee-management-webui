@@ -24,11 +24,10 @@ function interceptorConfig($httpProvider) {
         var errorMessage = '';
 
         if (unauthorizedError) {
-          var $rootScope = $injector.get('$rootScope');
-          if ($rootScope.authenticated) {
-            $rootScope.$broadcast('graviteeLogout');
-          } else {
+          if (error.config.headers['Authorization']) {
             errorMessage = 'Wrong user or password';
+          } else {
+            $injector.get('$rootScope').$broadcast('graviteeLogout');
           }
         } else if (error.status === 500) {
           errorMessage = 'Unexpected error';
