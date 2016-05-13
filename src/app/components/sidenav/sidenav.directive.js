@@ -43,11 +43,12 @@ class SideNavController {
       return routeMenuItem.menu.firstLevel && (!routeMenuItem.roles || UserService.isUserInRoles(routeMenuItem.roles));
     });
 
+    var _that = this;
     $scope.$on('$stateChangeSuccess', function (event, toState, toParams) {
       $scope.subMenuItems = _.filter(routeMenuItems, function (routeMenuItem) {
         var firstParam = _.values(toParams)[0];
         // do not display title if id is an UUID (not human readable)
-        if (firstParam && !self.isUUID(firstParam)) {
+        if (firstParam && !_that.isUUID(firstParam)) {
           $scope.currentResource = firstParam;
         } else {
           delete $scope.currentResource;
