@@ -16,7 +16,6 @@
 /* global setInterval:false, clearInterval:false, screen:false */
 function runBlock($rootScope, $window, $http, $cookieStore, $mdSidenav, UserService) {
   'ngInject';
-  var graviteeAuthenticationKey = 'Authorization';
 
   function configureScreenSize(user) {
     if (screen.width < 500) {
@@ -43,6 +42,8 @@ function runBlock($rootScope, $window, $http, $cookieStore, $mdSidenav, UserServ
   });
 
   $rootScope.$on('graviteeLogout', function () {
+    $cookieStore.remove('access_token');
+    $http.defaults.headers.common['Authorization'] = null;
     $mdSidenav('left').close();
     $window.location.href = $window.location.pathname;
   });

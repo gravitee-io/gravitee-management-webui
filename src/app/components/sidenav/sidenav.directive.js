@@ -28,13 +28,15 @@ class SideNavDirective {
 }
 
 class SideNavController {
-  constructor($rootScope, $mdSidenav, $mdDialog, $scope, $state, UserService) {
+  constructor($rootScope, $mdSidenav, $mdDialog, $scope, $state, UserService, Constants, $window) {
     'ngInject';
     this.$rootScope = $rootScope;
     this.$mdSidenav = $mdSidenav;
     this.$mdDialog = $mdDialog;
     this.UserService = UserService;
     this.$state = $state;
+    this.Constants = Constants;
+    this.$window = $window;
 
     var _that = this;
 
@@ -44,7 +46,7 @@ class SideNavController {
 
     _that.loadMenuItems($scope, UserService);
 
-    $rootScope.$on('userLoginSuccessful', function () {
+    $scope.$on('userLoginSuccessful', function () {
       _that.loadMenuItems($scope, UserService);
     });
 
@@ -65,7 +67,7 @@ class SideNavController {
     });
 
     $scope.$on('authenticationRequired', function () {
-      _that.$state.go('login');
+      _that.login();
     });
   }
 
@@ -77,6 +79,19 @@ class SideNavController {
 
   close() {
     this.$mdSidenav('left').close();
+  }
+
+  login() {
+    if (this.Constants.securityType !== 'oauth2') {
+      this.$state.go('login');
+    } else {
+      var oauth2ServerBaseURL = this.Constants.oauth2ServerURL;
+      var oauth2ClientId = this.Constants.oauth2ClientId;
+      var oauth2RedirectURI =  this.$window.location.origin;
+      var oauth2GrantFlow = 'authorize?response_type=token';
+      var oauth2AuthorizationEndPoint = oauth2ServerBaseURL + '/oauth/' + oauth2GrantFlow  + '&client_id=' + oauth2ClientId + '&redirect_uri=' + oauth2RedirectURI;
+      this.$window.location.href = oauth2AuthorizationEndPoint;
+    }
   }
 
   logout() {

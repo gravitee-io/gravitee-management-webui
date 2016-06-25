@@ -18,4 +18,10 @@ angular.module('gvConstants', []).constant('Constants', {
   // if the management REST API is on a different domain, put something like: http://demo.gravitee.io/management/
   "baseURL": '/management/',
   "version": "0.15.0"
+  // oauth2 configuration
+  // "securityType": "oauth2",
+  // oauth2 authorization server url
+  // "oauth2ServerURL": "http://oauth-host",
+  // oauth2 client id for the authorization implicit grant flow
+  // "oauth2ClientId": "test"
 });
