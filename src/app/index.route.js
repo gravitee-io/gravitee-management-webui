@@ -396,6 +396,11 @@ function routerConfig($stateProvider, $urlRouterProvider) {
       templateUrl: 'app/login/login.html',
       controller: 'LoginController',
       controllerAs: 'loginCtrl'
+    })
+    .state('oauth2callback', {
+      url: '/access_token=:accessToken',
+      controller: 'OAuth2Controller',
+      controllerAs: 'oauth2Ctrl'
     });
 
   $urlRouterProvider.otherwise('/');

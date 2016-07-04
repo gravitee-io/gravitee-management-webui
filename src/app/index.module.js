@@ -66,6 +66,7 @@ import PolicyService from './policy/policy.service';
 import ResourceService from './resource/resource.service';
 import PageDirective from './components/documentation/page.directive';
 import LoginController from './login/login.controller';
+import OAuth2Controller from './login/oauth2/oauth2.controller';
 import RoleDirective from './components/role/role.directive';
 import DiffDirective from './components/diff/diff.directive';
 import DialogApiDefinitionController from './api/admin/general/dialog/apiDefinitionDialog.controller';
@@ -133,6 +134,7 @@ angular.module('gravitee', ['ui.router', 'ngMaterial', 'ramlConsoleApp', 'btford
   .controller('DialogApiDefinitionController', DialogApiDefinitionController)
   .controller('PageController', PageController)
   .controller('LoginController', LoginController)
+  .controller('OAuth2Controller', OAuth2Controller)
   .controller('InstancesController', InstancesController)
   .controller('InstanceController', InstanceController)
   .controller('InstanceEnvironmentController', InstanceEnvironmentController)

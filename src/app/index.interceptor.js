@@ -70,10 +70,23 @@ function interceptorConfig($httpProvider) {
     };
   };
 
+  var interceptorOAuth2 = function ($q, $injector) {
+    return {
+      request: function (config) {
+        var cookieStore = $injector.get('$cookieStore');
+        if (cookieStore.get('access_token') != null) {
+          config.headers['Authorization'] = 'Bearer ' + cookieStore.get('access_token');
+        }
+        return config;
+      }
+    };
+  };
+
 
   if ($httpProvider.interceptors) {
     $httpProvider.interceptors.push(interceptorUnauthorized);
     $httpProvider.interceptors.push(interceptorTimeout);
+    $httpProvider.interceptors.push(interceptorOAuth2);
   }
 }
 
