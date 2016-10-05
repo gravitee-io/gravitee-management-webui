@@ -56,6 +56,19 @@ md-sidenav.md-sidenav-theme {
   }
 }
 
+.gravitee-sidenav {
+  ng-md-icon {
+    position: relative;
+    top: 7px;
+
+    &[icon=delete] {
+      svg {
+        width: 100%;
+      }
+    }
+  }
+}
+
 .sidenav-list {
   overflow-y: auto;
   height: calc(100vh - #{$sidenavFooterHeight} - #{$sidenavHeaderHeight});
@@ -141,3 +154,4 @@ md-sidenav.md-sidenav-theme {
     margin-top: -10px;
   }
 }
+

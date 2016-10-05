@@ -110,17 +110,6 @@ md-toolbar:not(.md-hue-1),
   fill: #fff;
 }
 
-ng-md-icon {
-  position: relative;
-  top: 7px;
-
-  &[icon=delete] {
-    svg {
-      width: 100%;
-    }
-  }
-}
-
 .btn-group ng-md-icon {
   position: relative;
   top: 3px;

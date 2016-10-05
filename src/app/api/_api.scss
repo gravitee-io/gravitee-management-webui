@@ -91,6 +91,15 @@
 
 .gravitee-api-header-content ng-md-icon {
   fill: grey;
+  
+    position: relative;
+    top: 7px;
+
+    &[icon=delete] {
+      svg {
+        width: 100%;
+      }
+    }
 }
 
 .gravitee-api-header-description {
