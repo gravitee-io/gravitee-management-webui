@@ -110,9 +110,36 @@ md-toolbar:not(.md-hue-1),
   fill: #fff;
 }
 
+ng-md-icon {
+  position: relative;
+  top: 7px;
+
+  &[icon=delete] {
+    svg {
+      width: 100%;
+    }
+  }
+}
+
+table {
+  ng-md-icon {
+    position: relative;
+    top: 0px;
+  }
+  code {
+    position: relative;
+    top: -6px;
+  }
+}
+
 .btn-group ng-md-icon {
   position: relative;
   top: 3px;
+}
+
+md-radio-button ng-md-icon {
+  position: relative;
+  top: 2px;
 }
 
 .gravitee-card:hover {
