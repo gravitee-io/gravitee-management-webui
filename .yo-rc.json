@@ -68,5 +68,24 @@
         "tmp": ".tmp"
       }
     }
+  },
+  "generator-fountain-angular1": {
+    "version": "1.0.0-rc2",
+    "props": {
+      "framework": "angular1",
+      "modules": "webpack",
+      "js": "typescript",
+      "ci": [],
+      "css": "scss",
+      "resolved": "/Users/Damien/.nvm/versions/node/v6.9.4/lib/node_modules/generator-fountain-webapp/node_modules/generator-fountain-angular1/generators/app/index.js",
+      "namespace": "fountain-angular1",
+      "argv": {
+        "remain": [],
+        "cooked": [],
+        "original": []
+      },
+      "sample": "hello",
+      "router": "uirouter"
+    }
   }
 }
