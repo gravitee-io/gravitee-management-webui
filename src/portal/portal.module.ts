@@ -70,7 +70,7 @@ angular.module('gravitee-portal', ['ui.router', 'ngMaterial', 'pascalprecht.tran
       }
     };
   })
-  .config(function ($mdThemingProvider: ng.material.IThemingProvider) {
+  .config(function ($mdThemingProvider: ng.material.IThemingProvider, $locationProvider: ng.ILocationProvider) {
     $mdThemingProvider.theme('default')
       .primaryPalette('blue-grey')
       .accentPalette('blue');
@@ -82,4 +82,6 @@ angular.module('gravitee-portal', ['ui.router', 'ngMaterial', 'pascalprecht.tran
 
     $mdThemingProvider.theme('toast-success');
     $mdThemingProvider.theme('toast-error');
+
+    $locationProvider.html5Mode(true);
   });
