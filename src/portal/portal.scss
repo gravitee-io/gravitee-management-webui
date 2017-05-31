@@ -110,6 +110,13 @@ ol, ul {
   list-style: none;
 }
 
+#scroll-to-top {
+  position: fixed;
+  bottom: 10px;
+  background-color: #d2d2d2;
+  right: 10px;
+}
+
 /**
  *  Do not remove the comment below. It's the markers used by gulp-inject to inject
  *  all your sass files automatically
