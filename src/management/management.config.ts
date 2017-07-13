@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-function config ($logProvider) {
+function config ($logProvider, $locationProvider: ng.ILocationProvider) {
   'ngInject';
   // Enable log
   $logProvider.debugEnabled(false);
+
+  $locationProvider.html5Mode(true);
 }
 
 export default config;
