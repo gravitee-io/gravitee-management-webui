@@ -1,0 +1,9 @@
+<md-button class="contextual md-fab md-mini" ng-click="$ctrl.openDocumentation();" ng-if="$ctrl.$state.current.name !== 'user'">
+  <ng-md-icon icon="help">
+    <md-tooltip md-direction="left">Help content</md-tooltip>
+  </ng-md-icon>
+</md-button>
+
+<div class="contextual-doc-container" ng-class="{'open' : $ctrl.isOpen}">
+  <div markdown-to-html="$ctrl.page.content" class="markdown-page"></div>
+</div>

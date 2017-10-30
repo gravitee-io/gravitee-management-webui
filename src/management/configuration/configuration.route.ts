@@ -67,6 +67,9 @@ function configurationRouterConfig($stateProvider: ng.ui.IStateProvider) {
         menu: {
           label: 'Views',
           icon: 'view_module'
+        },
+        docs: {
+          page: 'management-configuration-views'
         }
       }
     })
@@ -80,6 +83,9 @@ function configurationRouterConfig($stateProvider: ng.ui.IStateProvider) {
         menu: {
           label: 'Sharding tags',
           icon: 'label'
+        },
+        docs: {
+          page: 'management-configuration-sharding-tags'
         },
         perms: {
           only: ['management-tag-r']
@@ -97,6 +103,9 @@ function configurationRouterConfig($stateProvider: ng.ui.IStateProvider) {
           label: 'Tenants',
           icon: 'shuffle'
         },
+        docs: {
+          page: 'management-configuration-tenants'
+        },
         perms: {
           only: ['management-tenant-r']
         }
@@ -111,6 +120,9 @@ function configurationRouterConfig($stateProvider: ng.ui.IStateProvider) {
         menu: {
           label: 'Groups',
           icon: 'group_work'
+        },
+        docs: {
+          page: 'management-configuration-groups'
         },
         perms: {
           only: ['management-group-r']
@@ -127,6 +139,9 @@ function configurationRouterConfig($stateProvider: ng.ui.IStateProvider) {
         menu: {
           label: 'Portal pages',
           icon: 'insert_drive_file'
+        },
+        docs: {
+          page: 'management-configuration-portal-pages'
         },
         perms: {
           only: ['portal-documentation-r']
@@ -170,6 +185,9 @@ function configurationRouterConfig($stateProvider: ng.ui.IStateProvider) {
           label: 'Metadata',
           icon: 'description'
         },
+        docs: {
+          page: 'management-configuration-metadata'
+        },
         perms: {
           only: ['portal-metadata-r']
         }
@@ -185,6 +203,9 @@ function configurationRouterConfig($stateProvider: ng.ui.IStateProvider) {
         menu: {
           label: 'Roles',
           icon: 'group'
+        },
+        docs: {
+          page: 'management-configuration-roles'
         },
         perms: {
           only: ['management-role-r']
@@ -205,6 +226,9 @@ function configurationRouterConfig($stateProvider: ng.ui.IStateProvider) {
       controllerAs: '$ctrl',
       data: {
         menu: null,
+        docs: {
+          page: 'management-configuration-roles'
+        },
         perms: {
           only: ['management-role-r']
         }
@@ -214,6 +238,9 @@ function configurationRouterConfig($stateProvider: ng.ui.IStateProvider) {
       url: '/new',
       template: require('./roles/role/save/role.save.html'),
       data: {
+        docs: {
+          page: 'management-configuration-roles'
+        },
         perms: {
           only: ['management-role-c']
         }
@@ -223,6 +250,9 @@ function configurationRouterConfig($stateProvider: ng.ui.IStateProvider) {
       url: '/edit?role',
       template: require('./roles/role/save/role.save.html'),
       data: {
+        docs: {
+          page: 'management-configuration-roles'
+        },
         perms: {
           only: ['management-role-u']
         }

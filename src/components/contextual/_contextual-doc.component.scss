@@ -1,0 +1,44 @@
+.md-button.contextual {
+  position: absolute;
+  right: 0;
+  top: 55px;
+  margin: 0;
+  z-index: 59;
+  line-height: 25px !important;
+  width: 25px !important;
+  min-width: 25px !important;
+  height: 25px !important;
+  min-height: 25px !important;
+  ng-md-icon {
+    top: 0px;
+    right: 5px;
+  }
+}
+.contextual-doc-container {
+  display: none;
+  height: calc(100vh - 150px);
+  margin-top: 114px;
+  width: 300px;
+  border-left: 1px solid #e2e5e7;
+  margin-left: 20px;
+  padding: 20px;
+  &.open {
+    display: block;
+  }
+  h1 {
+    font-weight: 400;
+    font-size: 2em;
+    &:first-of-type {
+      padding-bottom: 20px;
+      border-bottom: 1px solid #e2e5e7;
+    }
+  }
+  h2 {
+    font-weight: 400;
+    font-size: 1.7em;
+  }
+  ol,li {
+    list-style: inherit;
+  }
+}
+
