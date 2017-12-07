@@ -321,6 +321,9 @@ import AuditController from '../management/audit/audit.controller';
 import ApiAuditController from '../management/api/audit/audit.controller';
 import AuditComponent from '../components/audit/audit.component';
 
+// Endpoint discovery
+import ApiDiscoveryController from '../management/api/discovery/discovery.controller';
+
 // Others
 import StringService from '../services/string.service';
 import AuthenticationService from '../services/authentication.service';
@@ -557,6 +560,9 @@ angular.module('gravitee-management', [uiRouter, permission, uiPermission, 'ngMa
   .controller('ApiHealthCheckConfigureController', ApiHealthCheckConfigureController)
   .controller('ApiHealthCheckLogController', ApiHealthCheckLogController)
   .component('progressBar', ProgressBarComponent)
+
+  // Endpoint discovery
+  .controller('ApiDiscoveryController', ApiDiscoveryController)
 
   .filter('humanDateFilter', function () {
     return function(input) {
