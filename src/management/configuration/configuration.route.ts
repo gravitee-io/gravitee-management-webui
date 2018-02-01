@@ -27,22 +27,12 @@ export default configurationRouterConfig;
 function configurationRouterConfig($stateProvider: ng.ui.IStateProvider) {
   'ngInject';
   $stateProvider
-    .state('management.configuration', {
-      abstract: true,
-      url: '/configuration'
-    })
-    .state('management.configuration.admin', {
-      url: '/admin',
-      controller: function ($state, SidenavService: SidenavService) {
-        SidenavService.setCurrentResource('CONFIGURATION');
-        if ('management.configuration.admin' === $state.current.name) {
-          $state.go('management.configuration.admin.views');
-        }
-      },
-      template: '<div ui-view></div>',
+    .state('management.settings', {
+      url: '/settings',
+      component: 'settings',
       data: {
         menu: {
-          label: 'Configuration',
+          label: 'Settings',
           icon: 'settings',
           firstLevel: true,
           order: 50
@@ -58,33 +48,27 @@ function configurationRouterConfig($stateProvider: ng.ui.IStateProvider) {
         }
       }
     })
-    .state('management.configuration.admin.views', {
+    .state('management.settings.views', {
       url: '/views',
       component: 'views',
       resolve: {
         views: (ViewService: ViewService) => ViewService.list(true).then(response => response.data)
       },
       data: {
-        menu: {
-          label: 'Views',
-          icon: 'view_module'
-        },
+        menu: null,
         docs: {
           page: 'management-configuration-views'
         }
       }
     })
-    .state('management.configuration.admin.tags', {
+    .state('management.settings.tags', {
       url: '/tags',
       component: 'tags',
       resolve: {
         tags: (TagService: TagService) => TagService.list().then(response => response.data)
       },
       data: {
-        menu: {
-          label: 'Sharding tags',
-          icon: 'label'
-        },
+        menu: null,
         docs: {
           page: 'management-configuration-sharding-tags'
         },
@@ -93,17 +77,14 @@ function configurationRouterConfig($stateProvider: ng.ui.IStateProvider) {
         }
       }
     })
-    .state('management.configuration.admin.tenants', {
+    .state('management.settings.tenants', {
       url: '/tenants',
       component: 'tenants',
       resolve: {
         tenants: (TenantService: TenantService) => TenantService.list().then(response => response.data)
       },
       data: {
-        menu: {
-          label: 'Tenants',
-          icon: 'shuffle'
-        },
+        menu: null,
         docs: {
           page: 'management-configuration-tenants'
         },
@@ -112,16 +93,13 @@ function configurationRouterConfig($stateProvider: ng.ui.IStateProvider) {
         }
       }
     })
-    .state('management.configuration.admin.groups', {
+    .state('management.settings.groups', {
       url: '/groups',
       template: require('./groups/groups.html'),
       controller: 'GroupsController',
       controllerAs: 'groupsCtrl',
       data: {
-        menu: {
-          label: 'Groups',
-          icon: 'group_work'
-        },
+        menu: null,
         docs: {
           page: 'management-configuration-groups'
         },
@@ -130,7 +108,7 @@ function configurationRouterConfig($stateProvider: ng.ui.IStateProvider) {
         }
       }
     })
-    .state('management.configuration.admin.pages', {
+    .state('management.settings.pages', {
       url: '/pages',
       component: 'portalPages',
       resolve: {
@@ -142,10 +120,7 @@ function configurationRouterConfig($stateProvider: ng.ui.IStateProvider) {
         },
       },
       data: {
-        menu: {
-          label: 'Portal pages',
-          icon: 'insert_drive_file'
-        },
+        menu: null,
         docs: {
           page: 'management-configuration-portal-pages'
         },
@@ -154,7 +129,7 @@ function configurationRouterConfig($stateProvider: ng.ui.IStateProvider) {
         }
       }
     })
-    .state('management.configuration.admin.pages.new', {
+    .state('management.settings.pages.new', {
       url: '/new',
       template: require('./pages/page/page.html'),
       controller: 'NewPageController',
@@ -172,14 +147,14 @@ function configurationRouterConfig($stateProvider: ng.ui.IStateProvider) {
         }
       }
     })
-    .state('management.configuration.admin.pages.page', {
+    .state('management.settings.pages.page', {
       url: '/:pageId',
       template: require('./pages/page/page.html'),
       controller: 'NewPageController',
       controllerAs: 'pageCtrl',
       data: {menu: null}
     })
-    .state('management.configuration.admin.metadata', {
+    .state('management.settings.metadata', {
       url: '/metadata',
       component: 'metadata',
       resolve: {
@@ -187,10 +162,7 @@ function configurationRouterConfig($stateProvider: ng.ui.IStateProvider) {
         metadataFormats: (MetadataService: MetadataService) => MetadataService.listFormats()
       },
       data: {
-        menu: {
-          label: 'Metadata',
-          icon: 'description'
-        },
+        menu: null,
         docs: {
           page: 'management-configuration-metadata'
         },
@@ -199,17 +171,14 @@ function configurationRouterConfig($stateProvider: ng.ui.IStateProvider) {
         }
       }
     })
-    .state('management.configuration.admin.roles', {
+    .state('management.settings.roles', {
       url: '/roles?roleScope',
       component: 'roles',
       resolve: {
         roleScopes: (RoleService: RoleService) => RoleService.listScopes()
       },
       data: {
-        menu: {
-          label: 'Roles',
-          icon: 'group'
-        },
+        menu: null,
         docs: {
           page: 'management-configuration-roles'
         },
@@ -225,7 +194,7 @@ function configurationRouterConfig($stateProvider: ng.ui.IStateProvider) {
         }
       }
     })
-    .state('management.configuration.admin.role', {
+    .state('management.settings.role', {
       abstract: true,
       url: '/role?roleScope',
       controller: 'RoleSaveController',
@@ -240,7 +209,7 @@ function configurationRouterConfig($stateProvider: ng.ui.IStateProvider) {
         }
       }
     })
-    .state('management.configuration.admin.role.new', {
+    .state('management.settings.role.new', {
       url: '/new',
       template: require('./roles/role/save/role.save.html'),
       data: {
@@ -252,7 +221,7 @@ function configurationRouterConfig($stateProvider: ng.ui.IStateProvider) {
         }
       }
     })
-    .state('management.configuration.admin.role.edit', {
+    .state('management.settings.role.edit', {
       url: '/edit?role',
       template: require('./roles/role/save/role.save.html'),
       data: {

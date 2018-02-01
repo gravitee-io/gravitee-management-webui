@@ -1,0 +1,79 @@
+<!--
+
+    Copyright (C) 2015 The Gravitee team (http://gravitee.io)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<md-content flex layout-padding>
+  <span class="md-headline" style="padding: 24px 16px 16px;">Settings</span>
+
+
+  <div layout="row" flex>
+    <div class="menu" flex="15" style="border-right: 1px solid #ccc;padding: 20px;">
+
+      <div class="aui-nav-heading">
+        <strong>Gateway Configuration</strong>
+      </div>
+
+      <ul class="aui-nav">
+        <li class="iterable-item" ui-sref-active="aui-nav-selected">
+          <a class="execute" ui-sref="management.settings.tags">Sharding Tags</a>
+        </li>
+
+        <li class="iterable-item" ui-sref-active="aui-nav-selected">
+          <a class="execute" ui-sref="management.settings.tenants">Tenants</a>
+        </li>
+      </ul>
+
+      <div class="aui-nav-heading">
+        <strong>Portal Configuration</strong>
+      </div>
+
+      <ul class="aui-nav">
+        <li class="iterable-item" ui-sref-active="aui-nav-selected">
+          <a class="execute" ui-sref="management.settings.pages">Pages</a>
+        </li>
+
+        <li class="iterable-item" ui-sref-active="aui-nav-selected">
+          <a class="execute" ui-sref="management.settings.topapis">Top APIs</a>
+        </li>
+
+        <li class="iterable-item" ui-sref-active="aui-nav-selected">
+          <a class="execute" ui-sref="management.settings.views">Views</a>
+        </li>
+      </ul>
+
+      <div class="aui-nav-heading">
+        <strong>User Management</strong>
+      </div>
+
+      <ul class="aui-nav">
+        <li class="iterable-item" ui-sref-active="aui-nav-selected">
+          <a class="execute" ui-sref="management.settings.users">Users</a>
+        </li>
+
+        <li class="iterable-item" ui-sref-active="aui-nav-selected">
+          <a class="execute" ui-sref="management.settings.groups">Groups</a>
+        </li>
+
+        <li class="iterable-item" ui-sref-active="aui-nav-selected">
+          <a class="execute" ui-sref="management.settings.roles">Roles</a>
+        </li>
+      </ul>
+    </div>
+
+    <md-content flex layout-padding ui-view></md-content>
+  </div>
+
+</md-content>
