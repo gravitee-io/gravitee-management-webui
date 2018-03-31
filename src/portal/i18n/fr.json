@@ -121,7 +121,7 @@
       "title": "Titre ou résumé pour votre commentaire",
       "comment": "Commentaire",
       "by": "Par",
-      "rate": "{{numberOfRatings}} note(s)",
+      "rate": "({{numberOfRatings}})",
       "empty": {
         "title": "Aucune note sur cette API",
         "message": "Soyez le premier à la noter",

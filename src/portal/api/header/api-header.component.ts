@@ -21,9 +21,14 @@ const ApiHeaderComponent: ng.IComponentOptions = {
     apiRatingSummary: '<'
   },
   template: require('./api-header.html'),
-  controller: function(Constants, ApiService: ApiService, $state, $stateParams, $rootScope) {
+  controller: function(Constants, ApiService: ApiService, $state, $stateParams, $rootScope, $scope) {
     'ngInject';
     this.ratingEnabled = ApiService.isRatingEnabled();
+    let metadata;
+    ApiService.listApiMetadata($stateParams.apiId).then((response) => {
+      metadata = response.data;
+      this.projectName = metadata.filter(v => v.key === 'project-name')[0];
+    });
 
     this.getEndpoint = function () {
       return Constants.portal.entrypoint + this.api.context_path;

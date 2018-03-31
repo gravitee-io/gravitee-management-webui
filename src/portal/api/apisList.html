@@ -39,22 +39,42 @@
                     layout="row" layout-align="start start"
                     layout-wrap
                     class="api-gallery">
-          <div flex="100" layout="row">
+          <div flex="100" layout="row" layout-wrap>
             <input flex="90" type="text" class="form-control apis-filter" placeholder="{{'apis.filter' | translate}}" ng-model="$ctrl.apiFilter" />
-            <md-button class="md-primary" ng-click="apisCtrl.toggleDisplayMode()" aria-label="Toggle APIs display mode">
+
+            <div flex="none">
+            <md-button class="md-primary toggleView" ng-click="apisCtrl.toggleDisplayMode()" aria-label="Toggle APIs display mode">
               <ng-md-icon ng-if="apisCtrl.tilesMode" icon="view_list" style="fill: rgba(0, 0, 0, 0.54);"></ng-md-icon>
               <ng-md-icon ng-if="!apisCtrl.tilesMode" icon="view_module" style="fill: rgba(0, 0, 0, 0.54);"></ng-md-icon>
             </md-button>
+          </div>
+
+            <!--<div flex="grow">
+                <div layout="row" layout-align="space-between center">
+                    <div flex="10">{{apisCtrl.apis.length}} Results</div>
+                    <span>View</span>
+                    <md-select ng-model="weapon" placeholder="View" class="md-no-underline">
+                        <md-option ng-repeat="view in apisCtrl.views track by view.id">{{view.name}}</md-option>
+                    </md-select>
+                </div>
+            </div>-->
           </div>
 
           <md-card ng-if="apisCtrl.tilesMode" class="api-box gravitee-card gravitee-api-card"
                    ng-repeat="api in apisCtrl.apis | filter:$ctrl.apiFilter track by api.id"
                    ng-click="apisCtrl.goToApi(api)"
                    layout-wrap>
-            <md-card-title style="padding-top: 15px; padding-bottom: 0px;">
+            <md-card-title>
               <md-card-title-text>
                 <span class="md-headline">{{::api.name}}</span>
-                <span class="md-subhead">{{::api.version}}</span>
+                <span class="md-subhead">
+                  <span ng-if="api.metaData['project-name']">{{::api.metaData["project-name"]}}</span>
+                  <span ng-if="api.metaData['project-name'] && apisCtrl.ratingEnabled && api.rate">|</span>
+                  <gv-star-rating flex ng-if="apisCtrl.ratingEnabled && api.rate"  value="api.rate"
+                                message="'api.rating.rate' | translate:{numberOfRatings: api.numberOfRatings}" display-none-message="true"
+                                ng-click="apisCtrl.goToRating($event, api)"></gv-star-rating>
+                </span>
+                
               </md-card-title-text>
               <md-card-title-media>
                 <div class="md-media-sm card-media">
@@ -64,19 +84,22 @@
             </md-card-title>
             <md-card-content>
               <div class="api-infos">
-                <small>{{::api.description}}</small>
+                <p>{{::api.description}}</p>
               </div>
-              <div class="api-views" layout="row">
-                <div flex="65">
-                  <a ng-if="api.views" ng-repeat="view in api.views" class="ui label" ng-click="apisCtrl.changeView($event, view)">{{view}}</a>
-                  <div ng-if="!api.views || api.views.length === 0" class="no-view"></div>
-                </div>
-
-                <gv-star-rating flex ng-if="apisCtrl.ratingEnabled && api.rate"  value="api.rate"
-                                message="'api.rating.rate' | translate:{numberOfRatings: api.numberOfRatings}" display-none-message="true"
-                                ng-click="apisCtrl.goToRating($event, api)"></gv-star-rating>
-              </div>
+              
             </md-card-content>
+            <md-card-footer>
+                <div class="api-views" layout="row">
+                    <div flex="85">
+                      <a ng-if="api.views" ng-repeat="view in api.views" class="ui label" ng-click="apisCtrl.changeView($event, view)">{{view}}</a>
+                      <div ng-if="!api.views || api.views.length === 0" class="no-view"></div>
+                    </div>
+                    <div class="health" flex="25" ng-if="api.availability">
+                      <span class="pinnedHealth" ng-class="{'pinnedHealth-success': api.availability >= 95, 'pinnedHealth-warning': api.availability < 95 && api.availability >= 80 , 'pinnedHealth-danger': api.availability < 80}"></span>
+                      <span>{{api.availability | number:0}} %</span>
+                    </div>             
+                </div>
+            </md-card-footer>
           </md-card>
 
           <md-table-container ng-if="!apisCtrl.tilesMode" style="width: 100%">
@@ -86,6 +109,7 @@
                   ng-repeat="api in apisCtrl.apis | orderBy:'name' | filter:$ctrl.apiFilter track by api.id">
                 <td md-cell><img height="40" ng-src="{{::api.picture_url}}"/></td>
                 <td md-cell>{{api.name}}</td>
+                <td md-cell>{{api.metaData['project-name']}}</td>
                 <td md-cell>{{api.version}}</td>
                 <td md-cell>{{api.description}}</td>
                 <td class="api-table-rating" md-cell ng-if="apisCtrl.ratingEnabled" width="20%">

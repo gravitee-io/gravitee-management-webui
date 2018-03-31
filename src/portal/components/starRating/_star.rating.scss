@@ -19,8 +19,8 @@
 
   .star-rating-title {
     position: absolute;
-    top: 2px;
-    left: 100px;
+    top: 0px;
+    left: 88px;
   }
 }
 
@@ -80,12 +80,12 @@ span:focus, p:focus {
 
 .icon-5stars:before { 
   content: '\e801 \e801 \e801 \e801 \e801';
-  font-size: 1.4em;
+  font-size: 1.2em;
 }
 
 .icon-5stars-empty:before { 
   content: '\e800 \e800 \e800 \e800 \e800';
-  font-size: 1.4em;
+  font-size: 1.2em;
 }
 
 /*.api-gallery .icon-5stars:before {
