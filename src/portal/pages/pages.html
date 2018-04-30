@@ -25,11 +25,20 @@
 
 <md-content ng-if="$ctrl.pages && $ctrl.pages.length > 0" layout="row" layout-xs="column" layout-padding layout-margin style="padding-top: 50px;">
   <div flex="15" layout="column" class="doc-sidenav" layout-padding>
-    <ul>
-      <li class="sidenav_item" ng-class="{'active': page.selected}" ng-repeat="page in $ctrl.pages" ng-click="$ctrl.selectPage(page)">
-        <span>{{::page.name}}</span>
-      </li>
-    </ul>
+      <ul>
+          <li ng-class="{'active': title.selected }" ng-repeat="title in $ctrl.pagesTree" class="sidenav_item">
+
+            <span ng-if="!$ctrl.isTitleObj(title)" ng-click="$ctrl.selectPage(title)">{{::title.name}}</span>
+            
+            <p ng-if="$ctrl.isTitleObj(title)">{{::title.value}}</p>
+            <ul ng-if="$ctrl.isTitleObj(title)">
+                <li class="sidenav_item l2" ng-class="{'active': page.selected}" ng-repeat="page in $ctrl.getPages(title.value)" ng-click="$ctrl.selectPage(page)">
+                  <span>{{::page.name}}</span>
+                </li>
+            </ul>
+          </li>
+      </ul>
+    
   </div>
   <div flex="85" ui-view></div>
 </md-content>
