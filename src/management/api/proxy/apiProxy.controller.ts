@@ -69,6 +69,8 @@ class ApiProxyController {
 
     this.api.labels = this.api.labels || [];
 
+    this.$scope.discoveryProvider = ['CONSUL', 'EUREKA'];
+
     this.$scope.lbs = [
       {
         name: 'Round-Robin',
@@ -250,6 +252,10 @@ class ApiProxyController {
     this.SidenavService.setCurrentResource(this.api.name);
   }
 
+  onDiscoveryProviderChange() {
+    delete this.discovery.configuration;
+  }
+
   update(api) {
     if (!this.failoverEnabled) {
       delete api.proxy.failover;
@@ -257,9 +263,6 @@ class ApiProxyController {
     // Discovery is disabled, set dummy values
     if (this.discovery.enabled === false) {
       delete this.discovery.configuration;
-    } else {
-      // Set default provider
-      this.discovery.provider = 'CONSUL';
     }
     this.api.services['discovery'] = this.discovery;
 
