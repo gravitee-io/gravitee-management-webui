@@ -39,7 +39,10 @@ function portalRouterConfig($stateProvider: ng.ui.IStateProvider) {
       controllerAs: 'indexCtrl',
       resolve: {
         resolvedDocumentation: function (PortalPagesService: PortalPagesService) {
-          return PortalPagesService.listPortalDocumentation().then(response => response.data)
+          return PortalPagesService.listPortalDocumentation().then(response => response.data.map(page => {
+            if (page.name.indexOf("::") !== -1) page.name = page.name.split("::")[1];
+            return page;
+          }))
         }
       }
     })

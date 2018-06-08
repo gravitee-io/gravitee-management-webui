@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import * as _ from 'lodash';
+// import * as templatePages from './api-pages.html';
 
 const ApiPagesComponent: ng.IComponentOptions = {
   bindings: {
@@ -25,12 +26,69 @@ const ApiPagesComponent: ng.IComponentOptions = {
     'ngInject';
 
     this.$onInit = function() {
+
+      this.pagesTree = [];
+      this.pagesByTitle = new Map();
+
+      var filterByTitle = function(map, page, title, name) {
+
+        if (title && name) {
+
+          if (!map.has(title)) {
+            map.set(title, new Array());
+          }
+
+          map.get(title).push(page);
+
+          page.name = name;
+        }
+      };
+
+      var filterTree = function(array, page, title) {
+        if (title) {
+          array.push(title);
+        } else {
+          array.push(page);
+        }
+      } ;
+
+      this.pages.forEach(page => {
+        var selected = ($stateParams.pageId && page.id === $stateParams.pageId);
+
+        var title = undefined;
+        var name = undefined;
+
+        if (page.name.indexOf("::") !== -1) {
+          title = page.name.split("::")[0];
+          name = page.name.split("::")[1];
+        }
+
+        filterTree(this.pagesTree, page, title);
+        filterByTitle(this.pagesByTitle, page, title, name);
+        page.selected = selected;
+
+      });
+
+      this.pagesTree = this.pagesTree
+      .filter((value, index, self) => self.indexOf(value) === index)
+      .map(title => {
+        var toReturn = title;
+        if (typeof title === 'string') toReturn = {"value": title, "selected": false};
+        return toReturn;
+      });
+
       if (this.pages.length && !$stateParams.pageId) {
-        this.pages[0].selected = true;
         $location.url(`/apis/${$stateParams.apiId}/pages/${this.pages[0].id}`);
-      } else {
-        _.each(this.pages, function(p) { if (p.id === $stateParams.pageId) {p.selected = true; }});
       }
+
+    };
+
+    this.getPages = function(title: String) {
+      return this.pagesByTitle.get(title);
+    };
+
+    this.isTitleObj = function(value) {
+      return value["value"] !== undefined;
     };
 
     this.selectPage = function (page) {
@@ -38,6 +96,20 @@ const ApiPagesComponent: ng.IComponentOptions = {
       page.selected = true;
       $state.go('portal.api.pages.page', {pageId: page.id});
     }
+
+    this.selectPageWithTilte = function (title) {
+      var pageId;
+      _.each(this.pages, function(p) {
+        p.selected = false;
+        if (p.name === title) {
+          p.selected = true;
+          this.pageLevel1Selected = p;
+          pageId = p.id;
+        }
+      });
+
+      $state.go('portal.pages.page', {pageId: pageId});
+    };
   }
 };
 
