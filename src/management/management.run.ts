@@ -69,6 +69,11 @@ function runBlock($rootScope, $window, $http, $mdSidenav, $transitions, $state,
   $window.onfocus = () => {
     $rootScope.isWindowFocused = true;
   };
+
+  if (Constants.portal.apikeyHeader && Constants.apiKey) {
+    $http.defaults.headers.common[Constants.portal.apikeyHeader] = Constants.apiKey;
+  }
+
 }
 
 export default runBlock;
