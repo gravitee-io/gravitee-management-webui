@@ -43,10 +43,7 @@ module.exports = {
         loaders: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: 'css-loader!sass-loader!postcss-loader'
-        }),
-        include: [
-          path.resolve(__dirname, '..') + '/src/index.scss'
-        ]
+        })
       },
       {
         test: /\.ts$/,

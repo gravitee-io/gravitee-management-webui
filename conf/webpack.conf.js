@@ -34,10 +34,7 @@ module.exports = {
       },
       {
         test: /\.(css|scss)$/,
-        loaders: ['style-loader', 'css-loader', 'sass-loader'],
-        include: [
-          path.resolve(__dirname, '..') + '/src/index.scss'
-        ]
+        loaders: ['style-loader', 'css-loader', 'sass-loader']
       },
       {
         test: /\.ts$/,
