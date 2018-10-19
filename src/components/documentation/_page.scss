@@ -175,7 +175,7 @@
     border: initial;
   }
 
-  @import '~swagger-ui-dist/swagger-ui.css';
+  //@import '~swagger-ui-dist/swagger-ui.css';
 
   a.tablelinks {
     color: #3b4151;
@@ -370,7 +370,7 @@
     box-sizing: border-box;
 }
 
-.tui-editor-contents table th, 
+.tui-editor-contents table th,
 .tui-editor-contents table td {
     height: 32px;
     padding: 5px 14px 5px 12px;

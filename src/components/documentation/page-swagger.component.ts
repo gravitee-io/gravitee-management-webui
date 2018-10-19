@@ -16,8 +16,9 @@
 import * as jsyaml from 'js-yaml';
 import * as _ from 'lodash';
 import UserService from '../../services/user.service';
-import {SwaggerUIBundle} from 'swagger-ui-dist';
+//import {SwaggerUIBundle} from 'swagger-ui-dist';
 import { StateService } from '@uirouter/core';
+import { Redoc } from 'redoc';
 
 const DisableTryItOutPlugin = function () {
   return {
@@ -64,6 +65,12 @@ const PageSwaggerComponent: ng.IComponentOptions = {
         contentAsJson = jsyaml.safeLoad(this.page.content);
       }
 
+      console.log(Redoc);
+
+      Redoc.init('http://petstore.swagger.io/v2/swagger.json', {
+        scrollYOffset: 50
+      }, document.getElementById('swagger-container'))
+      /*
       let cfg = {
         dom_id: '#swagger-container',
         presets: [
@@ -119,6 +126,7 @@ const PageSwaggerComponent: ng.IComponentOptions = {
 //            ui.preauthorizeApiKey('api_key', 'my_api_key')
           }
         }));
+        */
     };
 
   }

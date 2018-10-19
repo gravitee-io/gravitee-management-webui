@@ -78,7 +78,14 @@ require('../libraries/angular-schema-form/boostrap-decorator');
 require('../libraries/angular-schema-form/codemirror-decorator');
 require('../libraries/angular-ui-codemirror/ui-codemirror');
 
-require('swagger-ui-dist');
+console.log('cool');
+
+import * as React from 'react';
+//import React, { cloneElement, createContext, Component, createElement } from 'react';
+import * as ReactDOM from 'react-dom';
+import styled from 'styled-components';
+
+//require('swagger-ui-dist');
 require('../libraries/showdown-extension/DocHelper-extension.js');
 
 require('ngclipboard');
