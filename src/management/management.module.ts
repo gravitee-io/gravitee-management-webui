@@ -427,9 +427,6 @@ angular.module('gravitee-management', [uiRouter, permission, uiPermission, 'ngMa
   'ngMessages', 'vAccordion', 'schemaForm', 'ngclipboard', 'ui.validate', 'angular-timeline',
   'utf8-base64', 'ngFileUpload', 'md-steppers', 'ui.tree', 'angular-jwt', 'gridster', 'angular-loading-bar',
   'ngAnimate', 'LocalStorageModule', 'satellizer', ngInfiniteScroll, 'moment-picker'])
-  .config(['cfpLoadingBarProvider', function (cfpLoadingBarProvider) {
-    cfpLoadingBarProvider.includeSpinner = false;
-  }])
   .config((localStorageServiceProvider: angular.local.storage.ILocalStorageServiceProvider) => {
     'ngInject';
     localStorageServiceProvider.setPrefix('gravitee');

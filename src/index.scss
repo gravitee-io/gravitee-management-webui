@@ -549,3 +549,10 @@ table {
   min-height: 0;
   fill: rgba(0, 0, 0, 0.54);
 }
+
+#loading-bar-spinner {
+  width: 100%;
+  .spinner-icon {
+    margin: 0 auto;
+  }
+}
