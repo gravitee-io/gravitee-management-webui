@@ -18,6 +18,7 @@
 <md-dialog aria-label="Delete tag '{{tag}}'">
   <md-dialog-content layout-padding>
     <p>Are you sure you want to delete the tag '{{tag}}'?</p>
+    <b>Entrypoints configured with this tag will be also deleted!</b>
   </md-dialog-content>
   <md-dialog-actions layout="row">
     <md-button ng-click="cancel()" md-auto-focus>
