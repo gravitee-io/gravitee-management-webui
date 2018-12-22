@@ -183,11 +183,6 @@ function managementRouterConfig($stateProvider) {
       docs: {
         page: 'management-tasks'
       }
-    },
-    resolve: {
-      tasks: ( graviteeUser: User) => {
-        return graviteeUser.tasks;
-      }
     }
   });
 }
