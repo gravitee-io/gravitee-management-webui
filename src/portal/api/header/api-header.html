@@ -24,16 +24,18 @@
       <img height="60" ng-src="{{$ctrl.api.picture_url}}" alt="api-logo" />
       <div layout="column">
         <span class="api-title" ui-sref="portal.api.detail({apiId: $ctrl.api.id})">{{::$ctrl.api.name}}</span>
-
-        <a permission permission-only="'api-rating-r'" ui-sref="portal.api.rating({apiId: $ctrl.api.id})">
-          <gv-star-rating ng-if="$ctrl.ratingEnabled" class="api-rating" summary="$ctrl.apiRatingSummary"
+        <span class="api-subtitle">
+          <span ng-if="$ctrl.projectName.value">{{::$ctrl.projectName.value}} |</span>
+          <a permission permission-only="'api-rating-r'" ui-sref="portal.api.rating({apiId: $ctrl.api.id})">
+            <gv-star-rating ng-if="$ctrl.ratingEnabled" class="api-rating" summary="$ctrl.apiRatingSummary"
+                            message="'api.rating.rate' | translate:{numberOfRatings: $ctrl.apiRatingSummary.numberOfRatings}"
+                            display-none-message="true"></gv-star-rating>
+          </a>
+          <gv-star-rating permission permission-except="'api-rating-r'"
+                          ng-if="$ctrl.ratingEnabled" class="api-rating" summary="$ctrl.apiRatingSummary"
                           message="'api.rating.rate' | translate:{numberOfRatings: $ctrl.apiRatingSummary.numberOfRatings}"
                           display-none-message="true"></gv-star-rating>
-        </a>
-        <gv-star-rating permission permission-except="'api-rating-r'"
-                        ng-if="$ctrl.ratingEnabled" class="api-rating" summary="$ctrl.apiRatingSummary"
-                        message="'api.rating.rate' | translate:{numberOfRatings: $ctrl.apiRatingSummary.numberOfRatings}"
-                        display-none-message="true"></gv-star-rating>
+        </span>
       </div>
     </div>
     <div id="header-detail" class="api-header-detail">

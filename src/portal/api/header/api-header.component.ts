@@ -65,6 +65,13 @@ const ApiHeaderComponent: ng.IComponentOptions = {
         };
       }, 0);
     };
+
+    let metadata;
+        ApiService.listApiMetadata($stateParams.apiId).then((response) => {
+          metadata = response.data;
+          this.projectName = metadata.filter(v => v.key === 'project-name')[0];
+    });
+
   }
 };
 

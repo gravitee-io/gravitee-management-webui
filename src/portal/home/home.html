@@ -40,8 +40,10 @@
                  ng-click="homeCtrl.goToApi(api)" layout-wrap>
           <md-card-title>
             <md-card-title-text>
-              <span class="md-headline">{{api.name}}</span>
-              <span class="md-subhead">{{api.version}}</span>
+              <span class="md-headline">{{api.name}} <span class="version">{{api.version}}</span></span>
+              <span class="md-subhead">
+                <span ng-if="api.metaData['project-name']">{{::api.metaData["project-name"]}}</span>
+              </span>
             </md-card-title-text>
             <md-card-title-media>
               <div class="md-media-sm card-media">
@@ -51,7 +53,7 @@
           </md-card-title>
           <md-card-content>
             <div class="api-infos">
-              <small>{{api.description}}</small>
+              <p>{{api.description}}</p>
             </div>
             <div class="api-views" layout="row">
               <div flex="65">

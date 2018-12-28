@@ -69,8 +69,10 @@
                      layout-wrap>
               <md-card-title style="padding-top: 15px; padding-bottom: 0px;">
                 <md-card-title-text>
-                  <span class="md-headline">{{::api.name}}</span>
-                  <span class="md-subhead">{{::api.version}}</span>
+                  <span class="md-headline">{{::api.name}} <span class="version">{{::api.version}}</span></span>
+                  <span class="md-subhead">
+                    <span ng-if="api.metaData['project-name']">{{::api.metaData["project-name"]}}</span>
+                  </span>
                 </md-card-title-text>
                 <md-card-title-media>
                   <div class="md-media-sm card-media">
@@ -80,7 +82,7 @@
               </md-card-title>
               <md-card-content>
                 <div class="api-infos">
-                  <small>{{::api.description}}</small>
+                  <p>{{::api.description}}</p>
                 </div>
                 <div class="api-views" layout="row">
                   <div flex="65">
@@ -101,8 +103,8 @@
                 <tr style="height: 80px;" md-row ng-click="apisCtrl.goToApi(api)"
                     ng-repeat="api in apisCtrl.apis">
                   <td md-cell><img height="40" ng-src="{{::api.picture_url}}"/></td>
-                  <td md-cell>{{api.name}}</td>
-                  <td md-cell>{{api.version}}</td>
+                  <td md-cell>{{api.name}} <span class="version">{{api.version}}</span></td>
+                  <td md-cell>{{::api.metaData["project-name"]}}</td>
                   <td md-cell>{{api.description}}</td>
                   <td class="api-table-rating" md-cell ng-if="apisCtrl.ratingEnabled" width="20%">
                     <gv-star-rating flex ng-if="api.rate" value="api.rate" ng-click="apisCtrl.goToRating($event, api)"
