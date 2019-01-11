@@ -1,3 +1,15 @@
 {
-  "baseURL": "/management/"
+  "baseURL": "/management/",
+  "company" : {
+    "name" : "ABEG"
+  },
+  "management" : {
+    "title" : "ABEG Developers Portal"
+  },
+  "theme" : {
+    "name" : "asahi",
+    "logo" : "themes/assets/asahi-logo-header.jpg",
+    "loader" : "assets/gravitee_logo_anim.gif",
+    "css": "themes/assets/asahi.css"
+  }
 }

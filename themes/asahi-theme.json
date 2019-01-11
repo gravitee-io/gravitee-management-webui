@@ -1,0 +1,76 @@
+{
+  "portal": {
+    "navbar": {
+      "padding-left": "20%",
+      "border-bottom": "1px solid #d6d6d6",
+      "background-color": "white",
+      "color": "#3b3d40",
+      "help": {
+        "fill": "rgb(0, 65, 153)"
+      },
+      "notifications": {
+        "fill": "rgb(0, 65, 153)"
+      },
+      "user": {
+        "img": {
+          "border": "2px solid rgb(0, 65, 153)",
+          "alert": {
+            "border": "2px solid #54a3ff"
+          }
+        },
+        "notification": {
+          "background-image": "linear-gradient(#54a3ff, #006eed)",
+          "border": "2px solid #2d323e"
+        }
+      }
+    },
+    "footer": {
+      "content": {
+        "background-color": "#0e4393",
+        "color": "#fff"
+      },
+      "links": {
+        "color": "#f5f5f6"
+      }
+    },
+    "home": {
+      "header": {
+        "background-image": "url('/themes/assets/hp-banner-5.jpg')",
+        "color": "#fff"
+      },
+      "homepage": {
+        "background-color": "#f7f7f7"
+      },
+      "content": {
+        "background": "url('/themes/assets/bg-pattern.png') 0 0 repeat",
+        "background-color": "#34a0d4"
+      },
+      "topapis": {
+        "background": "url('/themes/assets/bg-pattern.png') 0 0 repeat",
+        "color": "#0e4393"
+      }
+    },
+    "apisList": {
+      "background": "url('/themes/assets/bg-pattern.png') 0 0 repeat"
+    },
+    "api": {
+      "header": {
+        "background": "url('/themes/assets/asahi-blue-pattern.png') 0 0 repeat",
+        "color": "white"
+      },
+      "plans": {
+        "background": "url('/themes/assets/bg-pattern.png') 0 0 repeat",
+        "title": {
+          "color": "#0e4393",
+          "font-size": "52px",
+          "font-weight": "700",
+          "margin": "5px, 0 70px"
+        }
+      },
+      "plan": {
+        "color": "#555",
+        "border": "1px solid #ccc"
+      }
+    }
+  }
+}
