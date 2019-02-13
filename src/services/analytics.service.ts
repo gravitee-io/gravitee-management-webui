@@ -18,10 +18,16 @@ import * as _ from 'lodash';
 
 class AnalyticsService {
   private analyticsURL: string;
+  private analyticsHttpTimeout: number;
 
   constructor(private $http, Constants) {
     'ngInject';
     this.analyticsURL = `${Constants.baseURL}platform/analytics`;
+
+    if(Constants.analyticsHttpTimeout)
+      this.analyticsHttpTimeout = Constants.analyticsHttpTimeout as number
+    else
+      this.analyticsHttpTimeout = 30000
   }
 
   /*
@@ -38,7 +44,8 @@ class AnalyticsService {
       }
     });
 
-    return this.$http.get(url, {timeout: 30000});
+
+    return this.$http.get(url, {timeout: this.analyticsHttpTimeout});
   }
 }
 

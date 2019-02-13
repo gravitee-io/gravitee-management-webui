@@ -33,11 +33,17 @@ interface IMembership {
 class ApiService {
   private apisURL: string;
   private Constants: any;
+  private analyticsHttpTimeout: number;
 
   constructor(private $http, Constants) {
     'ngInject';
     this.apisURL = `${Constants.baseURL}apis/`;
     this.Constants = Constants;
+
+    if(Constants.analyticsHttpTimeout)
+      this.analyticsHttpTimeout = Constants.analyticsHttpTimeout as number
+    else
+      this.analyticsHttpTimeout = 30000
   }
 
   defaultHttpHeaders(): string[] {
@@ -159,7 +165,7 @@ class ApiService {
       }
     });
 
-    return this.$http.get(url, {timeout: 30000});
+    return this.$http.get(url, {timeout: this.analyticsHttpTimeout});
   }
 
   /*
