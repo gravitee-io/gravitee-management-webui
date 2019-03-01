@@ -278,6 +278,7 @@ import PortalConfigService from '../services/portalConfig.service';
 // Users
 import UsersComponent from '../management/configuration/users/users.component';
 import UserDetailComponent from '../management/configuration/user/userdetail.component';
+import NewUserComponent from '../management/configuration/user/new/new-user.component';
 import DialogAddUserGroupController from '../management/configuration/user/dialog/addusergroup.dialog.controller';
 // Groups
 import GroupsComponent from '../management/configuration/groups/groups.component';
@@ -735,6 +736,7 @@ angular.module('gravitee-management', [uiRouter, permission, uiPermission, 'ngMa
   // Users
   .component('users', UsersComponent)
   .component('userDetail', UserDetailComponent)
+  .component('newUser', NewUserComponent)
   .controller('DialogAddUserGroupController', DialogAddUserGroupController)
 
   // Router
