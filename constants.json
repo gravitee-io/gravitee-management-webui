@@ -1,3 +1,15 @@
 {
-  "baseURL": "/management/"
+  "baseURL": "/management/",
+  "company" : {
+    "name" : "MyCompany"
+  },
+  "management" : {
+    "title" : "MyCompany Developers Portal"
+  },
+  "theme" : {
+    "name" : "mycompany",
+    "logo" : "themes/assets/mycompany/mycompany-logo.png",
+    "loader" : "themes/assets/mycompany/loader-mycompany-logo.jpg",
+    "css": "themes/assets/mycompany/mycompany.css"
+  }
 }

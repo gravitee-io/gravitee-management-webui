@@ -1,0 +1,256 @@
+/**
+ * Copyright (C) 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+body {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  color: #006594;
+  background: #fff;
+  font-size: 12px;
+}
+
+.gravitee-splash-screen {
+  background: #fff;
+}
+
+img.logo {
+  display: none;
+}
+
+.topnavbar-brand a img {
+  max-height: 120px;
+  max-width: 120px;
+}
+
+#footer .footer-brand-content img {
+  max-height: 120px;
+  max-width: 120px;
+}
+
+.menu-active {
+  background-color: white !important;
+}
+.topnavbar a, .topnavbar button {
+  font-weight: bold;
+}
+
+/*
+#header {
+  background-color: #eff4f9;
+  padding-top: 400px;
+  padding-bottom: 30px;
+}
+*/
+
+#header.md-whiteframe-5dp {
+  box-shadow: none;
+}
+
+.api-nav ul li.header-button button.oui-button.thin-button {
+  color: #006594;
+}
+
+.api-nav {
+  background: #f6f7f8 0 0;
+  border-top: 1px solid #ececed;
+  border-bottom: 1px solid #ececed;
+}
+
+.api-nav ul li a {
+  color: #006594;
+}
+
+.api-nav ul li.active a {
+  border-color: #006594;
+}
+
+section.tall h2 {
+  font-size: 36px;
+  margin: 5px 0 70px;
+}
+
+/*
+h2.section-title {
+  text-align: center;
+  color: #0e4393;
+}
+
+h2.color-white {
+  color: #0e4393;
+}
+*/
+
+.pricing-footer .select {
+  border-radius: 0px;
+}
+
+.tall .md-button, .pricing-footer .select {
+  display: inline-block;
+  padding: 15px 20px;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 1.75px;
+  border: 0;
+  text-decoration: none;
+  font-size: 12px;
+  cursor: pointer;
+  min-width: 180px;
+  text-align: center;
+}
+
+.tall .md-button.md-raised, .pricing-footer .select {
+  border-radius: 3px;
+  font-size: 14px;
+  font-weight: 700;
+  background-color: #006594;
+  color: #fff;
+  transition: background-color .3s;
+}
+
+.tall .md-button.md-raised:not([disabled]):hover, .pricing-footer .select:hover {
+  background-color: #00659494;
+  text-decoration: underline;
+}
+
+#footer .footer-brand-content {
+  border-left: none;
+}
+
+#header .api-title {
+  color: #006594;
+}
+
+#header  h1 {
+  color: #006594;
+  padding-top: 180px;
+}
+
+/**
+ * Main view
+ */
+input.apis-filter {
+  position: relative;
+  height: 60px;
+  text-align: left;
+  background: 0;
+  background-color: rgba(231, 231, 231, 0.97);
+  -webkit-border-radius: 50px 50px 50px 50px;
+  -moz-border-radius: 50px 50px 50px 50px;
+  border-radius: 50px 50px 50px 50px;
+}
+
+/**
+ * Top APIs section
+ */
+#top-apis h2 {
+  color: #006594;
+  font-size: 36px;
+  padding-top: 20px;
+}
+
+/**
+ * API Gallery view
+ */
+.gravitee-api-card {
+  color: #006594;
+}
+
+.gravitee-api-card .api-infos p {
+  color: #565656;
+}
+
+.apis-sidenav ul li.sidenav_item span {
+  color: #006594;
+}
+
+.apis-sidenav ul li.active {
+  border-left: 2px solid #006594;
+}
+
+.apis-sidenav ul li.sidenav_item:hover span {
+  color: #354794;
+}
+
+/**
+ * API view
+ */
+.api-nav ul li.header-button button.oui-button.thin-button {
+  border: 1px solid #006594;
+}
+
+/**
+ Login view
+ */
+.gravitee-no-sidenav-container {
+  background: white;
+  height: 100%;
+}
+
+.md-button.md-raised:not([disabled]) {
+  text-transform: uppercase;
+  border-radius: 3px;
+  font-size: 14px;
+  font-weight: 700;
+  background-color: #354794;
+  color: #fff;
+  transition: background-color .3s;
+}
+
+.md-button.md-raised:not([disabled]):hover {
+  background-color: #354794;
+  text-decoration: underline;
+}
+
+/**
+ * Subscription view
+ */
+.subscription-content {
+  background-color: white;
+}
+
+.subscription-step {
+  border: none;
+  border-bottom: 1px solid #ececed;
+}
+
+
+/**
+ * Documentation view
+ */
+.doc-sidenav ul li.active, .doc-sidenav ul li.active span, #sidenav ul li.active span, .doc-sidenav ul li.sidenav_item span {
+  color: #006594;
+}
+
+.doc-sidenav ul li.active, #sidenav ul li.active {
+  border-left: 2px solid #006594;
+}
+
+.doc-sidenav ul li.sidenav_item:hover span, #sidenav ul li.sidenav_item:hover span {
+  color: #354794;
+}
+
+
+/**
+ * Markdown page
+ */
+.tui-editor-contents h1 {
+  color: #006594;
+}
+
+.tui-editor-contents h2 {
+  color: #006594;
+  border-bottom: 1px solid rgb(236, 236, 237);
+}
