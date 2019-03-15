@@ -239,6 +239,26 @@
         ui-codemirror-opts="{lineNumbers: false, readOnly: true, lineWrapping: true, mode: $ctrl.getMimeType($ctrl.log.clientRequest)}"
         ng-model="$ctrl.log.clientRequest.body">
       </div>
+
+      <md-table-container>
+          <div class="btn-curl" ng-click="$ctrl.getCurl($ctrl.log, 'client')" ng-if="!$ctrl.displayClientCurl">
+            <span >View curl </span>
+            <ng-md-icon icon="keyboard_arrow_down"></ng-md-icon>
+          </div>
+          <div class="btn-curl" ng-click="$ctrl.displayClientCurl = false" ng-if="$ctrl.displayClientCurl">
+            <span>Hide curl </span>
+            <ng-md-icon icon="keyboard_arrow_up"></ng-md-icon>
+          </div>
+          <div class="console" layout="row" flex="100" ng-if="$ctrl.displayClientCurl">
+            <div flex="90" layout="column">{{$ctrl.clientCurl}}</div>
+            <div flex="10" layout="column" class="copycurl">
+                <md-tooltip ng-click="$ctrl.copyCurl('client')" md-direction="top">Copy to clipboard</md-tooltip>
+              <ng-md-icon icon="content_copy" ngclipboard data-clipboard-text="{{$ctrl.clientCurl}}"
+              ngclipboard-success="$ctrl.onCopyCurlSuccess(e);" ></ng-md-icon>
+            </div>
+          </div>
+        
+        </md-table-container>
     </div>
     <div layout="column" flex="45" layout-align="center center" ng-if="!$ctrl.log.clientRequest">
       <p>No log for this request.</p>
@@ -288,6 +308,27 @@
         ui-codemirror-opts="{lineNumbers: false, readOnly: true, lineWrapping: true, mode: $ctrl.getMimeType($ctrl.log.proxyRequest)}"
         ng-model="$ctrl.log.proxyRequest.body">
       </div>
+
+      <md-table-container>
+          <div class="btn-curl" ng-click="$ctrl.getCurl($ctrl.log, 'proxy')" ng-if="!$ctrl.displayProxyCurl">
+            <span >View curl </span>
+            <ng-md-icon icon="keyboard_arrow_down"></ng-md-icon>
+          </div>
+          <div class="btn-curl" ng-click="$ctrl.displayProxyCurl = false" ng-if="$ctrl.displayProxyCurl">
+            <span>Hide curl </span>
+            <ng-md-icon icon="keyboard_arrow_up"></ng-md-icon>
+          </div>
+          <div class="console" layout="row" flex="100" ng-if="$ctrl.displayProxyCurl">
+            <div flex="90" layout="column">{{$ctrl.proxyCurl}}</div>
+            <div flex="10" layout="column" class="copycurl">
+                <md-tooltip ng-click="$ctrl.copyCurl('proxy')" md-direction="top">Copy to clipboard</md-tooltip>
+              <ng-md-icon icon="content_copy" ngclipboard data-clipboard-text="{{$ctrl.proxyCurl}}"
+              ngclipboard-success="$ctrl.onCopyCurlSuccess(e);" ></ng-md-icon>
+            </div>
+          </div>
+        
+        </md-table-container>
+
     </div>
     <div layout="column" flex="45" layout-align="center center" ng-if="!$ctrl.log.proxyRequest">
       <p>No log for this request.</p>
@@ -333,6 +374,8 @@
           ui-codemirror-opts="{lineNumbers: false, readOnly: true, lineWrapping: true, mode: $ctrl.getMimeType($ctrl.log.clientResponse)}"
           ng-model="$ctrl.log.clientResponse.body">
         </div>
+
+        
     </div>
     <div layout="column" flex="45" layout-align="center center" ng-if="!$ctrl.log.clientResponse">
       <p>No log for this response.</p>

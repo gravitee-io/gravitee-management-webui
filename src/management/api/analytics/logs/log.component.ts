@@ -1,4 +1,5 @@
 import {StateService} from "@uirouter/core";
+import NotificationService from '../../../../services/notification.service';
 
 /*
  * Copyright (C) 2015 The Gravitee team (http://gravitee.io)
@@ -19,7 +20,7 @@ const LogComponent: ng.IComponentOptions = {
   bindings: {
     log: '<'
   },
-  controller: function($state: StateService, Constants: any) {
+  controller: function($state: StateService, Constants: any, NotificationService: NotificationService) {
     'ngInject';
     this.Constants = Constants;
     this.backStateParams = {
@@ -27,6 +28,7 @@ const LogComponent: ng.IComponentOptions = {
       to: $state.params['to'],
       q: $state.params['q'],
     };
+    
     this.getMimeType = function(log) {
 
       if (log.headers['Content-Type'] !== undefined) {
@@ -35,6 +37,42 @@ const LogComponent: ng.IComponentOptions = {
       }
 
       return null;
+    };
+    this.getCurl = function(log, scope){
+      var request = (scope == "client") ? log.clientRequest : log.proxyRequest;
+      if(scope == "client"){
+        var uri = request.headers['X-Forwarded-Proto']+"://"+request.headers['Host']+request.headers['X-Forwarded-Prefix']+request.uri;
+      }else{
+        var uri = request.uri+"";
+      }
+      
+      var curl = "curl -X "+request.method.toUpperCase()+" '"+uri+"'";
+
+      curl+= (request.body != undefined) ? " -d '"+request.body+"'" : "";
+
+      for(var headerName in request.headers){
+        curl += " -H '"+headerName+":"+request.headers[headerName]+"'";
+      }
+
+      if(scope=="client"){
+        this.clientCurl = curl;
+        this.displayClientCurl = true;
+      }else{
+        this.proxyCurl = curl;
+        this.displayProxyCurl = true;
+      }
+      
+    };
+    this.hideCurl = function(scope){
+      if(scope == "client"){
+        this.displayClientCurl = false;
+      }else if(scope == "proxy"){
+        this.displayProxyCurl = false;
+      }
+    };
+    this.onCopyCurlSuccess = function(e){
+      NotificationService.show('Curl has been copied to clipboard');
+      e.clearSelection();
     };
   },
   template: require('./log.html')

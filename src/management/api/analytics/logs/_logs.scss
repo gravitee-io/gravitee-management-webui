@@ -99,3 +99,35 @@ tr.log-error {
 .gv-log-response-panel-5 {
   @include logResponsePanel(#ff9e9e, #f55d5d);
 }
+
+.console {
+  font-family:Courier;
+  color: #CCCCCC;
+  background: #000000;
+  padding:5px 10px 5px 10px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  overflow-wrap: break-word;
+  transition: opacity 600ms, visibility 600ms;
+  svg:hover{
+    opacity: 0.5;
+  }
+  svg{
+    fill: rgb(189,189,189);
+    cursor: pointer;
+  }
+  .copycurl{
+    text-align: right;
+  }
+}
+
+.btn-curl{
+  margin-top: 5px;
+  ng-md-icon{
+    top: 0px;
+  }
+  span{
+    position: relative;
+    top: -7px;
+  }
+}
