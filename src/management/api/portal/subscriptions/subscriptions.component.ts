@@ -18,6 +18,7 @@ import ApiService from "../../../../services/api.service";
 import NotificationService from "../../../../services/notification.service";
 import { PagedResult } from "../../../../entities/pagedResult";
 import { StateService } from '@uirouter/core';
+import apisAnalyticsRouterConfig from '../../analytics/apis.analytics.route';
 
 export class SubscriptionQuery {
   status?: string[] = ['ACCEPTED', 'PENDING', 'PAUSED'];
@@ -38,6 +39,7 @@ const ApiSubscriptionsComponent: ng.IComponentOptions = {
   controller: class {
 
     private subscriptions: PagedResult;
+    private allSubscriptionsForExport: any[];
     private api: any;
 
     private query: SubscriptionQuery = new SubscriptionQuery();
@@ -61,6 +63,71 @@ const ApiSubscriptionsComponent: ng.IComponentOptions = {
       'ngInject';
 
       this.onPaginate = this.onPaginate.bind(this);
+      
+    }
+
+    onClickExport(){
+      
+      this.allSubscriptionsForExport = [];
+      this.getAllSubscriptionsForExport(1); 
+    }
+
+    getAllSubscriptionsForExport(page){
+      let query = this.buildQuery(page, 100);
+      this.ApiService.getSubscriptions(this.api.id, query).then((response) => {
+        var data = response.data as PagedResult;
+        var that = this;
+        data.data.forEach(function(subscription){
+          that.allSubscriptionsForExport.push([
+            data.metadata[subscription.api].name, 
+            data.metadata[subscription.plan].name, 
+            data.metadata[subscription.application].name, 
+            that.formatDate(new Date(subscription.created_at)), 
+            that.formatDate(new Date(subscription.processed_at)), 
+            that.formatDate(new Date(subscription.starting_at)), 
+            subscription.ending_at == undefined ? "" : that.formatDate(new Date(subscription.ending_at)), 
+            subscription.closed_at == undefined ? "" : that.formatDate(new Date(subscription.closed_at)), 
+            subscription.status.toUpperCase()
+          ]);
+        });
+        if(data.page.total_pages > page){
+          this.getAllSubscriptionsForExport(page+1);
+        }else{
+          this.generateExport();
+        }
+      });
+    }
+
+    generateExport() {
+      let headers = "API,PLAN,APPLICATION,CREATED_AT,PROCESSED_AT,STARTING_AT,ENDING_AT,CLOSED_AT,STATUS\n";
+      let csvContent = headers + this.allSubscriptionsForExport.map(e=>e.join(",")).join("\n");
+      let file = new Blob([csvContent], {type: "text/csv;charset=utf-8;"});
+      let apiName = this.api.name;
+      apiName = apiName.replace(/[\s]/gi, '-');
+      apiName = apiName.replace(/[^\w]/gi, '-');
+      let fileName = apiName+"-subscriptions.csv";
+      if (navigator.msSaveBlob) { // IE 10+
+        navigator.msSaveBlob(file, fileName);
+      } else {
+        var link = document.createElement("a");
+        var url = URL.createObjectURL(file);
+        link.href = url;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        setTimeout(function() {
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);  
+        }, 0); 
+      }
+    }
+
+    formatDate(date){
+      return this.pad(date.getMonth()+1)+"-"+this.pad(date.getDate())+"-"+date.getFullYear()+" "+this.pad(date.getHours())+":"+this.pad(date.getMinutes())+":"+this.pad(date.getSeconds());
+    }
+
+    pad(n) {
+      return n<10 ? '0'+n : n;
     }
 
     onPaginate(page) {
@@ -80,8 +147,10 @@ const ApiSubscriptionsComponent: ng.IComponentOptions = {
       this.doSearch();
     }
 
-    buildQuery() {
-      let query = '?page=' + this.query.page + '&size=' + this.query.size + '&';
+    buildQuery(inPage = null, inSize = null) {
+      let page = inPage != null ? inPage : this.query.page;
+      let size = inSize != null ? inSize : this.query.size;
+      let query = '?page=' + page + '&size=' + size + '&';
       let parameters = {};
 
       if (this.query.status !== undefined) {

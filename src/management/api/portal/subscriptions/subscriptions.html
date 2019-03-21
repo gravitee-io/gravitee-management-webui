@@ -98,6 +98,14 @@
     class="gv-table-dense">
   </md-table-pagination>
 
+  <div layout="row" ng-if="$ctrl.subscriptions.data.length > 0">
+    <md-button class="md-icon-button export-subscriptions-btn" ng-click="$ctrl.onClickExport()">
+      <md-tooltip md-direction="top">Export subscriptions</md-tooltip>
+      <ng-md-icon icon="file_download"></ng-md-icon>
+    </md-button>
+  </div>
+  
+
 <gravitee-empty-state ng-if="$ctrl.subscriptions.data.length === 0"
                       icon="vpn_key"
                       model="Subscription"
