@@ -233,12 +233,15 @@
       </md-table-container>
 
       <br>
-
-      <div ng-if="$ctrl.log.clientRequest.body"
+      <div ng-if="$ctrl.log.clientRequest.body" class="call-body"
         ui-codemirror
         ui-codemirror-opts="{lineNumbers: false, readOnly: true, lineWrapping: true, mode: $ctrl.getMimeType($ctrl.log.clientRequest)}"
-        ng-model="$ctrl.log.clientRequest.body">
+        ng-model="$ctrl.log.clientRequest.body"
+        ngclipboard data-clipboard-text="{{$ctrl.log.clientRequest.body}}"
+        ngclipboard-success="$ctrl.onCopyCurlSuccess(e);">
+        <md-tooltip md-direction="top">Click to copy</md-tooltip>
       </div>
+      
     </div>
     <div layout="column" flex="45" layout-align="center center" ng-if="!$ctrl.log.clientRequest">
       <p>No log for this request.</p>
@@ -283,10 +286,13 @@
 
       <br>
 
-      <div ng-if="$ctrl.log.proxyRequest.body"
+      <div ng-if="$ctrl.log.proxyRequest.body" class="call-body"
         ui-codemirror
         ui-codemirror-opts="{lineNumbers: false, readOnly: true, lineWrapping: true, mode: $ctrl.getMimeType($ctrl.log.proxyRequest)}"
-        ng-model="$ctrl.log.proxyRequest.body">
+        ng-model="$ctrl.log.proxyRequest.body"
+        ngclipboard data-clipboard-text="{{$ctrl.log.proxyRequest.body}}"
+        ngclipboard-success="$ctrl.onCopyCurlSuccess(e);">
+        <md-tooltip md-direction="top">Click to copy</md-tooltip>
       </div>
     </div>
     <div layout="column" flex="45" layout-align="center center" ng-if="!$ctrl.log.proxyRequest">
@@ -328,10 +334,13 @@
 
       <br>
 
-      <div ng-if="$ctrl.log.clientResponse.body"
+      <div ng-if="$ctrl.log.clientResponse.body" class="call-body"
           ui-codemirror
           ui-codemirror-opts="{lineNumbers: false, readOnly: true, lineWrapping: true, mode: $ctrl.getMimeType($ctrl.log.clientResponse)}"
-          ng-model="$ctrl.log.clientResponse.body">
+          ng-model="$ctrl.log.clientResponse.body"
+          ngclipboard data-clipboard-text="{{$ctrl.log.clientResponse.body}}"
+          ngclipboard-success="$ctrl.onCopyCurlSuccess(e);">
+          <md-tooltip md-direction="top">Click to copy</md-tooltip>
         </div>
     </div>
     <div layout="column" flex="45" layout-align="center center" ng-if="!$ctrl.log.clientResponse">
@@ -373,10 +382,13 @@
 
       <br>
 
-      <div ng-if="$ctrl.log.proxyResponse.body"
+      <div ng-if="$ctrl.log.proxyResponse.body" class="call-body"
         ui-codemirror
         ui-codemirror-opts="{lineNumbers: false, lineWrapping: true, readOnly: true, mode: $ctrl.getMimeType($ctrl.log.proxyResponse)}"
-        ng-model="$ctrl.log.proxyResponse.body">
+        ng-model="$ctrl.log.proxyResponse.body"
+        ngclipboard data-clipboard-text="{{$ctrl.log.proxyResponse.body}}"
+        ngclipboard-success="$ctrl.onCopyCurlSuccess(e);">
+        <md-tooltip md-direction="top">Click to copy</md-tooltip>
       </div>
     </div>
     <div layout="column" flex="45" layout-align="center center" ng-if="!$ctrl.log.proxyResponse">
