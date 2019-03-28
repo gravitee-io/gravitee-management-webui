@@ -21,6 +21,7 @@
       <img ng-src="{{$ctrl.getLogo()}}" alt="logo"/>
     </a>
     <md-button class="gv-navbar-link" ui-sref-active="menu-active" ui-sref="portal.apis">{{'menu.gallery' | translate}}</md-button>
+    <md-button ng-if="$ctrl.graviteeUser.id" class="gv-navbar-link" ui-sref-active="menu-active" ui-sref="portal.applications.list">{{'menu.applications' | translate}}</md-button>
     <md-button class="gv-navbar-link" ui-sref-active="menu-active" ui-sref="portal.pages">{{'menu.documentation' | translate}}</md-button>
     <md-button ng-if="$ctrl.supportEnabled" class="gv-navbar-link" ui-sref-active="menu-active" ui-sref="support">{{'menu.support' | translate}}</md-button>
   </div>

@@ -60,6 +60,32 @@ import PortalViewController from './views/view/view.controller';
 
 import RouterService from '../services/router.service';
 
+// Applications
+import applicationRouterConfig from './application/applications.route';
+
+// Applications
+import ApplicationService from '../services/application.service';
+import ApplicationsComponent from './application/applications.component';
+import ApplicationsController from './application/applications.controller';
+import CreateApplicationsComponent from './application/create-application.component';
+import ApplicationComponent from './application/details/application.component';
+import ApplicationHeaderComponent from './application/header/application-header.component';
+import ApplicationGeneralController from './application/details/general/application-general.controller';
+import ApplicationGeneralComponent from './application/details/general/application-general.component';
+import ApplicationMembersController from './application/details/members/application-members.controller';
+import ApplicationMembersComponent from './application/details/members/application-members.component';
+import ApplicationSubscriptionsController
+  from './application/details/subscriptions/application-subscriptions.controller';
+import ApplicationSubscriptionsComponent from './application/details/subscriptions/application-subscriptions.component';
+import ApplicationSubscriptionComponent from './application/details/subscriptions/application-subscription.component';
+import ApplicationAnalyticsController from './application/details/analytics/application-analytics.controller';
+import ApplicationAnalyticsComponent from './application/details/analytics/application-analytics.component';
+import ApplicationLogsController from './application/details/logs/application-logs.controller';
+import ApplicationLogsComponent from './application/details/logs/application-logs.component';
+import ApplicationLogComponent from './application/details/logs/application-log.component';
+import DialogAddMemberController from './application/details/members/addMemberDialog.controller';
+import DialogTransferApplicationController from './application/details/members/transferApplicationDialog.controller';
+
 require('angulartics');
 
 import {AuthProvider} from 'satellizer';
@@ -72,6 +98,7 @@ angular.module('gravitee-portal', [uiRouter, permission, uiPermission, 'ngMateri
   .config(portalRouterConfig)
   .config(portalI18nConfig)
   .config(authenticationConfig)
+  .config(applicationRouterConfig)
   .factory('i18nCustomLoader', i18nCustomLoader)
   .controller('HomeController', HomeController)
   .controller('PortalApisController', PortalApisController)
@@ -91,6 +118,29 @@ angular.module('gravitee-portal', [uiRouter, permission, uiPermission, 'ngMateri
   .directive('gvThemeElement', () => ThemeElementDirective)
   .directive('gvStarRating', () => StarRatingDirective)
   .service('PortalService', PortalService)
+
+  // Applications
+  .service('ApplicationService', ApplicationService)
+  .component('portalApplications', ApplicationsComponent)
+  .component('portalApplication', ApplicationComponent)
+  .component('portalApplicationHeader', ApplicationHeaderComponent)
+  .component('portalApplicationCreate', CreateApplicationsComponent)
+  .component('portalApplicationGeneral', ApplicationGeneralComponent)
+  .component('portalApplicationSubscriptions', ApplicationSubscriptionsComponent)
+  .component('portalApplicationSubscription', ApplicationSubscriptionComponent)
+  .component('portalApplicationMembers', ApplicationMembersComponent)
+  .component('portalApplicationAnalytics', ApplicationAnalyticsComponent)
+  .component('portalApplicationLogs', ApplicationLogsComponent)
+  .component('portalApplicationLog', ApplicationLogComponent)
+  .controller('DialogAddMemberController', DialogAddMemberController)
+  .controller('ApplicationsController', ApplicationsController)
+  .controller('ApplicationGeneralController', ApplicationGeneralController)
+  .controller('ApplicationMembersController', ApplicationMembersController)
+  .controller('ApplicationSubscriptionsController', ApplicationSubscriptionsController)
+  .controller('ApplicationAnalyticsController', ApplicationAnalyticsController)
+  .controller('ApplicationLogsController', ApplicationLogsController)
+  .controller('DialogTransferApplicationController', DialogTransferApplicationController)
+
   .filter('humanDateFilter', function () {
     return function(input) {
       if (!moment().subtract(1, 'weeks').isAfter(input)) {

@@ -38,10 +38,10 @@
   "menu": {
     "login": "Login",
     "gallery": "API gallery",
+    "applications": "My Applications",
     "documentation": "Documentation",
     "profile": "My account",
     "management": "Administration",
-    "applications": "Applications",
     "apis": "APIs",
     "tasks": "Tasks",
     "logout": "Sign out",
