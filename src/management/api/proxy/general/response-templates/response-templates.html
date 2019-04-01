@@ -53,9 +53,8 @@
                   <a ng-if="!template.display" ng-click="template.display=true">show</a>
                   <a ng-if="template.display" ng-click="template.display=false">hide</a>
                 </td>
-                <td ng-if="$first" md-cell width="48px" rowspan="{{ctrl.countTypes(templates)}}">
-                  <ng-md-icon icon="delete" ng-click="ctrl.remove(key)"
-                              style="font-size: 24px; height: 24px;">
+                <td ng-if="$first" md-cell rowspan="{{ctrl.countTypes(templates)}}" width="100px">
+                  <ng-md-icon icon="delete" ng-click="ctrl.remove(key)">
                     <md-tooltip md-direction="top" md-visible="false">Remove</md-tooltip>
                   </ng-md-icon>
                 </td>
