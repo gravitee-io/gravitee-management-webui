@@ -19,7 +19,7 @@
   <div class="gv-forms" layout="column">
     <div class="gv-forms-header">
       <h1 ng-if="$ctrl.creation">New Response Template</h1>
-      <h1 ng-if="!$ctrl.creation">Response Template: {{$ctrl.templateKey}}</h1>
+      <h1 ng-if="!$ctrl.creation">Response Template: {{$ctrl.selectedTemplateKey}}</h1>
       <a ui-sref='management.apis.detail.proxy.responsetemplates.list'>Back to response templates</a>
     </div>
 
@@ -31,11 +31,22 @@
       <div class="gv-form-content">
         <!-- Template Key -->
         <div flex-xs flex="50">
-          <md-input-container class="md-block">
-            <label>Template Key</label>
-            <input ng-model="$ctrl.templateKey" type="text" required>
-          </md-input-container>
-          <div class="hint">The error key for which template responses will be applied.</div>
+          <md-autocomplete
+            flex required
+            md-input-name="autocompleteTemplateKeyField"
+            md-selected-item="$ctrl.selectedTemplateKey"
+            md-selected-item-change="$ctrl.onSelectedTemplateKey(key)"
+            md-search-text="$ctrl.searchTemplateKey"
+            md-items="key in $ctrl.querySearchTemplateKey($ctrl.searchTemplateKey)"
+            md-item-text="key"
+            md-min-length="0"
+            md-require-match="false"
+            md-floating-label="Template key">
+            <md-item-template>
+              <span md-highlight-text="$ctrl.searchTemplateKey" md-highlight-flags="^i">{{key}}</span>
+            </md-item-template>
+          </md-autocomplete>
+          <div class="hint">The template key for which template responses will be applied.</div>
         </div>
       </div>
     </div>

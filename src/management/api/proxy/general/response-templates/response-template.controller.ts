@@ -24,7 +24,7 @@ class ApiResponseTemplateController {
   private initialApi: any;
 
   private selectedStatusCode: any;
-  private templateKey: string;
+  private selectedTemplateKey: any;
   private formResponseTemplate: any;
   private creation: boolean = false;
   private keys: any;
@@ -42,7 +42,7 @@ class ApiResponseTemplateController {
 
     this.creation = (this.$stateParams.key === undefined);
 
-    this.templateKey = this.$stateParams.key;
+    this.selectedTemplateKey = this.$stateParams.key;
 
     this.initialApi = _.cloneDeep(this.$scope.$parent.apiCtrl.api);
     this.api = _.cloneDeep(this.$scope.$parent.apiCtrl.api);
@@ -79,6 +79,20 @@ class ApiResponseTemplateController {
     }
   }
 
+  onSelectedTemplateKey (key) {
+    this.selectedTemplateKey = key;
+  }
+
+  querySearchTemplateKey (query) {
+    return query ? this.keys.filter(this.createFilterForTemplateKey(query)) : this.keys;
+  }
+
+  createFilterForTemplateKey (query) {
+    return function filterFn(state) {
+      return (state.indexOf(query) === 0);
+    };
+  }
+
   addTemplate() {
     this.templates.push({
       type: '*/*',
@@ -96,7 +110,7 @@ class ApiResponseTemplateController {
     let apiResponseTemplates = this.api['response_templates'] ||  {};
 
     if (this.templates.length > 0) {
-      apiResponseTemplates[this.templateKey] =
+      apiResponseTemplates[this.selectedTemplateKey] =
         _.mapValues(
           _.keyBy(this.templates, (template) => template.type),
           (template) => {
@@ -108,7 +122,7 @@ class ApiResponseTemplateController {
           });
       this.api['response_templates'] = apiResponseTemplates;
     } else {
-      delete this.api['response_templates'][this.templateKey];
+      delete this.api['response_templates'][this.selectedTemplateKey];
     }
 
     this.ApiService.update(this.api).then((updatedApi) => {
@@ -120,14 +134,14 @@ class ApiResponseTemplateController {
 
   onApiUpdate() {
     this.$rootScope.$broadcast('apiChangeSuccess', {api: this.api});
-    this.NotificationService.show('Response template saved for key: ' + this.templateKey);
+    this.NotificationService.show('Response template saved for key: ' + this.selectedTemplateKey);
     this.$state.go('management.apis.detail.proxy.responsetemplates.list');
   }
 
   reset() {
     this.selectedStatusCode = null;
     if (this.creation) {
-      this.templateKey = null;
+      this.selectedTemplateKey = null;
     }
     this.api = _.cloneDeep(this.initialApi);
     if (this.formResponseTemplate) {
