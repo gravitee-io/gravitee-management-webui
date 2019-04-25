@@ -25,7 +25,7 @@ const ApplicationLogComponent: ng.IComponentOptions = {
     this.backStateParams = {
       from: $state.params['from'],
       to: $state.params['to'],
-      q: $state.params['q'],
+      q: $state.params['q']
     };
     this.getMimeType = function(log) {
 
