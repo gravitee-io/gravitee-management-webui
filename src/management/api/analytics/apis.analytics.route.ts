@@ -72,24 +72,19 @@ function apisAnalyticsRouterConfig($stateProvider) {
       },
       params: {
         from: {
-          type: 'int',
-          dynamic: true
+          type: 'int'
         },
         to: {
-          type: 'int',
-          dynamic: true
+          type: 'int'
         },
         q: {
-          type: 'string',
-          dynamic: true
+          type: 'string'
         },
         page: {
-          type: 'int',
-          dynamic: true
+          type: 'int'
         },
         size: {
-          type: 'int',
-          dynamic: true
+          type: 'int'
         }
       },
       resolve: {
