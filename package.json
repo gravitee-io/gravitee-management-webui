@@ -37,7 +37,7 @@
     "highcharts": "^6.1.1",
     "@highcharts/map-collection": "^1.1.2",
     "jquery": "^3.4.0",
-    "js-yaml": "^3.13.1",    
+    "js-yaml": "^3.13.1",
     "karma-jasmine": "^1.1.2",
     "marked": "^0.7.0",
     "md-color-picker": "^0.2.6",
@@ -59,7 +59,8 @@
     "traverse": "^0.6.6",
     "tui-editor": "^1.2.6",
     "unicode": "^11.0.1",
-    "v-accordion": "^1.6.0"
+    "v-accordion": "^1.6.0",
+    "snyk": "^1.195.1"
   },
   "devDependencies": {
     "@types/angular": "^1.6.48",
@@ -183,6 +184,9 @@
     "serve:nightly": "gulp serve:nightly",
     "serve:dist": "gulp serve:dist",
     "test:auto": "gulp test:auto",
-    "buildNoReg": "gulp buildNoReg"
-  }
+    "buildNoReg": "gulp buildNoReg",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
+  },
+  "snyk": true
 }
