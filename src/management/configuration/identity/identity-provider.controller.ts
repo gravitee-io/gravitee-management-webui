@@ -21,6 +21,7 @@ import IdentityProviderService from "../../../services/identityProvider.service"
 import { GroupMapping, IdentityProvider, RoleMapping } from "../../../entities/identityProvider";
 import angular = require("angular");
 import _ = require('lodash');
+import UserService from "../../../services/user.service";
 
 interface IIdentityProviderScope extends ng.IScope {
   formIdentityProvider: any;
@@ -36,6 +37,7 @@ class IdentityProviderController {
   constructor(
     private $scope: IIdentityProviderScope,
     private $state: StateService,
+    private UserService: UserService,
     private $mdEditDialog,
     private Constants,
     private $mdDialog: angular.material.IDialogService,

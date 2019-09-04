@@ -20,6 +20,7 @@ import {ApiPortalHeader} from "../../../entities/apiPortalHeader";
 import PortalConfigService from "../../../services/portalConfig.service";
 import _ = require('lodash');
 import {IScope} from "angular";
+import UserService from "../../../services/user.service";
 
 const ApiPortalHeaderComponent: ng.IComponentOptions = {
   bindings: {
@@ -28,6 +29,7 @@ const ApiPortalHeaderComponent: ng.IComponentOptions = {
   template: require('./api-portal-header.html'),
   controller: function(
     ApiHeaderService: ApiHeaderService,
+    UserService: UserService,
     NotificationService: NotificationService,
     PortalConfigService: PortalConfigService,
     $mdDialog: angular.material.IDialogService,
@@ -38,7 +40,6 @@ const ApiPortalHeaderComponent: ng.IComponentOptions = {
     this.$rootScope = $rootScope;
     this.$mdDialog = $mdDialog;
     this.settings = _.cloneDeep(Constants);
-
     this.$onInit = () => {
     };
 
@@ -141,7 +142,9 @@ const ApiPortalHeaderComponent: ng.IComponentOptions = {
       });
     };
 
-
+    this.isUserHasPermissions = (permission)  => {
+      return UserService.isUserHasPermissions([permission]);
+    }
   }
 };
 

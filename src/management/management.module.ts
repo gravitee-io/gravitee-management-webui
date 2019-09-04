@@ -822,6 +822,7 @@ angular.module('gravitee-management', [uiRouter, permission, uiPermission, 'ngMa
   // ApiHeader
   .component('configApiPortalHeader', ApiPortalHeaderComponent)
   .service('ApiHeaderService', ApiHeaderService)
+  .service('UserService', UserService)
   .controller("NewApiPortalHeaderDialogController", NewApiPortalHeaderDialogController)
   .controller("UpdateApiPortalHeaderDialogController", UpdateApiPortalHeaderDialogController)
 

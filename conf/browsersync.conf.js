@@ -26,8 +26,8 @@ module.exports = function (env) {
     },
     open: false,
     middleware: proxyMiddleware(
-      env ? `https://${env}.gravitee.io/management` : 'http://localhost:8083/management',
-      {changeOrigin: !!env, secure: false}
+      env ? `https://${env}.gravitee.io/management` : 'https://gravitee-01.dev.k8s.i-lab.online/management',
+      {changeOrigin: true, secure: false, logLevel: 'debug'}
     )
   };
 };
