@@ -18,6 +18,7 @@ import NotificationService from "../../../../services/notification.service";
 import PortalConfigService from "../../../../services/portalConfig.service";
 import { ClientRegistrationProvider } from "../../../../entities/clientRegistrationProvider";
 import ClientRegistrationProviderService from "../../../../services/clientRegistrationProvider.service";
+import UserService from "../../../../services/user.service";
 
 const ClientRegistrationProvidersComponent: ng.IComponentOptions = {
   bindings: {
@@ -28,6 +29,7 @@ const ClientRegistrationProvidersComponent: ng.IComponentOptions = {
     $mdDialog: angular.material.IDialogService,
     ClientRegistrationProviderService: ClientRegistrationProviderService,
     PortalConfigService: PortalConfigService,
+    UserService: UserService,
     NotificationService: NotificationService,
     $state: StateService,
     Constants
@@ -97,6 +99,10 @@ const ClientRegistrationProvidersComponent: ng.IComponentOptions = {
         NotificationService.show("Application type '" + type  + "' is now " + (this.settings.application.types[type].enabled?"allowed":"disallowed") );
         _.merge(Constants, response.data);
       });
+    };
+
+    this.isUserHasPermissions = (permission)  => {
+      return UserService.isUserHasPermissions(permission);
     };
   }
 };

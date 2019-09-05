@@ -671,6 +671,7 @@ angular.module('gravitee-management', [uiRouter, permission, uiPermission, 'ngMa
   .component('topApis', TopApisComponent)
   .component('portalSettings', PortalSettingsComponent)
   .component('analyticsSettings', AnalyticsSettingsComponent)
+  .service('UserService', UserService)
   .directive('gvMetadataValidator', () => MetadataValidatorDirective)
 
   .component('instances', InstancesComponent)
@@ -835,12 +836,14 @@ angular.module('gravitee-management', [uiRouter, permission, uiPermission, 'ngMa
   .component('gvIdentityproviderOidc', IdentityProviderOIDCComponent)
   .controller("IdentityProviderController", IdentityProviderController)
   .service('IdentityProviderService', IdentityProviderService)
+  .service('UserService', UserService)
 
   // Settings: Client Registration
   .component('clientRegistrationProviders', ClientRegistrationProvidersComponent)
   .component('clientRegistrationProvider', ClientRegistrationProviderComponent)
   .controller('ClientRegistrationProviderController', ClientRegistrationProviderController)
   .service('ClientRegistrationProviderService', ClientRegistrationProviderService)
+  .service('UserService', UserService)
 
   // Alerts
   .service('AlertService', AlertService)

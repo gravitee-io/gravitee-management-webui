@@ -20,6 +20,7 @@ import NotificationService from "../../../services/notification.service";
 import PortalConfigService from "../../../services/portalConfig.service";
 import _ = require('lodash');
 import {IScope} from 'angular';
+import UserService from "../../../services/user.service";
 
 const IdentityProvidersComponent: ng.IComponentOptions = {
   bindings: {
@@ -28,6 +29,7 @@ const IdentityProvidersComponent: ng.IComponentOptions = {
   template: require('./identity-providers.html'),
   controller: function(
     $mdDialog: angular.material.IDialogService,
+    UserService: UserService,
     IdentityProviderService: IdentityProviderService,
     PortalConfigService: PortalConfigService,
     NotificationService: NotificationService,
@@ -95,6 +97,10 @@ const IdentityProvidersComponent: ng.IComponentOptions = {
         NotificationService.show("Login form is now " + (this.settings.authentication.localLogin.enabled?"enabled":"disabled"));
       });
     };
+
+    this.isUserHasPermissions = (permission)  => {
+      return UserService.isUserHasPermissions(permission);
+    }
   }
 };
 

@@ -17,6 +17,7 @@ import NotificationService from "../../../services/notification.service";
 import PortalConfigService from "../../../services/portalConfig.service";
 import { StateService } from '@uirouter/core';
 import _ = require('lodash');
+import UserService from "../../../services/user.service";
 
 const PortalSettingsComponent: ng.IComponentOptions = {
   bindings: {
@@ -26,6 +27,7 @@ const PortalSettingsComponent: ng.IComponentOptions = {
   controller: function(
     NotificationService: NotificationService,
     PortalConfigService: PortalConfigService,
+    UserService: UserService,
     $state: StateService,
     Constants: any
   ) {
@@ -55,6 +57,11 @@ const PortalSettingsComponent: ng.IComponentOptions = {
        this.settings.authentication.github.clientId ||
        this.settings.authentication.oauth2.clientId;
     }
+
+    this.isUserHasPermissions = (permission)  => {
+      return UserService.isUserHasPermissions(permission);
+    }
+
   }
 };
 

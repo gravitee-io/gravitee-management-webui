@@ -22,7 +22,7 @@
         <div class="gv-form-content" layout="column">
             <md-input-container class="md-block" flex-gt-xs>
                 <label>Company name</label>
-                <input ng-model="$ctrl.settings.company.name">
+                <input ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.company.name">
             </md-input-container>
         </div>
     </div>
@@ -34,26 +34,26 @@
         <div class="gv-form-content" layout="column">
             <md-input-container class="md-block" flex>
                 <label>Title</label>
-                <input ng-model="$ctrl.settings.management.title">
+                <input ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.management.title">
             </md-input-container>
             <h6>Security plans type available</h6>
             <md-input-container class="gv-input-container-dense">
-                <md-checkbox ng-model="$ctrl.settings.plan.security.keyless.enabled" aria-label="A">
+                <md-checkbox ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.plan.security.keyless.enabled" aria-label="A">
                     Keyless plans
                 </md-checkbox>
             </md-input-container>
             <md-input-container class="gv-input-container-dense">
-                <md-checkbox ng-model="$ctrl.settings.plan.security.apikey.enabled" aria-label="A">
+                <md-checkbox ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.plan.security.apikey.enabled" aria-label="A">
                     Api-key plans
                 </md-checkbox>
             </md-input-container>
             <md-input-container class="gv-input-container-dense">
-                <md-checkbox ng-model="$ctrl.settings.plan.security.oauth2.enabled" aria-label="A">
+                <md-checkbox ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.plan.security.oauth2.enabled" aria-label="A">
                     Oauth2 plans
                 </md-checkbox>
             </md-input-container>
             <md-input-container class="gv-input-container-dense">
-                <md-checkbox ng-model="$ctrl.settings.plan.security.jwt.enabled" aria-label="A">
+                <md-checkbox ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.plan.security.jwt.enabled" aria-label="A">
                     JWT plans
                 </md-checkbox>
             </md-input-container>
@@ -67,61 +67,61 @@
 
             <md-input-container class="md-block" flex-gt-xs>
                 <label>Title</label>
-                <input ng-model="$ctrl.settings.portal.title">
+                <input ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.portal.title">
             </md-input-container>
             <md-input-container class="md-block" flex-gt-xs>
                 <label>Api-key Header
                     <small>(Used by portal to display the CURL command, change the YAML configuration to impact the gateway)</small>
                 </label>
-                <input ng-model="$ctrl.settings.portal.apikeyHeader">
+                <input ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.portal.apikeyHeader">
             </md-input-container>
             <md-input-container class="gv-input-container-dense">
-                <md-checkbox ng-model="$ctrl.settings.portal.apis.tilesMode.enabled" aria-label="Tiles Mode">
+                <md-checkbox ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.portal.apis.tilesMode.enabled" aria-label="Tiles Mode">
                     Use Tiles Mode for apis by default (if not overridden by user)
                 </md-checkbox>
             </md-input-container>
             <md-input-container class="gv-input-container-dense">
-                <md-checkbox ng-model="$ctrl.settings.portal.support.enabled" aria-label="Support">
+                <md-checkbox ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.portal.support.enabled" aria-label="Support">
                     Activate Support
                 </md-checkbox>
             </md-input-container>
             <md-input-container class="gv-input-container-dense">
-                <md-checkbox ng-model="$ctrl.settings.portal.rating.enabled" aria-label="Rating">
+                <md-checkbox ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.portal.rating.enabled" aria-label="Rating">
                     Activate Rating
                 </md-checkbox>
             </md-input-container>
             <md-input-container class="gv-input-container-dense">
-                <md-checkbox ng-model="$ctrl.settings.portal.rating.comment.mandatory" aria-label="Rating comment mandatory">
+                <md-checkbox ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.portal.rating.comment.mandatory" aria-label="Rating comment mandatory">
                     Force user to fill comment before to save a rating
                 </md-checkbox>
             </md-input-container>
             <md-input-container class="gv-input-container-dense">
-                <md-checkbox ng-model="$ctrl.settings.portal.devMode.enabled" aria-label="Developer Portal Only">
+                <md-checkbox ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.portal.devMode.enabled" aria-label="Developer Portal Only">
                     Developer Portal Only
                 </md-checkbox>
             </md-input-container>
             <md-input-container class="gv-input-container-dense">
-                <md-checkbox ng-model="$ctrl.settings.portal.userCreation.enabled" aria-label="Allow user creation">
+                <md-checkbox ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.portal.userCreation.enabled" aria-label="Allow user creation">
                     Allow User Registration
                 </md-checkbox>
             </md-input-container>
             <md-input-container class="gv-input-container-dense">
-                <md-checkbox ng-model="$ctrl.settings.portal.analytics.enabled" aria-label="Add Google Analytics">
+                <md-checkbox ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.portal.analytics.enabled" aria-label="Add Google Analytics">
                     Add Google Analytics
                 </md-checkbox>
             </md-input-container>
             <md-input-container class="md-block" flex-gt-xs>
                 <label>Google Analytics TrackingId</label>
-                <input ng-model="$ctrl.settings.portal.analytics.trackingId">
+                <input ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.portal.analytics.trackingId">
             </md-input-container>
             <md-input-container class="gv-input-container-dense">
-                <md-checkbox ng-model="$ctrl.settings.portal.uploadMedia.enabled" aria-label="Allow upload media">
+                <md-checkbox ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.portal.uploadMedia.enabled" aria-label="Allow upload media">
                     Allow Upload Images
                 </md-checkbox>
             </md-input-container>
             <md-input-container class="md-block" flex-gt-xs>
                 <label>Max size upload file (bytes)</label>
-                <input type="number" min="0" ng-model="$ctrl.settings.portal.uploadMedia.maxSizeInOctet">
+                <input ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" type="number" min="0" ng-model="$ctrl.settings.portal.uploadMedia.maxSizeInOctet">
             </md-input-container>
         </div></div>
 
@@ -132,19 +132,19 @@
         <div class="gv-form-content" layout="column">
             <md-input-container class="md-block" flex-gt-xs>
                 <label>Name</label>
-                <input ng-model="$ctrl.settings.theme.name">
+                <input ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.theme.name">
             </md-input-container>
             <md-input-container class="md-block" flex-gt-xs>
                 <label>Logo</label>
-                <input ng-model="$ctrl.settings.theme.logo">
+                <input ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.theme.logo">
             </md-input-container>
             <md-input-container class="md-block" flex-gt-xs>
                 <label>Loader</label>
-                <input ng-model="$ctrl.settings.theme.loader">
+                <input ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.theme.loader">
             </md-input-container>
             <md-input-container class="md-block" flex-gt-xs>
                 <label>Css file (for example themes/assets/gravitee.css)</label>
-                <input ng-model="$ctrl.settings.theme.css">
+                <input ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.theme.css">
             </md-input-container>
         </div></div>
 
@@ -155,11 +155,11 @@
         <div class="gv-form-content" layout="column">
             <md-input-container class="md-block" flex-gt-xs>
                 <label>Tasks (in seconds)</label>
-                <input type="number" min="0" ng-model="$ctrl.settings.scheduler.tasks">
+                <input type="number" min="0" ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.scheduler.tasks">
             </md-input-container>
             <md-input-container class="md-block" flex-gt-xs>
                 <label>Notifications (in seconds)</label>
-                <input type="number" min="0" ng-model="$ctrl.settings.scheduler.notifications">
+                <input type="number" min="0" ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.scheduler.notifications">
             </md-input-container>
         </div></div>
 
@@ -169,7 +169,7 @@
         <div class="gv-form-content" layout="column">
             <md-input-container class="md-block" flex-gt-xs>
                 <label>Documentation URL</label>
-                <input ng-model="$ctrl.settings.documentation.url">
+                <input ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.documentation.url">
             </md-input-container>
         </div>
     </div>
@@ -178,46 +178,46 @@
         <h2>API Quality</h2>
         <div class="gv-form-content" layout="column">
           <md-input-container class="md-block" flex-gt-xs>
-            <md-checkbox ng-model="$ctrl.settings.apiReview.enabled" aria-label="API reviews">
+            <md-checkbox ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.apiReview.enabled" aria-label="API reviews">
               Enable API review
             </md-checkbox>
           </md-input-container>
             <md-input-container class="md-block" flex-gt-xs>
-                <md-checkbox ng-model="$ctrl.settings.apiQualityMetrics.enabled" aria-label="Rating">
+                <md-checkbox ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.apiQualityMetrics.enabled" aria-label="Rating">
                     Enable API Quality Metrics
                 </md-checkbox>
             </md-input-container>
             <md-input-container class="md-block" flex-gt-xs>
                 <label>Functional documentation weight (0 means not used)</label>
-                <input type="number" min="0" ng-model="$ctrl.settings.apiQualityMetrics.functionalDocumentationWeight">
+                <input type="number" min="0" ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.apiQualityMetrics.functionalDocumentationWeight">
             </md-input-container>
             <md-input-container class="md-block" flex-gt-xs>
                 <label>Technical documentation weight (0 means not used)</label>
-                <input type="number" min="0" ng-model="$ctrl.settings.apiQualityMetrics.technicalDocumentationWeight">
+                <input type="number" min="0" ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.apiQualityMetrics.technicalDocumentationWeight">
             </md-input-container>
             <md-input-container class="md-block" flex-gt-xs>
                 <label>Healthcheck weight (0 means not used)</label>
-                <input type="number" min="0" ng-model="$ctrl.settings.apiQualityMetrics.healthcheckWeight">
+                <input type="number" min="0" ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.apiQualityMetrics.healthcheckWeight">
             </md-input-container>
             <md-input-container class="md-block" flex-gt-xs>
                 <label>Description weight (0 means not used)</label>
-                <input type="number" min="0" ng-model="$ctrl.settings.apiQualityMetrics.descriptionWeight">
+                <input type="number" min="0" ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.apiQualityMetrics.descriptionWeight">
             </md-input-container>
             <md-input-container class="md-block" flex-gt-xs>
                 <label>Description minimum length</label>
-                <input type="number" min="0" ng-model="$ctrl.settings.apiQualityMetrics.descriptionMinLength">
+                <input type="number" min="0" ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.apiQualityMetrics.descriptionMinLength">
             </md-input-container>
             <md-input-container class="md-block" flex-gt-xs>
                 <label>Logo weight (0 means not used)</label>
-                <input type="number" min="0" ng-model="$ctrl.settings.apiQualityMetrics.logoWeight">
+                <input type="number" min="0" ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.apiQualityMetrics.logoWeight">
             </md-input-container>
             <md-input-container class="md-block" flex-gt-xs>
                 <label>Views weight (0 means not used)</label>
-                <input type="number" min="0" ng-model="$ctrl.settings.apiQualityMetrics.viewsWeight">
+                <input type="number" min="0" ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.apiQualityMetrics.viewsWeight">
             </md-input-container>
             <md-input-container class="md-block" flex-gt-xs>
                 <label>Labels weight (0 means not used)</label>
-                <input type="number" min="0" ng-model="$ctrl.settings.apiQualityMetrics.labelsWeight">
+                <input type="number" min="0" ng-disabled="!$ctrl.isUserHasPermissions(['portal-settings-c','portal-settings-u','portal-settings-d'])" ng-model="$ctrl.settings.apiQualityMetrics.labelsWeight">
             </md-input-container>
         </div>
     </div>

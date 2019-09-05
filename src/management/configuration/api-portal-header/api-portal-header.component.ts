@@ -143,7 +143,7 @@ const ApiPortalHeaderComponent: ng.IComponentOptions = {
     };
 
     this.isUserHasPermissions = (permission)  => {
-      return UserService.isUserHasPermissions([permission]);
+      return UserService.isUserHasPermissions(permission);
     }
   }
 };
