@@ -84,7 +84,7 @@
                 </div>
                 <div class="api-views" layout="row">
                   <div flex="65">
-                    <a ng-if="api.views" ng-repeat="view in api.views" class="ui label" ng-click="apisCtrl.changeView($event, view)">{{view}}</a>
+                    <a ng-if="api.views" ng-repeat="view in api.views" class="ui label" ng-click="apisCtrl.changeView($event, view)">{{apisCtrl.getViewName(view)}}</a>
                     <div ng-if="!api.views || api.views.length === 0" class="no-view"></div>
                   </div>
 

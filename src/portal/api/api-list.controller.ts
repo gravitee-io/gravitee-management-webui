@@ -156,6 +156,10 @@ export class PortalApiListController {
 
     return _.map(api.views, (view) => "api-card-view-" + view).join(' ');
   }
+
+  getViewName(viewId) {
+    return _.find(this.views, (view) => viewId === view.id).name;
+  }
 }
 
 export default PortalApiListController;
