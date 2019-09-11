@@ -88,7 +88,7 @@ const SettingsComponent: ng.IComponentOptions = {
       // GATEWAYS
       api_logging: {
         perm: UserService.isUserHasPermissions(
-          ['managment-settings-r']),
+          ['management-settings-r']),
         goTo: 'management.settings.api_logging'
       },
       dictionaries: {
