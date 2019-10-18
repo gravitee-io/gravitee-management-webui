@@ -421,7 +421,7 @@ class ApiPortalController {
           });
         }
       }
-    })
+    });
   }
 
   canAskForReview(): boolean {
@@ -464,7 +464,23 @@ class ApiPortalController {
           this.NotificationService.show(`Review has been asked for API ${this.api.name}`);
         });
       }
-    })
+    });
+  }
+
+  showDuplicateDialog() {
+    this.$mdDialog.show({
+      controller: 'DialogApiDuplicateController',
+      controllerAs: '$ctrl',
+      template: require('./dialog/apiDuplicate.dialog.html'),
+      clickOutsideToClose: true,
+      locals: {
+        api: this.$scope.$parent.apiCtrl.api
+      }
+    }).then((api) => {
+      if (api) {
+        this.$state.go('management.apis.detail.portal.general', {apiId: api.id});
+      }
+    });
   }
 }
 
