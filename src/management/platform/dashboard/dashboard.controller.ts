@@ -153,7 +153,7 @@ class DashboardController {
         request: {
           type: 'date_histo',
           field: 'status',
-          aggs: 'field:status'
+          aggs: 'field:status:50'
         }
       }
     }, {
