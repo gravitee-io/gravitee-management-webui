@@ -42,7 +42,7 @@
           </div>
         <h5>Which events would you like to subscribe for ?</h5>
         <div layout="column">
-          <div flex ng-repeat="category in $ctrl.hooksCategories" style="margin-top: 18px;">
+          <div ng-repeat="category in $ctrl.hooksCategories" style="margin-top: 18px;">
             <h6>{{category}}</h6>
             <div layout="row" layout-wrap>
               <div flex="35" ng-repeat="hook in $ctrl.hooksByCategory[category]">
@@ -78,7 +78,8 @@
     </form>
   </div>
   <md-button permission permission-only="['api-notification-c', 'application-notification-c', 'management-notification-c']"
-             class="md-fab md-fab-bottom-right"
+             class="md-fab md-fab-bottom-right md-fab-scrollable"
+             ng-class="{'gv-help-displayed': $ctrl.$rootScope.helpDisplayed}"
              aria-label="Add"
              ng-click="$ctrl.addDialog()">
     <ng-md-icon icon="add"></ng-md-icon>

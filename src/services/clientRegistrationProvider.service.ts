@@ -48,9 +48,15 @@ class ClientRegistrationProviderService {
         name: clientRegistrationProvider.name,
         description: clientRegistrationProvider.description,
         discovery_endpoint: clientRegistrationProvider.discovery_endpoint,
+        initial_access_token_type: clientRegistrationProvider.initial_access_token_type,
         client_id: clientRegistrationProvider.client_id,
         client_secret: clientRegistrationProvider.client_secret,
-        scopes: clientRegistrationProvider.scopes
+        scopes: clientRegistrationProvider.scopes,
+        initial_access_token: clientRegistrationProvider.initial_access_token,
+        renew_client_secret_support: clientRegistrationProvider.renew_client_secret_support,
+        renew_client_secret_endpoint: clientRegistrationProvider.renew_client_secret_endpoint,
+        renew_client_secret_method: clientRegistrationProvider.renew_client_secret_method,
+        software_id: clientRegistrationProvider.software_id
       }).then(response => {
       let clientRegistrationProvider = response.data;
       clientRegistrationProvider.scopes = clientRegistrationProvider.scopes || [];

@@ -23,9 +23,10 @@ class DashboardController {
   private selectedEventTypes: any[];
   private lastFrom: any;
   private lastTo: any;
-  private analyticsData: any;
   private events: any;
   private query: any;
+  private dashboards: any;
+  private dashboard: any;
 
   constructor(
     private EventsService,
@@ -33,7 +34,9 @@ class DashboardController {
     private ApiService,
     private ApplicationService,
     private $scope,
-    private Constants
+    private Constants,
+    private $state,
+    private dashboards
   ) {
     'ngInject';
     this.eventLabels = {};
@@ -41,202 +44,32 @@ class DashboardController {
     this.selectedAPIs = [];
     this.selectedApplications = [];
     this.selectedEventTypes = [];
+    this.dashboards = _.filter(this.dashboards, 'enabled');
 
-    this.$scope.platformDashboard = [{
-      col: 0,
-      row: 0,
-      sizeY: 1,
-      sizeX: 2,
-      title: 'Top API',
-      subhead: 'Ordered by API calls',
-      chart: {
-        type: 'table',
-        selectable: true,
-        link: 'api',
-        columns: ['API', 'Hits'],
-        paging: 5,
-        request: {
-          type: 'group_by',
-          field: 'api',
-          size: 10000
-        }
+    let dashboardId = this.$state.params.dashboard;
+    if (dashboardId) {
+      this.dashboard = _.find(this.dashboards, {id: dashboardId});
+      if (!this.dashboard) {
+        delete this.$state.params.dashboard;
+        this.$state.go(this.$state.current);
       }
-    }, {
-      col: 2,
-      row: 0,
-      sizeY: 1,
-      sizeX: 2,
-      title: 'Top applications',
-      subhead: 'Ordered by application calls',
-      chart: {
-        type: 'table',
-        selectable: true,
-        link: 'application',
-        columns: ['Application', 'Hits'],
-        paging: 5,
-        request: {
-          type: 'group_by',
-          field: 'application',
-          size: 10000
-        }
-      }
-    }, {
-      col: 0,
-      row: 1,
-      sizeY: 1,
-      sizeX: 2,
-      title: 'Top failed APIs',
-      subhead: 'Order by API 5xx status calls',
-      chart: {
-        type: 'table',
-        link: 'api',
-        columns: ['API', 'Hits'],
-        paging: 5,
-        request: {
-          type: 'group_by',
-          field: 'api',
-          query: 'status:[500 TO 599]',
-          size: 10000
-        }
-      }
-    }, {
-      col: 2,
-      row: 1,
-      sizeY: 1,
-      sizeX: 2,
-      title: 'Top slow APIs',
-      subhead: 'Order by API response time calls',
-      chart: {
-        type: 'table',
-        link: 'api',
-        columns: ['API', 'Latency (in ms)'],
-        paging: 5,
-        request: {
-          type: 'group_by',
-          field: 'api',
-          order: '-avg:response-time',
-          size: 10000
-        }
-      }
-    }, {
-      col: 4,
-      row: 1,
-      sizeY: 1,
-      sizeX: 2,
-      title: 'Top overhead APIs',
-      subhead: 'Order by gateway latency',
-      chart: {
-        type: 'table',
-        link: 'api',
-        columns: ['API', 'Latency (in ms)'],
-        paging: 5,
-        request: {
-          type: 'group_by',
-          field: 'api',
-          order: '-avg:proxy-latency',
-          size: 10000
-        }
-      }
-    },
-    {
-      col: 0,
-      row: 2,
-      sizeY: 1,
-      sizeX: 6,
-      title: 'Response Status',
-      subhead: 'Hits repartition by HTTP Status',
-      chart: {
-        type: 'line',
-        stacked: true,
-        selectable: true,
-        labelPrefix: 'HTTP Status',
-        request: {
-          type: 'date_histo',
-          field: 'status',
-          aggs: 'field:status'
-        }
-      }
-    }, {
-      col: 0,
-      row: 3,
-      sizeY: 1,
-      sizeX: 6,
-      title: 'Response times',
-      subhead: 'Average response time for the gateway and the API',
-      chart: {
-        type: 'line',
-        stacked: false,
-        request: {
-          type: 'date_histo',
-          field: 'api',
-          aggs: 'avg:response-time%3Bavg:api-response-time'
-        },
-        labels: ['Global latency (ms)', 'API latency (ms)']
-      }
-    },
-  {
-    col: 4,
-    row: 0,
-    sizeY: 1,
-    sizeX: 2,
-    title: 'Tenant repartition',
-    subhead: 'Hits repartition by tenant',
-    chart: {
-      type: 'table',
-      selectable: true,
-      columns: ['Tenant', 'Hits'],
-      paging: 5,
-      request: {
-        type: 'group_by',
-        field: 'tenant',
-        size: 20
-
-      }
-    }
-  }];
-
-    if (Constants.portal.dashboard && Constants.portal.dashboard.widgets) {
-      let initialDashboardLength = this.$scope.platformDashboard.length;
-      for (let i = 0; i < Constants.portal.dashboard.widgets.length; i++) {
-        let nbWidget = this.$scope.platformDashboard.length - initialDashboardLength;
-        let row = nbWidget > 2 ? 3 : 2;
-        let col = nbWidget > 2 ? (nbWidget - 3) * 2 : nbWidget * 2;
-        switch (Constants.portal.dashboard.widgets[i]) {
-          case 'host':
-            this.$scope.platformDashboard.push({
-              row: row,
-              col: col,
-              sizeY: 1,
-              sizeX: 2,
-              title: 'Hits by Host ',
-              subhead: 'Hits repartition by Host HTTP Header',
-              chart: {
-                type: 'table',
-                selectable: true,
-                columns: ['Host', 'Hits'],
-                paging: 5,
-                request: {
-                  type: 'group_by',
-                  field: 'host',
-                  fieldLabel: 'host',
-                  size: 20
-
-                }
-              }
-            });
-            break;
-        }
-      }
+    } else {
+      this.dashboard = this.dashboards[0];
     }
 
-    _.forEach(this.$scope.platformDashboard, (widget) => {
-      _.merge(widget, {
-        chart: {
-          service: {
-            caller: this.AnalyticsService,
-            function: this.AnalyticsService.analytics
+    _.forEach(this.dashboards, (dashboard) => {
+      if (dashboard.definition) {
+        dashboard.definition = JSON.parse(dashboard.definition);
+      }
+      _.forEach(dashboard.definition, (widget) => {
+        _.merge(widget, {
+          chart: {
+            service: {
+              caller: this.AnalyticsService,
+              function: this.AnalyticsService.analytics
+            }
           }
-        }
+        });
       });
     });
 
@@ -251,11 +84,20 @@ class DashboardController {
     this.searchEvents = this.searchEvents.bind(this);
   }
 
+  onDashboardChanged(dashboardId: string) {
+    this.$state.transitionTo(
+      this.$state.current,
+      _.merge(this.$state.params, {dashboard: dashboardId}), {reload: true});
+  }
+
   onTimeframeChange(timeframe) {
     this.lastFrom = timeframe.from;
     this.lastTo = timeframe.to;
 
-    this.searchEvents();
+    // display events only on first dashboard
+    if (this.dashboard === this.dashboards[0]) {
+      this.searchEvents();
+    }
   }
 
   selectEvent(eventType) {

@@ -17,17 +17,16 @@
 -->
 <md-step label="General" md-complete="$ctrl.parent.vm.stepData[0].data.completed">
   <md-step-body>
-    <md-content layout-padding class="api-creation-general-content api-creation-content">
+    <md-content layout-padding class="gv-creation-general-content gv-creation-content">
       <form name="apiGeneralForm" ng-submit="$ctrl.parent.validFirstStep($ctrl.parent.vm.stepData[0].data)">
         <div layout-gt-sm="row">
           <md-input-container class="md-block" flex-gt-sm>
             <label>Name</label>
-            <input ng-model="$ctrl.parent.api.name" type="text" required name="name" minlength="4"
-                   md-maxlength="50" autofocus />
+            <input ng-model="$ctrl.parent.api.name" type="text" required name="name"
+                   md-maxlength="512" autofocus />
             <div class="hint" ng-if="apiGeneralForm.name.$valid || apiGeneralForm.name.$pristine">API Name</div>
             <div ng-messages="apiGeneralForm.name.$error">
               <div ng-message="required">API Name is required.</div>
-              <div ng-message="minlength">The name has to be more than 4 characters long.</div>
               <div ng-message="md-maxlength">The name has to be less than 50 characters long.</div>
             </div>
           </md-input-container>

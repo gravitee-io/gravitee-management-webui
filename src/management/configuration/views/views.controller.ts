@@ -18,11 +18,13 @@ import ViewService from '../../../services/view.service';
 import NotificationService from '../../../services/notification.service';
 import { StateService } from '@uirouter/core';
 import PortalConfigService from "../../../services/portalConfig.service";
+import {IScope} from 'angular';
 
 class ViewsController {
   private viewsToUpdate: any[];
   private views: any[];
   private Constants: any;
+  private settings: any;
 
   constructor(
     private ViewService: ViewService,
@@ -31,8 +33,11 @@ class ViewsController {
     private $mdDialog: angular.material.IDialogService,
     private $state: StateService,
     private PortalConfigService: PortalConfigService,
-    Constants: any) {
+    Constants: any,
+    private $rootScope: IScope) {
     'ngInject';
+    this.$rootScope = $rootScope;
+    this.settings = _.cloneDeep(Constants);
     this.Constants = Constants;
     this.viewsToUpdate = [];
   }
@@ -76,7 +81,8 @@ class ViewsController {
   }
 
   toggleDisplayMode() {
-    this.PortalConfigService.save().then( () => {
+    this.PortalConfigService.save(this.settings).then( (response) => {
+      _.merge(this.Constants, response.data);
       this.NotificationService.show("Display mode saved!");
     });
   }
@@ -115,10 +121,6 @@ class ViewsController {
         });
       }
     });
-  }
-
-  selectView(view) {
-    this.$state.go('management.settings.view', {viewId: view.id})
   }
 }
 

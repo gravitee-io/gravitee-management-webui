@@ -20,23 +20,13 @@ const NotificationsComponent: ng.IComponentOptions = {
     notificationSettings: '<',
     api: '<',
     application: '<',
-    alerts: '<'
   },
   template: require('./notifications.html'),
-  controller: function ($state: StateService) {
+  controller: function (Constants: any, $state: StateService) {
     'ngInject';
 
     this.$onInit = () => {
-      $state.go('.notificationSetting');
-      this.alertEnabled = this.alerts && this.alerts.length;
-    };
-
-    this.isNotificationActive = (notification) => {
-      return $state.current.name.endsWith('.notifications.notificationSetting') && notification.id === $state.params.notificationId;
-    };
-
-    this.isAlertActive = (alert) => {
-      return $state.current.name.endsWith('.notifications.alert') && alert.id === $state.params.alertId;
+      $state.go('^.notifications.notification', {notificationId: 'portal'});
     };
   }
 };

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import _ = require('lodash');
 import ApiService from "../../../services/api.service";
 import TicketService from "../../../services/ticket.service";
 
@@ -20,8 +21,7 @@ const ApiHeaderComponent: ng.IComponentOptions = {
   bindings: {
     api: '<',
     apiRatingSummary: '<',
-    apiPortalHeaders: '<',
-    entrypoints: '<'
+    apiPortalHeaders: '<'
   },
   template: require('./api-header.html'),
   controller: function (
@@ -45,7 +45,18 @@ const ApiHeaderComponent: ng.IComponentOptions = {
     });
 
     this.$onInit = () => {
+      // override api entrypoint
+      if (Constants.portal.entrypoint && this.api.entrypoints.length <= 1) {
+        let ctxtpath = "";
+        if (this.api.proxy.virtual_hosts.length > 0) {
+          ctxtpath = this.api.proxy.virtual_hosts[0].path;
+        }
+
+        this.api.entrypoints[0].target = Constants.portal.entrypoint + ctxtpath;
+
+      }
       $timeout(function () {
+
         const apiNavbar = document.getElementById("api-navbar");
         const headerDetail = document.getElementById("header-detail");
         const headerMetadata = document.getElementById("header-metadata");
@@ -67,9 +78,9 @@ const ApiHeaderComponent: ng.IComponentOptions = {
       }, 0);
     };
 
-    this.getEntrypointsByTags = () => {
-      return ApiService.getTagEntrypoints(this.api, this.entrypoints);
-    }
+    this.uniqueEntrypoints = () => {
+      return _.uniq(_.map(this.api.entrypoints, 'target'));
+    };
   }
 };
 

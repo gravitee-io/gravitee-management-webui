@@ -38,23 +38,25 @@
           <th md-column>Display name</th>
           <th md-column width="15%" nowrap>Email</th>
           <th md-column width="15%" nowrap>Source</th>
-          <th md-column width="10%" nowrap></th>
+          <th md-column width="1%" nowrap></th>
         </tr>
         </thead>
         <tbody md-body>
         <tr md-row ng-repeat="user in $ctrl.usersPage.data | orderBy: orderUser">
             <td md-cell>
-              <a ng-click="$ctrl.selectUser(user)">
-                <img ng-src="{{$ctrl.getUserPicture(user)}}" class="md-avatar" alt="User picture" />
+              <a ui-sref="management.settings.user({userId: user.id})">
+                <img ng-src="{{$ctrl.getUserPicture(user)}}"
+                     onerror="this.src='assets/default_photo.png'"
+                     class="md-avatar" alt="User picture" />
                 {{user.displayName}}
               </a>
             </td>
             <td md-cell width="15%" nowrap>{{user.email}}</td>
             <td md-cell width="15%" nowrap>{{user.source}}</td>
-            <td md-cell width="10%" nowrapng-click="$event.stopPropagation()">
+            <td md-cell width="1%" nowrap ng-click="$event.stopPropagation()">
                 <span permission permission-only="['management-user-d']">
                     <md-tooltip md-direction="top">delete</md-tooltip>
-                    <ng-md-icon icon="delete" ng-click="$ctrl.remove($event, user)" aria-label="delete-user"></ng-md-icon>
+                    <ng-md-icon icon="delete" style="width:20px; display: block;" ng-click="$ctrl.remove($event, user)" aria-label="delete-user"></ng-md-icon>
                 </span>
             </td>
         </tr>
@@ -72,7 +74,9 @@
     </div>
 </div>
 
-<md-button ng-click="$ctrl.newUser()" aria-label="Add user" class="md-fab md-fab-bottom-right">
+
+<md-button ng-click="$ctrl.newUser()" aria-label="Add user" class="md-fab md-fab-bottom-right md-fab-scrollable"
+           ng-class="{'gv-help-displayed': $ctrl.$rootScope.helpDisplayed}">
   <md-tooltip md-direction="top" md-visible="false">Add user</md-tooltip>
   <ng-md-icon icon="add"></ng-md-icon>
 </md-button>

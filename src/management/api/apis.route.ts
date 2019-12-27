@@ -18,15 +18,14 @@ import ApisController from './apis.controller';
 import TagService from '../../services/tag.service';
 import GroupService from '../../services/group.service';
 import * as _ from 'lodash';
-import NotificationSettingsService from '../../services/notificationSettings.service';
-import {Scope} from '../../entities/scope';
 import ApiService from "../../services/api.service";
+import {StateProvider} from '../../../node_modules/@uirouter/angularjs';
 import TenantService from "../../services/tenant.service";
 import UserService from "../../services/user.service";
 
 export default apisRouterConfig;
 
-function apisRouterConfig($stateProvider) {
+function apisRouterConfig($stateProvider: StateProvider) {
   'ngInject';
   $stateProvider
     .state('management.apis', {
@@ -79,8 +78,6 @@ function apisRouterConfig($stateProvider) {
     .state('management.apis.new', {
       url: '/new',
       template: require('./creation/newApi.html'),
-      controller: 'NewApiController',
-      controllerAs: 'newApiCtrl',
       data: {
         perms: {
           only: ['management-api-c']
@@ -133,6 +130,11 @@ function apisRouterConfig($stateProvider) {
         devMode: true,
         ncyBreadcrumb: {
           label: 'APIs'
+        }
+      },
+      params: {
+        q: {
+          dynamic: true
         }
       }
     });

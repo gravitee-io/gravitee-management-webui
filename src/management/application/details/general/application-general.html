@@ -17,21 +17,17 @@
 -->
 <form name="formApplication" ng-submit="$ctrl.update()" novalidate>
   <div class="gv-forms" layout="column" permission permission-only="'application-definition-r'">
-    <h1>{{$ctrl.application.name}}
-      <small ng-if="$ctrl.application.type" style="color:grey;">( {{$ctrl.application.type}} )</small>
-    </h1>
-
+    <application-header application="$ctrl.application"></application-header>
     <div class="gv-form">
       <h2>General</h2>
       <div class="gv-form-content" layout="column">
 
         <md-input-container flex>
           <label>Name</label>
-          <input ng-model="$ctrl.application.name" type="text" name="name" minlength="4" md-maxlength="50" required>
+          <input ng-model="$ctrl.application.name" type="text" name="name" md-maxlength="512" required>
           <div class="hint" ng-if="formApplication.name.$valid || formApplication.name.$pristine">Application name</div>
           <div ng-messages="formApplication.name.$error">
             <div ng-message="required">Application name is required.</div>
-            <div ng-message="minlength">The name has to be more than 4 characters long.</div>
             <div ng-message="md-maxlength">The name has to be less than 50 characters long.</div>
           </div>
         </md-input-container>
@@ -116,6 +112,14 @@
                         ngclipboard-success="$ctrl.onCopyClientSecretSuccess(e);" role="button">
             </ng-md-icon>
           </span>
+
+          <md-button class="md-raised md-primary" type="button"
+                     style="height: 36px"
+                     ng-if="$ctrl.application.settings.oauth.renew_client_secret_supported"
+                     ng-click="$ctrl.renewClientSecret($event)"
+                     permission permission-only="'application-definition-u'">
+            Renew secret
+          </md-button>
         </div>
 
         <md-input-container class="md-block">
@@ -131,11 +135,11 @@
             </md-option>
           </md-select>
           <div class="hint">
-            Grant types allowed for the client. Please try to set only grant types you need for security reasons.
+            Grant types allowed for the client. Please set only grant types you need for security reasons.
           </div>
         </md-input-container>
 
-        <md-input-container class="md-block">
+        <md-input-container class="md-block" ng-if="$ctrl.applicationType.oauth.requires_redirect_uris">
           <label>Redirect URIs</label>
           <md-chips required
                     ng-model="$ctrl.application.settings.oauth.redirect_uris"
@@ -163,7 +167,7 @@
       </div>
     </div>
 
-    <div class="md-actions gravitee-api-save-button" layout="row">
+    <div class="md-actions gravitee-api-save-button" layout="row" ng-if="$ctrl.application.status !=='ARCHIVED'">
       <md-button class="md-raised md-primary" type="submit"
                  ng-disabled="formApplication.$invalid || formApplication.$pristine"
                  permission permission-only="'application-definition-u'">

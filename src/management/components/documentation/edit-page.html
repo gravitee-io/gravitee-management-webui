@@ -22,7 +22,7 @@
             <h1>{{$ctrl.page.name}}</h1>
             <a ng-click="$ctrl.cancel()">Back to Documentation</a>
         </div>
-        <div>
+        <div ng-if="$ctrl.canUpdate">
           <md-button class="md-raised md-primary" type="button" ng-if="$ctrl.page.source" ng-click="$ctrl.fetch()">
             Fetch
           </md-button>
@@ -35,7 +35,8 @@
           <md-button ng-if="$ctrl.page.metadata.edit_url" type="button" style="padding: 0 6px;"
                      target="_blank" href="{{$ctrl.page.metadata.edit_url}}"
                      aria-label="Edit">
-            <ng-md-icon icon="open_in_new" style="fill: #212121;padding: 0;vertical-align: inherit;"></ng-md-icon>
+              <md-icon md-svg-icon="assets/logo_{{$ctrl.page.metadata.provider_name | lowercase}}-fetcher.svg"
+                       style="height:24px; padding:0; vertical-align:inherit;"></md-icon>
             Edit on {{$ctrl.page.metadata.provider_name}}
           </md-button>
         </div>
@@ -61,8 +62,8 @@
         <h2></h2>
         <div class="gv-form-content" layout="column">
 
-            <div ng-if="editorReadonly" class="gv-page-draft-banner">
-                <ng-md-icon icon="warning" style="fill: #ce4844"></ng-md-icon>
+            <div ng-if="editorReadonly && $ctrl.canUpdate" class="gv-page-draft-banner">
+                <ng-md-icon icon="warning" class="gv-warning"></ng-md-icon>
                 Page's content is retrieved from an external source. If you want to edit content manually, <a ng-click="$ctrl.goToExternalSource()">please change the configuration</a>.
             </div>
             <md-tabs md-dynamic-height md-selected="$ctrl.selectedTab">
@@ -74,36 +75,37 @@
                         <!-- edit SWAGGER inline -->
                         <div ng-if="'SWAGGER' === $ctrl.page.type" style="display: inline-block; width: 100%;">
                             <div layout="row" style="max-height: 900px; overflow: auto;">
-                                <md-input-container class="md-block" flex="50">
-                        <textarea
-                                ui-codemirror
-                                ui-codemirror-opts="$ctrl.codeMirrorOptions"
-                                ng-model="$ctrl.page.content"
-                                aria-label="page content"
-                                rows="5" style="overflow-y: scroll;"
-                                ng-disabled="$ctrl.page.source"
-                                md-autofocus></textarea>
+                                <md-input-container class="md-block" flex="50" ng-if="$ctrl.canUpdate">
+                                  <textarea
+                                    ui-codemirror
+                                    ui-codemirror-opts="$ctrl.codeMirrorOptions"
+                                    ng-model="$ctrl.page.content"
+                                    aria-label="page content"
+                                    rows="5" style="overflow-y: scroll;"
+                                    ng-disabled="$ctrl.page.source"
+                                    md-autofocus></textarea>
                                 </md-input-container>
-                                <gv-page flex="50" page="$ctrl.page" enable-try-it="false" edit="true"></gv-page>
+                                <gv-page flex page="$ctrl.page" edit="$ctrl.canUpdate"></gv-page>
                             </div>
                         </div>
 
                         <!-- edit MARKDOWN inline -->
                         <div ng-if="'MARKDOWN' === $ctrl.page.type" style="display: inline-block; width: 100%;">
                             <md-input-container class="md-block">
-                                <gv-page-editor-markdown page="$ctrl.page"></gv-page-editor-markdown>
+                              <gv-page-editor-markdown ng-if="$ctrl.canUpdate" page="$ctrl.page"></gv-page-editor-markdown>
+                              <gv-page-markdown ng-if="!$ctrl.canUpdate" page="$ctrl.page"></gv-page-markdown>
                             </md-input-container>
                         </div>
 
                         <!-- import file -->
-                        <div style="display: inline-block;">
+                        <div style="display: inline-block;" ng-if="$ctrl.canUpdate">
                             <h4>Select a file to import:</h4>
                             <input type="file" filecontent="pageContentFile.content" filename="pageContentFile.name" >
                         </div>
                     </md-tab-body>
                 </md-tab>
 
-                <md-tab md-on-select="currentTab=$ctrl.selectTab(1)">
+                <md-tab md-on-select="currentTab=$ctrl.selectTab(1)" ng-if="$ctrl.canUpdate">
                     <md-tab-label>Configuration</md-tab-label>
                     <md-tab-body>
                         <h3>General</h3>
@@ -125,48 +127,60 @@
                         </md-input-container>
                         <!-- SWAGGER Configuration -->
                         <div ng-if="$ctrl.page.type === 'SWAGGER'" layout="column">
-                            <h3>Swagger</h3>
-                            <md-checkbox ng-model="$ctrl.page.configuration.tryIt" ng-true-value="'true'" ng-false-value="'false'">
+
+                            <h3>OpenAPI documentation viewer: </h3>
+                            <md-radio-group ng-model="$ctrl.page.configuration.viewer">
+                                <md-radio-button value="Swagger" class="md-primary">Swagger-UI (Default)</md-radio-button>
+                                <md-radio-button value="Redoc">Redoc</md-radio-button>          
+                            </md-radio-group>
+
+                            <div ng-if="$ctrl.page.configuration.viewer === 'Swagger'" layout="column">
+                                <h3>Swagger</h3>
+                                <md-checkbox ng-model="$ctrl.page.configuration.tryIt" ng-true-value="'true'" ng-false-value="'false'">
                                 Enable "Try it!" mode
-                            </md-checkbox>
-                            <md-input-container class="md-block">
-                                <label>Base URL</label>
-                                <input type="text" ng-model="$ctrl.page.configuration.tryItURL" ng-disabled="$ctrl.page.configuration.tryIt === 'false'">
-                                <div class="hint">Base URL used to try the API</div>
-                            </md-input-container>
-                            <md-checkbox ng-model="$ctrl.page.configuration.showURL" ng-true-value="'true'" ng-false-value="'false'">
-                                Show the URL to download the content
-                            </md-checkbox>
-                            <md-checkbox ng-model="$ctrl.page.configuration.displayOperationId" ng-true-value="'true'" ng-false-value="'false'">
-                                Display the operationId in the operations list
-                            </md-checkbox>
-                            <md-input-container class="md-block">
-                                <label>Default expansion setting for the operations and tags</label>
-                                <md-select ng-model="$ctrl.page.configuration.docExpansion">
-                                    <md-option ng-value="'list'">Expands only the tags</md-option>
-                                    <md-option ng-value="'full'">Expands the tags and operations</md-option>
-                                    <md-option ng-value="'none'">Expands nothing</md-option>
-                                </md-select>
-                            </md-input-container>
-                            <md-checkbox ng-model="$ctrl.page.configuration.enableFiltering" ng-true-value="'true'" ng-false-value="'false'" class="md-block">
-                                Add a top bar to filter content
-                            </md-checkbox>
-                            <md-checkbox ng-model="$ctrl.page.configuration.showExtensions" ng-true-value="'true'" ng-false-value="'false'" class="md-block">
-                                Display vendor extension (X-) fields and values for Operations, Parameters, and Schema
-                            </md-checkbox>
-                            <md-checkbox ng-model="$ctrl.page.configuration.showCommonExtensions" ng-true-value="'true'" ng-false-value="'false'">
-                                Display extensions (pattern, maxLength, minLength, maximum, minimum) fields and values for Parameters
-                            </md-checkbox>
-                            <md-input-container class="md-block">
-                                <label>Number of max tagged operations displayed</label>
-                                <input type="number" ng-model="$ctrl.page.configuration.maxDisplayedTags">
-                                <div class="hint">Limits the number of tagged operations displayed to at most this many (-1 means show all operations).</div>
-                            </md-input-container>
+                                </md-checkbox>
+                                <md-checkbox ng-model="$ctrl.page.configuration.tryItAnonymous" ng-true-value="'true'" ng-false-value="'false'">
+                                Allow "Try it!" for anonymous users
+                                </md-checkbox>
+                                <md-input-container class="md-block">
+                                    <label>Base URL</label>
+                                    <input type="text" ng-model="$ctrl.page.configuration.tryItURL" ng-disabled="$ctrl.page.configuration.tryIt === 'false'">
+                                    <div class="hint">Base URL used to try the API</div>
+                                </md-input-container>
+                                <md-checkbox ng-model="$ctrl.page.configuration.showURL" ng-true-value="'true'" ng-false-value="'false'">
+                                    Show the URL to download the content
+                                </md-checkbox>
+                                <md-checkbox ng-model="$ctrl.page.configuration.displayOperationId" ng-true-value="'true'" ng-false-value="'false'">
+                                    Display the operationId in the operations list
+                                </md-checkbox>
+                                <md-input-container class="md-block">
+                                    <label>Default expansion setting for the operations and tags</label>
+                                    <md-select ng-model="$ctrl.page.configuration.docExpansion">
+                                        <md-option ng-value="'list'">Expands only the tags</md-option>
+                                        <md-option ng-value="'full'">Expands the tags and operations</md-option>
+                                        <md-option ng-value="'none'">Expands nothing</md-option>
+                                    </md-select>
+                                </md-input-container>
+                                <md-checkbox ng-model="$ctrl.page.configuration.enableFiltering" ng-true-value="'true'" ng-false-value="'false'" class="md-block">
+                                    Add a top bar to filter content
+                                </md-checkbox>
+                                <md-checkbox ng-model="$ctrl.page.configuration.showExtensions" ng-true-value="'true'" ng-false-value="'false'" class="md-block">
+                                    Display vendor extension (X-) fields and values for Operations, Parameters, and Schema
+                                </md-checkbox>
+                                <md-checkbox ng-model="$ctrl.page.configuration.showCommonExtensions" ng-true-value="'true'" ng-false-value="'false'">
+                                    Display extensions (pattern, maxLength, minLength, maximum, minimum) fields and values for Parameters
+                                </md-checkbox>
+                                <md-input-container class="md-block">
+                                    <label>Number of max tagged operations displayed</label>
+                                    <input type="number" ng-model="$ctrl.page.configuration.maxDisplayedTags">
+                                    <div class="hint">Limits the number of tagged operations displayed to at most this many (-1 means show all operations).</div>
+                                </md-input-container>
+                            </div>
                         </div>
                     </md-tab-body>
                 </md-tab>
 
-                <md-tab md-on-select="currentTab=$ctrl.selectTab(2)">
+                <md-tab md-on-select="currentTab=$ctrl.selectTab(2)" ng-if="$ctrl.canUpdate">
                     <md-tab-label>External Source</md-tab-label>
                     <md-tab-body>
                         <div style="display: inline-block;">
@@ -186,7 +200,7 @@
                     </md-tab-body>
                 </md-tab>
 
-                <md-tab md-on-select="currentTab=$ctrl.selectTab(3)">
+                <md-tab md-on-select="currentTab=$ctrl.selectTab(3)" ng-if="$ctrl.canUpdate">
                     <md-tab-label>Access Control</md-tab-label>
                     <md-tab-body>
                         <h3>Groups Authorizations</h3>
@@ -202,7 +216,7 @@
                 </md-tab>
             </md-tabs>
 
-            <div class="md-actions gravitee-api-save-button" layout="row" style="padding-top: 32px;">
+            <div class="md-actions gravitee-api-save-button" layout="row" style="padding-top: 32px;" ng-if="$ctrl.canUpdate">
                 <md-button class="md-raised md-primary" type="submit" ng-click="$ctrl.save()" ng-disabled="!$ctrl.page.name">
                     Save
                 </md-button>

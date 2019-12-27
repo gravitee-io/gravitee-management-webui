@@ -16,10 +16,7 @@
 
 -->
 <div class="gv-forms" layout="column">
-  <h1>{{$ctrl.application.name}}
-    <small ng-if="$ctrl.application.type" style="color:grey;">( {{$ctrl.application.type}} )</small>
-  </h1>
-
+  <application-header application="$ctrl.application"></application-header>
   <div class="gv-form">
     <h2>Members</h2>
     <div class="gv-form-content" layout="column">
@@ -37,7 +34,9 @@
             <tr md-row ng-repeat="member in $ctrl.members | orderBy: order">
               <td md-cell>
                 <md-list-item class="md-2-line contact-item">
-                  <img ng-src="{{$ctrl.getMembershipAvatar(member)}}" class="md-avatar" alt="User avatar" />
+                  <img ng-src="{{$ctrl.getMembershipAvatar(member)}}"
+                       onerror="this.src='assets/default_photo.png'"
+                       class="md-avatar" alt="User avatar" />
                   <div class="md-list-item-text compact">
                     <span ng-if="member.role == 'PRIMARY_OWNER'"><b>{{$ctrl.getMembershipDisplay(member)}}</b></span>
                     <span ng-if="member.role != 'PRIMARY_OWNER'">{{$ctrl.getMembershipDisplay(member)}}</span>
@@ -100,7 +99,8 @@
               <md-item-template>
                 <md-list-item class="md-2-line contact-item">
                   <div class="md-list-item-text compact">
-                    <h3>{{user.displayName}}</h3>
+                    <span style="font-size: medium;">{{user.displayName}}</span>
+                    <span style="padding-left: 24px; font-size: small;" ng-if="user.email">{{user.email}}</span>
                   </div>
                 </md-list-item>
               </md-item-template>

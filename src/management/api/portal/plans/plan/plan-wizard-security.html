@@ -17,7 +17,7 @@
 -->
 <md-step label="Secure" md-complete="$ctrl.parent.vm.stepData[1].completed">
   <md-step-body>
-    <md-content layout-padding class="api-creation-general-content api-creation-content">
+    <md-content layout-padding class="gv-creation-general-content gv-creation-content">
       <section>
         <md-subheader>Authentication</md-subheader>
         <form name="$ctrl.planGeneralForm">
@@ -45,6 +45,21 @@
       </section>
 
       <br />
+
+      <section ng-if="$ctrl.securitySchema">
+        <md-subheader>Additional selection rule</md-subheader>
+        <form name="$ctrl.planGeneralForm">
+          <div layout-gt-sm="row">
+            <md-input-container class="md-block" flex-gt-sm>
+              <input ng-model="$ctrl.parent.plan.selection_rule" type="text" placeholder="Selection Rule" name="selectionrule">
+              <div class="hint" style="top: 40px;">
+                Define an additional rule when you're managing multiple plans of the same type to improve the plan's selection process.
+                For example, if you want to check the issuer of a jwt token: #context.attributes['jwt'].claims['iss'] == 'my-issuer'
+              </div>
+            </md-input-container>
+          </div>
+        </form>
+      </section>
 
       <md-step-actions layout="row">
         <div flex>

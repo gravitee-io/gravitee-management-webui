@@ -18,7 +18,9 @@
 <div class="gv-forms" layout="column">
     <div layout="row" layout-align="start end" class="gv-forms-header">
         <h1 class="user">
-          <img ng-src="{{$ctrl.getUserPicture()}}" class="md-avatar" alt="User picture" />{{$ctrl.selectedUser.displayName}}
+          <img ng-src="{{$ctrl.getUserPicture()}}"
+               onerror="this.src='assets/default_photo.png'"
+               class="md-avatar" alt="User picture" />{{$ctrl.selectedUser.displayName}}
 
           <a ui-sref="management.settings.users" style="font-size: 12px; font-weight: normal;">Back to users</a>
         </h1>
@@ -192,7 +194,8 @@
 </div>
 
 <md-button permission permission-only="['management-user-c']"
-           class="md-fab md-fab-bottom-right"
+           class="md-fab md-fab-bottom-right md-fab-scrollable"
+           ng-class="{'gv-help-displayed': $ctrl.$rootScope.helpDisplayed}"
            aria-label="Add"
            ng-click="$ctrl.addGroupDialog()">
     <ng-md-icon icon="add"></ng-md-icon>

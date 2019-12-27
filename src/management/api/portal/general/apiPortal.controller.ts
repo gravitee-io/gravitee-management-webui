@@ -18,6 +18,7 @@ import angular = require('angular');
 import SidenavService from '../../../../components/sidenav/sidenav.service';
 import UserService from '../../../../services/user.service';
 import {QualityMetrics} from "../../../../entities/qualityMetrics";
+import ApiService from "../../../../services/api.service";
 
 class ApiPortalController {
   private initialApi: any;
@@ -36,7 +37,7 @@ class ApiPortalController {
   private isQualityEnabled: boolean;
 
   constructor(
-    private ApiService,
+    private ApiService: ApiService,
     private NotificationService,
     private UserService: UserService,
     private $scope,
@@ -50,7 +51,8 @@ class ApiPortalController {
     private resolvedGroups,
     private resolvedTags,
     private resolvedTenants,
-    private Constants
+    private Constants,
+    private qualityRules
   ) {
     'ngInject';
 
@@ -128,6 +130,7 @@ class ApiPortalController {
 
     this.$scope.$on('apiChangeSuccess', (event, args) => {
       this.api = args.api;
+      this.computeQualityMetrics();
     });
 
     this.isQualityEnabled = Constants.apiQualityMetrics && Constants.apiQualityMetrics.enabled;
@@ -139,6 +142,9 @@ class ApiPortalController {
     this.qualityMetricsDescription.set("api.quality.metrics.logo.weight", "Put your own logo");
     this.qualityMetricsDescription.set("api.quality.metrics.views.weight", "Link your API to views");
     this.qualityMetricsDescription.set("api.quality.metrics.labels.weight", "Add labels to your API");
+    _.forEach(this.qualityRules, (qualityRule) => {
+      this.qualityMetricsDescription.set(qualityRule.id, qualityRule.description);
+    });
   }
 
   $onInit() {
@@ -246,19 +252,22 @@ class ApiPortalController {
   delete(id) {
     let that = this;
     this.$mdDialog.show({
-      controller: 'DialogConfirmController',
+      controller: 'DialogConfirmAndValidateController',
       controllerAs: 'ctrl',
-      template: require('../../../../components/dialog/confirmWarning.dialog.html'),
+      template: require('../../../../components/dialog/confirmAndValidate.dialog.html'),
       clickOutsideToClose: true,
       locals: {
-        title: 'Are you sure you want to delete \'' + this.api.name + '\' API ?',
-        msg: '',
-        confirmButton: 'Delete'
+        title: 'Are you sure you want to delete \'' + this.api.name + '\'?',
+        warning: 'This operation is irreversible.',
+        msg: 'The API must be stopped and without any active plans and subscriptions.',
+        validationMessage: 'Please, type in the name of the api <code>'+ this.api.name +'</code> to confirm.',
+        validationValue: this.api.name,
+        confirmButton: 'Yes, delete this API.'
       }
     }).then(function (response) {
       if (response) {
         that.ApiService.delete(id).then(() => {
-          that.NotificationService.show('API \'' + that.initialApi.name + '\' has been removed');
+          that.NotificationService.show('API ' + that.initialApi.name + ' has been removed');
           that.$state.go('management.apis.list', {}, {reload: true});
         });
       }
@@ -304,7 +313,7 @@ class ApiPortalController {
     });
   }
 
-  showExportDialog(showExportVersion) {
+  showExportDialog() {
     this.$mdDialog.show({
       controller: 'DialogApiExportController',
       controllerAs: 'dialogApiExportCtrl',
@@ -361,7 +370,7 @@ class ApiPortalController {
       template: require('../../../../components/dialog/confirmWarning.dialog.html'),
       clickOutsideToClose: true,
       locals: {
-        title: `Are you sure you want to ${started ? 'stop' : 'start'} the API ?`,
+        title: `Are you sure you want to ${started ? 'stop' : 'start'} the API?`,
         msg: '',
         confirmButton: (started ? 'stop' : 'start')
       }
@@ -372,18 +381,110 @@ class ApiPortalController {
             this.api.state = 'stopped';
             this.api.etag = response.headers('etag');
             this.$rootScope.$broadcast("apiChangeSuccess", {api: this.api});
-            this.NotificationService.show(`API ${this.api.name} has been stopped!`);
+            this.NotificationService.show(`API ${this.api.name} has been stopped with success`);
           });
         } else {
           this.ApiService.start(this.api).then((response) => {
             this.api.state = 'started';
             this.api.etag = response.headers('etag');
-            this.NotificationService.show(`API ${this.api.name} has been started!`);
+            this.NotificationService.show(`API ${this.api.name} has been started with success`);
             this.$rootScope.$broadcast("apiChangeSuccess", {api: this.api});
           });
         }
       }
-    })
+    });
+  }
+
+  changeApiLifecycle(lifecycleState: string) {
+    let clonedApi = _.cloneDeep(this.api);
+    clonedApi.lifecycle_state = lifecycleState;
+    let actionLabel = lifecycleState.slice(0, -1);
+    actionLabel = actionLabel.replace('publishe', 'publish');
+    this.$mdDialog.show({
+      controller: 'DialogConfirmController',
+      controllerAs: 'ctrl',
+      template: require('../../../../components/dialog/confirmWarning.dialog.html'),
+      clickOutsideToClose: true,
+      locals: {
+        title: `Are you sure you want to ${actionLabel} the API?`,
+        msg: '',
+        confirmButton: _.capitalize(actionLabel)
+      }
+    }).then((response: boolean) => {
+      if (response) {
+        this.api = clonedApi;
+        this.ApiService.update(clonedApi).then((response) => {
+          this.api = response.data;
+          this.api.etag = response.headers('etag');
+          this.$rootScope.$broadcast("apiChangeSuccess", {api: this.api});
+          this.NotificationService.show(`API ${this.api.name} has been ${lifecycleState} with success`);
+        });
+      }
+    });
+  }
+
+  canAskForReview(): boolean {
+    return this.Constants.apiReview.enabled &&
+      (this.api.workflow_state === 'draft' || this.api.workflow_state === 'request_for_changes' || !this.api.workflow_state);
+  }
+
+  canChangeLifecycle(): boolean {
+    return !this.Constants.apiReview.enabled || (this.Constants.apiReview.enabled && (!this.api.workflow_state || this.api.workflow_state === 'review_ok'));
+  }
+
+  canChangeApiLifecycle(): boolean {
+    if (this.Constants.apiReview.enabled) {
+      return !this.api.workflow_state || this.api.workflow_state === 'review_ok';
+    } else {
+      return this.api.lifecycle_state==='created' || this.api.lifecycle_state==='published' || this.api.lifecycle_state==='unpublished';
+    }
+  }
+
+  canPublish(): boolean {
+    return (!this.api.lifecycle_state || this.api.lifecycle_state==='created' || this.api.lifecycle_state==='unpublished');
+  }
+
+  isDeprecated(): boolean {
+    return this.api.lifecycle_state === 'deprecated';
+  }
+
+  askForReview() {
+    this.$mdDialog.show({
+      controller: 'DialogConfirmController',
+      controllerAs: 'ctrl',
+      template: require('../../../../components/dialog/confirmWarning.dialog.html'),
+      clickOutsideToClose: true,
+      locals: {
+        title: `Are you sure you want to ask for a review of the API?`,
+        msg: '',
+        confirmButton: 'Ask for review'
+      }
+    }).then((response: boolean) => {
+      if (response) {
+        this.ApiService.askForReview(this.api).then((response) => {
+          this.api.workflow_state = 'in_review';
+          this.api.etag = response.headers('etag');
+          this.$rootScope.$broadcast("apiChangeSuccess", {api: this.api});
+          this.NotificationService.show(`Review has been asked for API ${this.api.name}`);
+        });
+      }
+    });
+  }
+
+  showDuplicateDialog() {
+    this.$mdDialog.show({
+      controller: 'DialogApiDuplicateController',
+      controllerAs: '$ctrl',
+      template: require('./dialog/apiDuplicate.dialog.html'),
+      clickOutsideToClose: true,
+      locals: {
+        api: this.$scope.$parent.apiCtrl.api
+      }
+    }).then((api) => {
+      if (api) {
+        this.$state.go('management.apis.detail.portal.general', {apiId: api.id});
+      }
+    });
   }
 }
 

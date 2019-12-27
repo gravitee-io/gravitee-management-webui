@@ -15,7 +15,8 @@
  */
 const ApplicationAnalyticsComponent: ng.IComponentOptions = {
   bindings: {
-    application: '<'
+    application: '<',
+    dashboards: '<'
   },
   controller: 'ApplicationAnalyticsController',
   template: require('./application-analytics.html')

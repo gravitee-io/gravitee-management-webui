@@ -94,11 +94,11 @@ class UserService {
     return this.currentUser && this.currentUser.allowedTo(permissions);
   }
 
-  current(forceRefresh?): ng.IPromise<User> {
+  current(): ng.IPromise<User> {
     let that = this;
 
-    if (forceRefresh || !this.currentUser || !this.currentUser.authenticated) {
-      const promises = [this.$http.get(this.userURL, {silentCall: true, forceSessionExpired: forceRefresh} as ng.IRequestShortcutConfig)];
+    if (!this.currentUser || !this.currentUser.authenticated) {
+      const promises = [this.$http.get(this.userURL, {silentCall: true, forceSessionExpired: true} as ng.IRequestShortcutConfig)];
 
       const applicationRegex = /applications\/([\w|\-]+)/;
       let applicationId = applicationRegex.exec(this.$location.$$path);
@@ -202,12 +202,16 @@ class UserService {
 
   logout(): ng.IPromise<any> {
     return this.$http.post(`${this.userURL}logout`, {}).then(() => {
-      this.currentUser = new User();
-      this.currentUser.authenticated = false;
-      this.isLogout = true;
-      this.$window.localStorage.removeItem('satellizer_token');
-      this.$cookies.remove('Auth-Graviteeio-APIM');
+      this.removeCurrentUserData();
     });
+  }
+
+  removeCurrentUserData() {
+    this.currentUser = new User();
+    this.currentUser.authenticated = false;
+    this.isLogout = true;
+    this.$window.localStorage.removeItem('satellizer_token');
+    this.$cookies.remove('Auth-Graviteeio-APIM');
   }
 
   currentUserPicture(): string {

@@ -31,6 +31,8 @@ import {StateParams} from '@uirouter/core';
 import EntrypointService from "../../services/entrypoint.service";
 import ClientRegistrationProviderService from "../../services/clientRegistrationProvider.service";
 import _ = require('lodash');
+import QualityRuleService from "../../services/qualityRule.service";
+import DashboardService from "../../services/dashboard.service";
 
 export default configurationRouterConfig;
 
@@ -336,7 +338,7 @@ function configurationRouterConfig($stateProvider) {
       component: 'editPage',
       resolve: {
         resolvedPage: (DocumentationService: DocumentationService, $stateParams: StateParams) =>
-          DocumentationService.get2($stateParams.pageId).then(response => response.data),
+          DocumentationService.get(null, $stateParams.pageId).then(response => response.data),
         resolvedGroups: (GroupService: GroupService) => {
           return GroupService.list().then(response => {
             return response.data;
@@ -615,6 +617,9 @@ function configurationRouterConfig($stateProvider) {
       url: '/analytics',
       component: 'analyticsSettings',
       resolve: {
+        dashboardsPlatform: (DashboardService: DashboardService) => DashboardService.list('PLATFORM').then(response => response.data),
+        dashboardsApi: (DashboardService: DashboardService) => DashboardService.list('API').then(response => response.data),
+        dashboardsApplication: (DashboardService: DashboardService) => DashboardService.list('APPLICATION').then(response => response.data)
       },
       data: {
         menu: null,
@@ -623,6 +628,35 @@ function configurationRouterConfig($stateProvider) {
         },
         perms: {
           only: ['portal-settings-r']
+        }
+      }
+    })
+    .state('management.settings.dashboardnew', {
+      url: '/analytics/dashboard/:type/new',
+      component: 'dashboard',
+      data: {
+        menu: null,
+        docs: {
+          page: 'management-configuration-dashboard'
+        },
+        perms: {
+          only: ['management-dashboard-c']
+        }
+      }
+    })
+    .state('management.settings.dashboard', {
+      url: '/analytics/dashboard/:type/:dashboardId',
+      component: 'dashboard',
+      resolve: {
+        dashboard: (DashboardService: DashboardService, $stateParams) => DashboardService.get($stateParams.dashboardId).then(response => response.data)
+      },
+      data: {
+        menu: null,
+        docs: {
+          page: 'management-configuration-dashboard'
+        },
+        perms: {
+          only: ['management-dashboard-u']
         }
       }
     })
@@ -640,6 +674,51 @@ function configurationRouterConfig($stateProvider) {
         },
         perms: {
           only: ['portal-api_header-r']
+        }
+      }
+    })
+    .state('management.settings.apiQuality', {
+      url: '/apiquality',
+      component: 'configApiQuality',
+      resolve: {
+        qualityRules: (QualityRuleService: QualityRuleService) => QualityRuleService.list().then(response => response.data)
+      },
+      data: {
+        menu: null,
+        docs: {
+          page: 'management-configuration-apiquality'
+        },
+        perms: {
+          only: ['portal-settings-r']
+        }
+      }
+    })
+    .state('management.settings.qualityRulenew', {
+      url: '/apiquality/new',
+      component: 'qualityRule',
+      data: {
+        menu: null,
+        docs: {
+          page: 'management-configuration-apiquality'
+        },
+        perms: {
+          only: ['management-quality_rule-c']
+        }
+      }
+    })
+    .state('management.settings.qualityRule', {
+      url: '/apiquality/:qualityRuleId',
+      component: 'qualityRule',
+      resolve: {
+        qualityRule: (QualityRuleService: QualityRuleService, $stateParams) => QualityRuleService.get($stateParams.qualityRuleId).then(response => response.data)
+      },
+      data: {
+        menu: null,
+        docs: {
+          page: 'management-configuration-apiquality'
+        },
+        perms: {
+          only: ['management-quality_rule-u']
         }
       }
     })
@@ -710,10 +789,6 @@ function configurationRouterConfig($stateProvider) {
     .state('management.settings.api_logging', {
       url: '/api_logging',
       component: 'apiLogging',
-      resolve: {
-        dictionaries: (DictionaryService: DictionaryService) =>
-          DictionaryService.list().then(response => response.data)
-      },
       data: {
         menu: null,
         docs: {

@@ -34,15 +34,15 @@ class ApiPathMappingsController {
     private NotificationService: NotificationService,
     private $scope,
     private $rootScope,
-    DocumentationService: DocumentationService
+    DocumentationService: DocumentationService,
+    private $state
   ) {
     'ngInject';
     this.api = this.$scope.$parent.apiCtrl.api;
     this.api.path_mappings = _.sortBy(this.api.path_mappings);
     const q = new DocumentationQuery();
-    q.api = this.api.id;
     q.type = "SWAGGER";
-    DocumentationService.search(q).then((response) => {
+    DocumentationService.search(q, this.api.id).then((response) => {
       this.swaggerDocs = response.data;
     });
 
@@ -54,6 +54,8 @@ class ApiPathMappingsController {
   update() {
     this.ApiService.update(this.api).then((updatedApi) => {
       this.onSave(updatedApi);
+    }, () => {
+      this.$state.reload();
     });
   }
 

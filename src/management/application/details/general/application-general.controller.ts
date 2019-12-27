@@ -71,7 +71,7 @@ class ApplicationGeneralController {
   }
 
   reset() {
-    this.application = _.cloneDeep(this.initialApplication);
+    _.assign(this.application, this.initialApplication);
     this.$scope.formApplication.$setPristine();
   }
 
@@ -83,18 +83,46 @@ class ApplicationGeneralController {
     ev.stopPropagation();
     let that = this;
     this.$mdDialog.show({
+      controller: 'DialogConfirmAndValidateController',
+      controllerAs: 'ctrl',
+      template: require('../../../../components/dialog/confirmAndValidate.dialog.html'),
+      clickOutsideToClose: true,
+      locals: {
+        title: 'Would you like to delete your application?',
+        warning: 'This operation is irreversible.',
+        msg: 'You will no longer be able to access this application.',
+        validationMessage: 'Please, type in the name of the application <code>'+ this.application.name +'</code> to confirm.',
+        validationValue: this.application.name,
+        confirmButton: 'Yes, delete this application.'
+      }
+    }).then(function (response) {
+      if (response) {
+        that.delete();
+      }
+    });
+  }
+
+  renewClientSecret(ev) {
+    ev.stopPropagation();
+    this.$mdDialog.show({
       controller: 'DialogConfirmController',
       controllerAs: 'ctrl',
       template: require('../../../../components/dialog/confirmWarning.dialog.html'),
       clickOutsideToClose: true,
       locals: {
-        msg: '',
-        title: 'Would you like to delete your application?',
-        confirmButton: 'Remove'
+        msg: 'By renewing the client secret, you will no longer be able to generate new access tokens and call APIs.',
+        title: 'Are you sure to renew the client secret?',
+        confirmButton: 'Renew'
       }
-    }).then(function (response) {
+    }).then( (response) => {
       if (response) {
-        that.delete();
+        this.ApplicationService.renewClientSecret(this.application.id)
+          .then((response) => {
+            this.NotificationService.show('Client secret has been renew');
+            this.application = response.data;
+            this.initialApplication = _.cloneDeep(this.application);
+            this.$scope.formApplication.$setPristine();
+          });
       }
     });
   }

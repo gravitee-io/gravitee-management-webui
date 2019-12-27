@@ -1,4 +1,7 @@
 .widget-card {
+  height: 100%;
+  overflow: scroll;
+  padding-bottom: 10px;
   & > md-card-title {
     padding-bottom: 0px;
     span.md-title {
@@ -27,6 +30,17 @@
   a:hover {
     color: #5a646d;
   }
+
+  & > md-card-content md-input-container, & > .gravitee-widget-draggable md-input-container {
+    margin-bottom: 0;
+    margin-top: 15px;
+    label {
+      margin-bottom: 0;
+    }
+    md-checkbox {
+      margin: 0;
+    }
+  }
 }
 
 .gravitee-widget-draggable {
@@ -42,4 +56,34 @@
   .buttons {
     margin-right: 10px !important;
   }
+}
+
+.gv-widget-stats-container {
+  margin-top: 10px;
+}
+
+.gv-widget-stats {
+  border: 1px solid;
+  border-radius: 8px;
+  margin: 15px;
+  padding: 15px;
+}
+
+.gv-widget-stats-sm {
+  margin: 10px;
+  padding: 10px;
+}
+
+.gv-widget-stats-value {
+  font-size: 30px;
+  text-align: center;
+}
+
+.gv-widget-stats-value-sm {
+  font-size: 25px;
+}
+
+.gv-widget-stats-label {
+  font-size: 15px;
+  text-align: center;
 }

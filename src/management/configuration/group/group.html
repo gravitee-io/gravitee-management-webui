@@ -27,7 +27,7 @@
         <div layout="row">
           <div layout="row" flex="50">
             <b style="margin: 26px 10px 26px 0">Default API Role</b>
-            <md-select placeholder="Default API Role" style="width: fit-content;min-width: 300px;"
+            <md-select placeholder="Default API Role" class="gv-input-number"
               ng-model="selectedApiRole" aria-label="Default API Role" ng-disabled="!$ctrl.canChangeDefaultApiRole()">
               <md-option ng-value="role.name"
                          ng-repeat="role in $ctrl.apiRoles"
@@ -36,7 +36,7 @@
           </div>
           <div layout="row" flex="50">
             <b style="margin: 26px 10px 26px 0">Default Application Role</b>
-            <md-select placeholder="Default Application Role" ng-model="selectedApplicationRole" style="width: fit-content;min-width: 300px;"
+            <md-select placeholder="Default Application Role" ng-model="selectedApplicationRole" class="gv-input-number"
                        aria-label="Default Application Role" ng-disabled="!$ctrl.canChangeDefaultApplicationRole()">
               <md-option ng-value="role.name"
                          ng-repeat="role in $ctrl.applicationRoles"
@@ -47,7 +47,7 @@
 
         <div permission permission-only="'management-group-u'">
           <div layout="column">
-            <md-input-container style="width: fit-content;min-width: 300px;">
+            <md-input-container class="gv-input-number">
               <label>Max members (default unlimited)</label>
               <input ng-model="$ctrl.group.max_invitation" type="number" min="0" max="99999">
             </md-input-container>
@@ -86,6 +86,9 @@
               <md-tab-body>
               <div style="margin: 16px 0 8px;">You can manage all members of this group.
                 <span permission permission-except="'management-group-u'" ng-if="$ctrl.group.max_invitation"> Limited to {{$ctrl.group.max_invitation}} members.</span>
+                <div ng-if="$ctrl.hasGroupAdmin() && !$ctrl.group.system_invitation && !$ctrl.group.email_invitation" style="font-weight: bold;">
+                  Enable email invitation and/or user search to allow the group administrator to add users.
+                </div>
               </div>
               <md-table-container>
                 <table md-table ng-init="orderGrp = 'displayName'">
@@ -246,8 +249,8 @@
     </div>
 </div>
 
-<md-fab-speed-dial ng-if="$ctrl.isSuperAdmin() || ($ctrl.group.system_invitation && $ctrl.group.email_invitation)"
-                   ng-if="$ctrl.canAddMembers()" md-direction="left" md-open="false" class="md-scale md-fab-bottom-right md-fab-scrollable"
+<md-fab-speed-dial ng-if="$ctrl.canAddMembers() || ($ctrl.group.system_invitation && $ctrl.group.email_invitation)"
+                   md-direction="left" md-open="false" class="md-scale md-fab-bottom-right md-fab-scrollable"
                    ng-class="{'gv-help-displayed': $ctrl.$rootScope.helpDisplayed}">
   <md-fab-trigger>
     <md-button aria-label="menu" class="md-fab md-success">
@@ -272,7 +275,7 @@
 
 <md-button ng-if="!$ctrl.isSuperAdmin() && !($ctrl.group.system_invitation && $ctrl.group.email_invitation) && ($ctrl.group.system_invitation || $ctrl.group.email_invitation)"
            ng-click="$ctrl.group.system_invitation?$ctrl.showAddMemberModal(): $ctrl.showInviteMemberModal()" aria-label="Add member" class="md-fab md-fab-bottom-right md-fab-scrollable"
-           ng-class="{'gv-help-displayed-btn': $ctrl.$rootScope.helpDisplayed}">
+           ng-class="{'gv-help-displayed': $ctrl.$rootScope.helpDisplayed}">
   <md-tooltip md-direction="top" md-visible="false">Add member</md-tooltip>
   <ng-md-icon icon="add"></ng-md-icon>
 </md-button>

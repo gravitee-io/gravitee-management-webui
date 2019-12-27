@@ -19,6 +19,9 @@ import * as _ from 'lodash';
 import UserService from "../../services/user.service";
 import {StateParams} from '@uirouter/core';
 import ApiService from "../../services/api.service";
+import TenantService from "../../services/tenant.service";
+import TagService from "../../services/tag.service";
+import DashboardService from "../../services/dashboard.service";
 
 export default applicationsConfig;
 
@@ -39,6 +42,9 @@ function applicationsConfig($stateProvider) {
           firstLevel: true,
           order: 20
         },
+        perms: {
+          only: ['management-application-r']
+        },
         devMode: true,
         docs: {
           page: 'management-applications'
@@ -51,6 +57,9 @@ function applicationsConfig($stateProvider) {
     .state('management.applications.create', {
       url: '/create',
       component: 'createApplication',
+      resolve: {
+        apis: (ApiService: ApiService) => ApiService.list(null, true).then(response => response.data)
+      },
       data: {
         perms: {
           only: ['portal-application-c']
@@ -59,9 +68,6 @@ function applicationsConfig($stateProvider) {
         docs: {
           page: 'management-create-application'
         }
-      },
-      resolve: {
-        applications: (ApplicationService: ApplicationService) => ApplicationService.list().then(response => response.data)
       }
     })
     .state('management.applications.application', {
@@ -102,13 +108,9 @@ function applicationsConfig($stateProvider) {
       },
       resolve: {
         groups: (UserService: UserService, GroupService: GroupService) => {
-          if (UserService.currentUser.isAdmin()) {
-            return GroupService.list().then((groups) => {
-              return groups.data;
-            });
-          } else {
-            return [];
-          }
+          return GroupService.list().then((groups) => {
+            return  _.filter(groups.data, "manageable");
+          });
         }
       }
     })
@@ -118,11 +120,27 @@ function applicationsConfig($stateProvider) {
       template: '<div ui-view></div>'
     })
     .state('management.applications.application.subscriptions.list', {
-      url: '',
+      url: '?page&size&:api&:status&:api_key',
       component: 'applicationSubscriptions',
       resolve: {
-        subscriptions: ($stateParams, ApplicationService: ApplicationService) =>
-          ApplicationService.listSubscriptions($stateParams.applicationId).then(response => response.data),
+        subscriptions: ($stateParams, ApplicationService: ApplicationService) => {
+          let query = "?page=" + $stateParams["page"]
+            + "&size=" + $stateParams["size"];
+
+          if ($stateParams["status"]) {
+            query += "&status=" + $stateParams["status"];
+          }
+
+          if ($stateParams["api"]) {
+            query += "&api=" + $stateParams["api"]
+          }
+
+          if ($stateParams["api_key"]) {
+            query += "&api_key=" + $stateParams["api_key"];
+          }
+
+          return ApplicationService.listSubscriptions($stateParams.applicationId, query).then(response => response.data)
+        },
 
         subscribers: ($stateParams, ApplicationService: ApplicationService) =>
           ApplicationService.getSubscribedAPI($stateParams.applicationId).then(response => response.data)
@@ -139,10 +157,34 @@ function applicationsConfig($stateProvider) {
         docs: {
           page: 'management-application-subscriptions'
         }
+      },
+      params: {
+        status: {
+          type: "string",
+          dynamic: true
+        },
+        api: {
+          type: "string",
+          dynamic: true
+        },
+        page: {
+          type: 'int',
+          value: 1,
+          dynamic: true
+        },
+        size: {
+          type: 'int',
+          value: 10,
+          dynamic: true
+        },
+        api_key: {
+          type: 'string',
+          dynamic: true
+        }
       }
     })
     .state('management.applications.application.subscriptions.subscription', {
-      url: '/:subscriptionId',
+      url: '/:subscriptionId?page&size&:api&:status&:api_key',
       component: 'applicationSubscription',
       resolve: {
         subscription: ($stateParams, ApplicationService: ApplicationService) =>
@@ -154,6 +196,45 @@ function applicationsConfig($stateProvider) {
         },
         docs: {
           page: 'management-application-subscriptions'
+        }
+      },
+      params: {
+        status: {
+          type: "string",
+          dynamic: true
+        },
+        api: {
+          type: "string",
+          dynamic: true
+        },
+        page: {
+          type: 'int',
+          value: 1,
+          dynamic: true
+        },
+        size: {
+          type: 'int',
+          value: 10,
+          dynamic: true
+        },
+        api_key: {
+          type: 'string',
+          dynamic: true
+        }
+      }
+    })
+    .state('management.applications.application.subscriptions.subscribe', {
+      url: '/subscribe',
+      component: 'applicationSubscribe',
+      resolve: {
+        apis: (ApiService: ApiService) => ApiService.list(null, true).then(response => response.data),
+        subscriptions: ($stateParams, ApplicationService: ApplicationService) =>
+          ApplicationService.listSubscriptions($stateParams.applicationId).then(response => response.data)
+      },
+      data: {
+        devMode: true,
+        perms: {
+          only: ['application-subscription-r']
         }
       }
     })
@@ -184,8 +265,11 @@ function applicationsConfig($stateProvider) {
       }
     })
     .state('management.applications.application.analytics', {
-      url: '/analytics?from&to&q',
+      url: '/analytics?from&to&q&dashboard',
       component: 'applicationAnalytics',
+      resolve: {
+        dashboards: (DashboardService: DashboardService) => DashboardService.list('APPLICATION').then(response => response.data)
+      },
       data: {
         menu: {
           label: 'Analytics',
@@ -211,11 +295,15 @@ function applicationsConfig($stateProvider) {
         q: {
           type: 'string',
           dynamic: true
+        },
+        dashboard: {
+          type: 'string',
+          dynamic: true
         }
       }
     })
     .state('management.applications.application.logs', {
-      url: '/logs?from&to&q',
+      url: '/logs?from&to&q&page&size',
       component: 'applicationLogs',
       data: {
         menu: {
@@ -242,6 +330,14 @@ function applicationsConfig($stateProvider) {
         q: {
           type: 'string',
           dynamic: true
+        },
+        page: {
+          type: 'int',
+          dynamic: true
+        },
+        size: {
+          type: 'int',
+          dynamic: true
         }
       },
       resolve: {
@@ -250,7 +346,7 @@ function applicationsConfig($stateProvider) {
       }
     })
     .state('management.applications.application.log', {
-      url: '/logs/:logId?timestamp&from&to&q',
+      url: '/logs/:logId?timestamp&from&to&q&page&size',
       component: 'applicationLog',
       resolve: {
         log: ($stateParams, ApplicationService: ApplicationService) =>

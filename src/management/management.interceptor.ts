@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import _ = require('lodash');
-
 import NotificationService from '../services/notification.service';
+import UserService from "../services/user.service";
 
 function interceptorConfig(
   $httpProvider: angular.IHttpProvider
@@ -27,33 +26,38 @@ function interceptorConfig(
 
   let sessionExpired;
 
-  const interceptorUnauthorized = ($q: angular.IQService, $injector: angular.auto.IInjectorService, $state): angular.IHttpInterceptor => ({
+  const interceptorUnauthorized = ($q: angular.IQService, $injector: angular.auto.IInjectorService, $location, $state): angular.IHttpInterceptor => ({
     responseError: function (error) {
       if (error.config && !error.config.tryItMode) {
         const unauthorizedError = !error || error.status === 401;
         let errorMessage = '';
 
         const notificationService = ($injector.get('NotificationService') as NotificationService);
+        const userService =  ($injector.get('UserService') as UserService);
+        const $timeout = $injector.get('$timeout');
         if (unauthorizedError) {
           if (error.config.headers.Authorization) {
             sessionExpired = false;
             errorMessage = 'Wrong user or password';
           } else {
-            const $timeout = $injector.get('$timeout');
+            // if on portal home do not redirect
+            error.config.forceSessionExpired =
+              $location.$$path !== ''
+              && $location.$$path !== '/'
+              && $location.$$path !== '/login'
+              && !$location.$$path.startsWith("/registration/confirm");
             if (error.config.forceSessionExpired || (!sessionExpired && !error.config.silentCall)) {
               sessionExpired = true;
               // session expired
               notificationService.showError(error, 'Session expired, redirecting to home...');
+              let redirectUri = $location.$$path;
               $timeout(function () {
-                $injector.get('$rootScope').$broadcast('graviteeLogout');
+                userService.removeCurrentUserData();
+                $injector.get('$rootScope').$broadcast('graviteeUserRefresh', {});
+                $injector.get('$rootScope').$broadcast('graviteeUserCancelScheduledServices');
+                $injector.get('$rootScope').$broadcast('graviteeLogout', {redirectUri: redirectUri});
               }, 2000);
-            } /*else {
-              $timeout(function () {
-                if (_.startsWith($state.current.name, 'management.') || $state.current.name === '') {
-                  $state.go('portal.home');
-                }
-              }, 100);
-            }*/
+            }
           }
         } else {
           if (error.status === 500) {
@@ -64,6 +68,10 @@ function interceptorConfig(
         }
         if (!sessionExpired && error && error.status > 0 && !error.config.silentCall) {
           notificationService.showError(error, errorMessage);
+          if (error.status === 403) {
+            // if the user try to access a forbidden resource (after redirection for example), do not stay on login form
+            $timeout(function () {$state.go('portal.home');});
+          }
         }
       }
 
@@ -80,12 +88,14 @@ function interceptorConfig(
       },
       responseError: function (error) {
         const notificationService = ($injector.get('NotificationService') as NotificationService);
-        if(error.config && !error.config.tryItMode) {
-          if (error && error.status <= 0) {
-            notificationService.showError('Server unreachable');
+        if (!error.config || !error.config.silentCall) {
+          if (error.config && !error.config.tryItMode) {
+            if (error && error.status <= 0 && error.xhrStatus !== "abort") {
+              notificationService.showError('Server unreachable');
+            }
+          } else {
+            notificationService.showError('Unable to call the remote service.');
           }
-        } else {
-          notificationService.showError('Unable to call the remote service.');
         }
         return $q.reject(error);
       }

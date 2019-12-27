@@ -21,18 +21,18 @@
     <h2></h2>
     <div class="gv-form-content" layout="column">
     <div class="gv-filters" flex>
-        <form ng-submit="$ctrl.doSearch()" name="$ctrl.subscriptionsFiltersForm">
+        <form ng-submit="$ctrl.search()" name="$ctrl.subscriptionsFiltersForm">
           <div layout-gt-sm="row">
-            <md-input-container class="md-block" flex-gt-sm flex="30">
+            <md-input-container class="md-block" flex-gt-sm flex="20">
               <label>Plan</label>
               <md-select ng-model="$ctrl.query.plans" placeholder="Plans" multiple>
                 <md-option ng-value="plan.id" ng-repeat="plan in $ctrl.plans track by plan.id">{{ plan.name }}</md-option>
               </md-select>
             </md-input-container>
-            <md-input-container class="md-block" flex-gt-sm flex="30">
+            <md-input-container class="md-block" flex-gt-sm flex="20">
               <label>Application</label>
               <md-select ng-model="$ctrl.query.applications" placeholder="Applications" multiple>
-                <md-option ng-value="subscriber.id" ng-repeat="subscriber in $ctrl.subscribers track by subscriber.id">{{ subscriber.name }} () </md-option>
+                <md-option ng-value="subscriber.id" ng-repeat="subscriber in $ctrl.subscribers track by subscriber.id">{{ subscriber.name }}</md-option>
               </md-select>
             </md-input-container>
             <md-input-container class="md-block" flex-gt-sm flex="20">
@@ -41,13 +41,22 @@
                 <md-option ng-value="key" ng-repeat="(key, value) in $ctrl.status">{{ value }}</md-option>
               </md-select>
             </md-input-container>
+            <md-input-container class="md-block" flex-gt-sm flex="20">
+              <label>API key</label>
+              <input ng-model="$ctrl.query.api_key">
+            </md-input-container>
             <div>
               <md-button type="submit" class="md-raised md-primary">
                 Search
               </md-button>
-              <md-button type="button" class="md-raised" ng-click="$ctrl.clearFilters()" ng-disabled="$ctrl.subscriptionsFiltersForm.$pristine">
+              <md-button type="button" class="md-raised" ng-click="$ctrl.clearFilters()" ng-disabled="!$ctrl.hasFilter()">
                 Clear
               </md-button>
+                <md-button type="button" class="md-raised" ng-click="$ctrl.exportAsCSV()" ng-disabled="!$ctrl.subscriptions.data || $ctrl.subscriptions.data.length === 0">
+                  Export as CSV
+                  <div id="hidden-export-container" style="display:none;"></div>
+                </md-button>
+              </div>
             </div>
           </div>
         </form>
@@ -64,14 +73,24 @@
         <th md-column>Start at</th>
         <th md-column>End at</th>
         <th md-column>Status</th>
+        <th md-column></th>
       </tr>
       </thead>
       <tbody md-body>
         <tr md-row
-            ui-sref="management.apis.detail.portal.subscriptions.subscription({subscriptionId: subscription.id})"
             ng-repeat="subscription in $ctrl.subscriptions.data track by subscription.id">
           <td md-cell>
-            <span style="font-weight: bold">{{$ctrl.subscriptions.metadata[subscription.plan].name}}</span>
+            <a  style="font-weight: bold" ui-sref="management.apis.detail.portal.subscriptions.subscription({
+              subscriptionId: subscription.id,
+              page: $ctrl.query.page,
+              size: $ctrl.query.size,
+              status: $ctrl.query.status,
+              application: $ctrl.query.applications,
+              plan: $ctrl.query.plans,
+              api_key: $ctrl.query.api_key
+            })">
+              {{$ctrl.subscriptions.metadata[subscription.plan].name}}
+            </a>
           </td>
           <td md-cell>{{$ctrl.subscriptions.metadata[subscription.application].name}}</td>
           <td md-cell>{{subscription.created_at | date:'yyyy-MM-dd HH:mm:ss'}}</td>
@@ -82,6 +101,9 @@
             <md-tooltip ng-if="subscription.reason" md-direction="left">{{subscription.reason}}</md-tooltip>
             {{subscription.status}}
           </td>
+          <td md-cell>
+            <gravitee-chart options="subscription.chartData" type="sparkline" height="20" width="120"></gravitee-chart>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -91,7 +113,7 @@
     ng-if="$ctrl.subscriptions.data.length > 0"
     md-limit="$ctrl.query.size"
     md-limit-options="[10, 25, 50, 75, 100]"
-    md-page="$ctrl.query.page"
+    md-page="$ctrl.subscriptions.page.current"
     md-total="{{$ctrl.subscriptions.page.total_elements}}"
     md-on-paginate="$ctrl.onPaginate"
     md-page-select

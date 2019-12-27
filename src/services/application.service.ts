@@ -207,6 +207,35 @@ class ApplicationService {
   getPermissions(application) {
     return this.$http.get(this.applicationsURL + application + '/members/permissions');
   }
+
+  renewClientSecret(applicationId: string): ng.IHttpPromise<any> {
+    return this.$http.post(`${this.applicationsURL}${applicationId}/renew_secret`, {});
+  }
+
+  getType(application: any): string {
+    let applicationType = 'Simple';
+    if (application.settings) {
+      if (application.settings.app && application.settings.app.type) {
+        applicationType = application.settings.app.type;
+      } else if (application.settings.oauth) {
+        switch (application.settings.oauth.application_type) {
+          case "backend_to_backend":
+            applicationType = 'Backend to backend';
+            break;
+          case "browser":
+            applicationType = 'Browser';
+            break;
+          case "native":
+            applicationType = 'Native';
+            break;
+          case "web":
+            applicationType = 'Web';
+            break;
+        }
+      }
+    }
+    return applicationType;
+  }
 }
 
 export default ApplicationService;

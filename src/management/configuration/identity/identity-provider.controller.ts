@@ -54,6 +54,19 @@ class IdentityProviderController {
       this.identityProvider.type = (this.$state.params.type as string);
       this.identityProvider.configuration = new Map<string ,any>();
       this.identityProvider.configuration['scopes'] = [];
+      this.identityProvider.emailRequired = true;
+
+      // Default user mapping configuration for OIDC or Gravitee.io AM providers
+
+      if (this.identityProvider.type === 'oidc' || this.identityProvider.type === 'graviteeio_am') {
+        this.identityProvider.userProfileMapping = {
+          id: 'sub',
+          firstname: 'given_name',
+          lastname: 'family_name',
+          email: 'email',
+          picture: 'picture'
+        };
+      }
     } else {
       this.tokenExchangeEndpoint = this.Constants.baseURL + 'auth/oauth2/' + this.identityProvider.id;
     }

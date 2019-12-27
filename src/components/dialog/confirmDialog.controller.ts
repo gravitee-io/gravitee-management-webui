@@ -18,7 +18,8 @@ function DialogConfirmController($scope, $mdDialog, locals) {
 
   $scope.title = locals.title;
   $scope.msg = locals.msg;
-  $scope.confirmButton = locals.confirmButton;
+  $scope.confirmButton = locals.confirmButton || 'OK';
+  $scope.cancelButton = locals.cancelButton || 'Cancel';
 
   this.cancel = function() {
     $mdDialog.hide(false);

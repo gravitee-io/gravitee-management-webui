@@ -32,8 +32,6 @@ class ComponentCtrl implements ng.IComponentController {
       var lastElement = Constants.portal.uploadMedia.maxSizeInOctet;
   }
 
-  $onInit() {}
-
   $onChanges() {
     const initialValue = this.page && this.page.content ? this.page.content : "";
     let mediaURL;
@@ -104,7 +102,7 @@ class ComponentCtrl implements ng.IComponentController {
 
           $http.post(mediaURL + "upload", fd, {headers: {"Content-Type": undefined}})
           .then((response) => {
-            callback(mediaURL + "/" + response.data, blob.name);
+            callback(mediaURL + response.data, blob.name);
           });
 
           return false;

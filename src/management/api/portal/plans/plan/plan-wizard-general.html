@@ -17,7 +17,7 @@
 -->
 <md-step label="Define" md-complete="$ctrl.parent.vm.stepData[0].completed">
   <md-step-body>
-    <md-content layout-padding class="api-creation-general-content api-creation-content">
+    <md-content layout-padding class="gv-creation-general-content gv-creation-content">
       <form name="$ctrl.planGeneralForm">
         <section>
           <md-subheader>General</md-subheader>
@@ -63,8 +63,8 @@
         <section>
           <md-subheader>Subscriptions</md-subheader>
 
-          <div layout-gt-sm="row">
-            <md-input-container class="md-block" flex>
+          <div layout-gt-md="row">
+            <md-input-container class="md-block" flex-gt-md>
               <md-switch aria-label="Auto validate subscriptions"
                          ng-model="$ctrl.parent.plan.validation" ng-true-value="'auto'" ng-disabled="plan.security == 'key_less'" ng-false-value="'manual'">
                 Auto validate subscription.
@@ -72,19 +72,35 @@
             </md-input-container>
           </div>
 
-          <div layout-gt-sm="row">
-            <md-input-container class="md-block" flex>
+          <div layout-gt-md="row">
+            <md-input-container class="md-block" flex-gt-md>
               <md-switch aria-label="Consumer comment"
                          ng-model="$ctrl.parent.plan.comment_required" ng-disabled="plan.security == 'key_less'">
                 Consumer must provide a comment when subscribing to the plan.
               </md-switch>
             </md-input-container>
-            <md-input-container class="md-block" flex>
+            <md-input-container class="md-block" flex-gt-md>
               <label>Custom message to display to consumer</label>
               <input ng-model="$ctrl.parent.plan.comment_message" type="text" name="comment_message" md-maxlength="64">
               <div ng-messages="$ctrl.planGeneralForm.comment_message.$error">
                 <div ng-message="md-maxlength">The comment message has to be less than 64 characters long.</div>
               </div>
+            </md-input-container>
+          </div>
+        </section>
+
+        <br />
+
+        <section>
+          <md-subheader>Deployment</md-subheader>
+          <div layout-gt-sm="row">
+            <md-input-container class="md-block" flex="100">
+              <label>Sharding tags</label>
+              <md-select ng-model="$ctrl.parent.plan.tags" multiple>
+                <md-option ng-repeat="tag in $ctrl.parent.tags" ng-value="tag.id" ng-disabled="$ctrl.parent.isTagDisabled(tag)">
+                  {{tag.name}}<span ng-if="tag.description" class="gravitee-general-description"> - {{tag.description}}</span>
+                </md-option>
+              </md-select>
             </md-input-container>
           </div>
         </section>

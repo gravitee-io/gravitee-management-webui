@@ -16,8 +16,14 @@
 import * as _ from 'lodash';
 
 import UserService from '../../services/user.service';
-import { StateService } from '@uirouter/core';
+import {StateParams, StateService, TransitionService} from '@uirouter/core';
+import ApiService from "../../services/api.service";
 
+interface IApisScope extends ng.IScope {
+  apisLoading: boolean;
+  formApi: any;
+  searchResult: boolean;
+}
 export class ApisController {
 
   private query: string = '';
@@ -34,22 +40,26 @@ export class ApisController {
   private portalTitle: string;
   private selectedApis: any[];
   private isQualityDisplayed: boolean;
+  private timer: any;
+  private canceler: any;
 
-  constructor(private ApiService,
-              private $mdDialog,
-              private $scope,
+  constructor(private ApiService: ApiService,
+              private $mdDialog: ng.material.IDialogService,
+              private $scope: IApisScope,
               private $state: StateService,
               private Constants,
               private Build,
               private resolvedApis,
               private UserService: UserService,
               private graviteeUser,
-              private $filter,
-              private $transitions,
-              private $stateParams,
-              private $timeout) {
+              private $filter: ng.IFilterService,
+              private $transitions: TransitionService,
+              private $stateParams: StateParams,
+              private $timeout: ng.ITimeoutService,
+              private $q: ng.IQService) {
     'ngInject';
 
+    this.$q = $q;
     this.graviteeUser = graviteeUser;
     this.graviteeUIVersion = Build.version;
     this.portalTitle = Constants.portal.title;
@@ -57,39 +67,60 @@ export class ApisController {
     this.apisProvider = _.filter(resolvedApis.data, 'manageable');
     if (!this.apisProvider.length) {
       // if no APIs, maybe the auth token has been expired
-      UserService.current(true);
+      UserService.current();
     }
 
     this.apisScrollAreaHeight = this.$state.current.name === 'apis.list' ? 195 : 90;
     this.isAPIsHome = this.$state.includes('apis');
 
-    this.createMode = !Constants.portal.devMode.enabled; // && Object.keys($rootScope.graviteeUser).length > 0;
+    this.createMode = !Constants.portal.devMode.enabled;
     this.selectedApis = [];
     this.syncStatus = [];
     this.qualityScores = [];
     this.isQualityDisplayed = Constants.apiQualityMetrics && Constants.apiQualityMetrics.enabled;
 
-    $transitions.onStart({to: $state.current.name}, () => {
-      $scope.apisLoading = true;
-    });
-
-    let timer;
-    $scope.$watch('$ctrl.query', (query, previousQuery) => {
-      $timeout.cancel(timer);
-      timer = $timeout(() => {
+    $scope.$watch('$ctrl.query', (query: string, previousQuery: string) => {
+      $timeout.cancel(this.timer);
+      this.timer = $timeout(() => {
         if (query !== undefined && query !== previousQuery) {
           this.search();
         }
       }, 300);
     });
+    this.canceler = $q.defer();
   }
 
   search() {
-    this.$state.go('.', {q: this.query});
+    // if search is already executed, cancel timer
+    this.$timeout.cancel(this.timer);
+
+    this.$scope.searchResult = true;
+    this.$scope.apisLoading = true;
+    this.canceler.resolve();
+    this.canceler = this.$q.defer();
+
+    let promise;
+    let promOpts = {timeout: this.canceler.promise};
+    this.$state.transitionTo(
+      this.$state.current,
+      {q: this.query},
+      {notify: false});
+
+    if (this.query) {
+      promise = this.ApiService.searchApis(this.query, promOpts);
+    } else {
+      promise = this.ApiService.list(null, false, promOpts);
+    }
+
+    promise.then( (response) => {
+      this.apisProvider = _.filter(response.data, 'manageable');
+      this.loadMore(this.query['order'], false);
+      this.$scope.apisLoading = false;
+    });
   }
 
   isSearchResult() {
-    return this.$stateParams.q !== undefined;
+    return this.$state.params.q !== undefined || this.$scope.searchResult;
   }
 
   update(api) {
@@ -123,7 +154,9 @@ export class ApisController {
       controller: 'DialogApiImportController',
       controllerAs: 'dialogApiImportCtrl',
       template: require('./portal/general/dialog/apiImport.dialog.html'),
-      apiId: '',
+      locals: {
+        apiId: ''
+      },
       clickOutsideToClose: true
     }).then(function (response) {
       if (response) {
@@ -142,13 +175,12 @@ export class ApisController {
     }
   }
 
-  loadMore = function (order, searchAPIs, showNext) {
-    const doNotLoad = showNext && (this.apisProvider && this.apisProvider.length) === (this.apis && this.apis.length);
-    if (!doNotLoad && this.apisProvider && this.apisProvider.length) {
+  loadMore = (order, showNext) => {
+    // check if data must be refreshed or not when sorting or searching (when user is typing text)
+    const doNotLoad = showNext && (this.apisProvider && this.apisProvider.length) === (this.apis && this.apis.length) &&
+      _.difference(_.map(this.apisProvider, 'id'), _.map(this.apis, 'id')).length === 0;
+    if (!doNotLoad && this.apisProvider) {
       let apisProvider = _.clone(this.apisProvider);
-      if (searchAPIs) {
-        apisProvider = this.$filter('filter')(apisProvider, searchAPIs);
-      }
       apisProvider = _.sortBy(apisProvider, _.replace(order, '-', ''));
       if (_.startsWith(order, '-')) {
         apisProvider.reverse();
@@ -170,11 +202,43 @@ export class ApisController {
         }
       });
     }
-  };
+  }
 
   getQualityMetricCssClass(score) {
-
     return this.ApiService.getQualityMetricCssClass(score);
+  }
+
+  getWorkflowStateLabel(api) {
+    if (api.lifecycle_state === 'deprecated') {
+      return 'DEPRECATED';
+    }
+    switch (api.workflow_state) {
+      case 'draft':
+        return 'DRAFT';
+      case 'in_review':
+        return 'IN REVIEW';
+      case 'request_for_changes':
+        return 'NEED CHANGES';
+      case 'review_ok':
+        return '';
+    }
+  }
+
+  getWorkflowStateColor(api) {
+    if (api.lifecycle_state === 'deprecated') {
+      return '#d73a49';
+    }
+    switch (api.workflow_state) {
+      case 'draft':
+        return '#54a3ff';
+      case 'in_review':
+      case 'request_for_changes':
+        return '#d73a49';
+    }
+  }
+
+  getEntrypoints(api) {
+    return _.uniq(_.map(api.virtual_hosts, 'path')).join(' - ');
   }
 }
 

@@ -15,6 +15,7 @@
  */
 /* global setInterval:false, clearInterval:false, screen:false */
 import UserService from '../services/user.service';
+import {log} from "util";
 
 function runBlock($rootScope, $window, $http, $mdSidenav, $transitions, $state,
                   $timeout, UserService: UserService, Constants, PermissionStrategies) {
@@ -32,7 +33,7 @@ function runBlock($rootScope, $window, $http, $mdSidenav, $transitions, $state,
     let fromState = trans.from();
     let toState = trans.to();
 
-    let notEligibleForDevMode = Constants.portal.devMode.enabled && toState.data && !toState.data.devMode;
+    let notEligibleForDevMode = Constants.portal.devMode.enabled && toState.data && !toState.data.devMode && !UserService.currentUser.isAdmin();
     let notEligibleForUserCreation = !Constants.portal.userCreation.enabled && (fromState.name === 'registration' || fromState === 'confirm');
 
     if (notEligibleForDevMode || notEligibleForUserCreation) {
@@ -42,8 +43,8 @@ function runBlock($rootScope, $window, $http, $mdSidenav, $transitions, $state,
     }
   });
 
-  $rootScope.$on('graviteeLogout', function () {
-    $window.location.href = $window.location.pathname;
+  $rootScope.$on('graviteeLogout', function (event, params) {
+    $state.go('login', {redirectUri: params.redirectUri});
   });
 
   $rootScope.$watch(function () {

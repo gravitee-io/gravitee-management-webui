@@ -20,6 +20,9 @@ import DocumentationService, {DocumentationQuery} from "../../../services/docume
 import {StateParams} from '@uirouter/core';
 import FetcherService from "../../../services/fetcher.service";
 import PolicyService from "../../../services/policy.service";
+import TagService from "../../../services/tag.service";
+import UserService from "../../../services/user.service";
+import QualityRuleService from "../../../services/qualityRule.service";
 
 export default apisPortalRouterConfig;
 
@@ -27,7 +30,11 @@ function apisPortalRouterConfig($stateProvider) {
   'ngInject';
   $stateProvider
     .state('management.apis.detail.portal', {
-      template:require('./apis.portal.route.html')
+      template:require('./apis.portal.route.html'),
+      resolve: {
+        qualityRules: (QualityRuleService: QualityRuleService) =>
+          QualityRuleService.list().then(response => response.data)
+      }
     })
     .state('management.apis.detail.portal.general', {
       url: '/portal',
@@ -83,7 +90,9 @@ function apisPortalRouterConfig($stateProvider) {
       component: 'editPlan',
       resolve: {
         groups: (GroupService: GroupService) => GroupService.list().then(response => response.data),
-        policies: (PolicyService: PolicyService) => PolicyService.list().then(response => response.data)
+        policies: (PolicyService: PolicyService) => PolicyService.list().then(response => response.data),
+        tags: (TagService: TagService) => TagService.list().then(response => response.data),
+        userTags: (UserService: UserService) => UserService.getCurrentUserTags().then(response => response.data)
       },
       data: {
         perms: {
@@ -101,7 +110,9 @@ function apisPortalRouterConfig($stateProvider) {
         plan: ($stateParams, ApiService: ApiService) =>
           ApiService.getApiPlan($stateParams.apiId, $stateParams.planId).then(response => response.data),
         groups: (GroupService: GroupService) => GroupService.list().then(response => response.data),
-        policies: (PolicyService: PolicyService) => PolicyService.list().then(response => response.data)
+        policies: (PolicyService: PolicyService) => PolicyService.list().then(response => response.data),
+        tags: (TagService: TagService) => TagService.list().then(response => response.data),
+        userTags: (UserService: UserService) => UserService.getCurrentUserTags().then(response => response.data)
       },
       data: {
         perms: {
@@ -122,11 +133,31 @@ function apisPortalRouterConfig($stateProvider) {
       }
     })
     .state('management.apis.detail.portal.subscriptions.list', {
-      url: '',
+      url: '?page&size&:application&:status&:plan&:api_key',
       component: 'apiSubscriptions',
       resolve: {
-        subscriptions: ($stateParams, ApiService: ApiService) =>
-          ApiService.getSubscriptions($stateParams.apiId).then(response => response.data),
+        subscriptions: ($stateParams, ApiService: ApiService) => {
+          let query = "?page=" + $stateParams["page"]
+            + "&size=" + $stateParams["size"];
+
+          if ($stateParams["status"]) {
+            query += "&status=" + $stateParams["status"];
+          }
+
+          if ($stateParams["application"]) {
+            query += "&application=" + $stateParams["application"];
+          }
+
+          if ($stateParams["plan"]) {
+            query += "&plan=" + $stateParams["plan"];
+          }
+
+          if ($stateParams["api_key"]) {
+            query += "&api_key=" + $stateParams["api_key"];
+          }
+
+          return ApiService.getSubscriptions($stateParams.apiId, query).then(response => response.data);
+        },
 
         subscribers: ($stateParams, ApiService: ApiService) =>
           ApiService.getSubscribers($stateParams.apiId).then(response => response.data),
@@ -141,10 +172,38 @@ function apisPortalRouterConfig($stateProvider) {
         docs: {
           page: 'management-api-subscriptions'
         }
+      },
+      params: {
+        status: {
+          type: "string",
+          dynamic: true
+        },
+        application: {
+          type: "string",
+          dynamic: true
+        },
+        plan: {
+          type: "string",
+          dynamic: true
+        },
+        page: {
+          type: 'int',
+          value: 1,
+          dynamic: true
+        },
+        size: {
+          type: 'int',
+          value: 10,
+          dynamic: true
+        },
+        api_key: {
+          type: "string",
+          dynamic: true
+        }
       }
     })
     .state('management.apis.detail.portal.subscriptions.subscription', {
-      url: '/:subscriptionId',
+      url: '/:subscriptionId?:page&:size&:application&:status&:plan&:api_key',
       component: 'apiSubscription',
       resolve: {
         subscription: ($stateParams, ApiService: ApiService) =>
@@ -156,6 +215,34 @@ function apisPortalRouterConfig($stateProvider) {
         },
         docs: {
           page: 'management-api-subscriptions'
+        }
+      },
+      params: {
+        status: {
+          type: "string",
+          dynamic: true
+        },
+        application: {
+          type: "string",
+          dynamic: true
+        },
+        plan: {
+          type: "string",
+          dynamic: true
+        },
+        page: {
+          type: 'int',
+          value: 1,
+          dynamic: true
+        },
+        size: {
+          type: 'int',
+          value: 10,
+          dynamic: true
+        },
+        api_key: {
+          type: "string",
+          dynamic: true
         }
       }
     })
@@ -334,7 +421,7 @@ function apisPortalRouterConfig($stateProvider) {
       component: 'editPage',
       resolve: {
         resolvedPage: (DocumentationService: DocumentationService, $stateParams: StateParams) =>
-          DocumentationService.get2($stateParams.pageId, $stateParams.apiId).then(response => response.data),
+          DocumentationService.get($stateParams.apiId, $stateParams.pageId).then(response => response.data),
         resolvedGroups: (GroupService: GroupService) => {
           return GroupService.list().then(response => {
             return response.data;
@@ -343,7 +430,7 @@ function apisPortalRouterConfig($stateProvider) {
         resolvedFetchers: (FetcherService: FetcherService) => {
           return FetcherService.list().then(response => {
             return response.data;
-          })
+          });
         }
       },
       data: {
@@ -352,7 +439,7 @@ function apisPortalRouterConfig($stateProvider) {
           page: 'management-api-documentation'
         },
         perms: {
-          only: ['api-documentation-u']
+          only: ['api-documentation-r']
         }
       },
       params: {
@@ -362,5 +449,5 @@ function apisPortalRouterConfig($stateProvider) {
           squash: false
         }
       }
-    })
+    });
 }

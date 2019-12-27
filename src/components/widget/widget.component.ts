@@ -18,78 +18,125 @@ import * as _ from 'lodash';
 const WidgetComponent: ng.IComponentOptions = {
   template: require('./widget.html'),
   bindings: {
-    widget: '<'
+    widget: '<',
+    updateMode: '<',
+    globalQuery: '<'
   },
   controller: function($scope, $state) {
     'ngInject';
-
     this.$state = $state;
 
     $scope.$on('gridster-resized', function () {
       $scope.$broadcast('onWidgetResize');
     });
 
-    let that = this;
+    $scope.$on('onTimeframeChange', (event, timeframe) => {
+      if (this.widget.chart && this.widget.chart.request) {
+        let query;
 
-    $scope.$on('onTimeframeChange', function (event, timeframe) {
-      let query;
+        if (this.widget.chart.request.query) {
+          query = this.widget.chart.request.query;
+        }
 
-      if (that.widget.chart.request.query) {
-        query = that.widget.chart.request.query;
-      }
+        // Associate the new timeframe to the chart request
+        _.assignIn(this.widget.chart.request, {
+          interval: timeframe.interval,
+          from: timeframe.from,
+          to: timeframe.to,
+          query: query,
+          additionalQuery: this.widget.chart.request.additionalQuery
+        });
 
-      // Associate the new timeframe to the chart request
-      _.assignIn(that.widget.chart.request, {
-        interval: timeframe.interval,
-        from: timeframe.from,
-        to: timeframe.to,
-        query: query,
-        additionalQuery: that.widget.chart.request.additionalQuery
-      });
-
-      that.reload();
-    });
-
-    $scope.$on('onQueryFilterChange', function (event, query) {
-      // Associate the new query filter to the chart request
-      that.widget.chart.request.additionalQuery = query.query;
-
-      // Reload only if not the same widget which applied the latest filter
-      if (that.widget.$uid !== query.source) {
-        that.reload();
+        this.reload();
       }
     });
 
-    this.reload = function() {
+    let unregisterFn = $scope.$on('onQueryFilterChange', (event, query) => {
+      if (this.widget.chart && this.widget.chart.request) {
+        // Associate the new query filter to the chart request
+        this.widget.chart.request.additionalQuery = query.query;
+
+        // Reload only if not the same widget which applied the latest filter
+        if (this.widget.$uid !== query.source) {
+          this.reload();
+        }
+      }
+    });
+
+    $scope.$on('$destroy', unregisterFn);
+
+    this.reload = () => {
       // Call the analytics service
       this.fetchData = true;
 
-      let chart = this.widget.chart;
-
       // Prepare arguments
-      let chartRequest = _.cloneDeep(chart.request);
+      let chartRequest = _.cloneDeep(this.widget.chart.request);
       if (chartRequest.additionalQuery) {
         if (chartRequest.query) {
-          if (!_.includes(chartRequest.query, this.widget.chart.request.additionalQuery)) {
-            chartRequest.query += ' AND ' + this.widget.chart.request.additionalQuery;
+          if (!_.includes(chartRequest.query, chartRequest.additionalQuery)) {
+            chartRequest.query += ' AND ' + chartRequest.additionalQuery;
           }
         } else {
-          chartRequest.query = this.widget.chart.request.additionalQuery;
+          chartRequest.query = chartRequest.additionalQuery;
         }
         delete chartRequest.additionalQuery;
       }
+
+      if (this.globalQuery) {
+        if (chartRequest.query) {
+          if (!_.includes(chartRequest.query, this.globalQuery)) {
+            chartRequest.query += ' AND ' + this.globalQuery;
+          }
+        } else {
+          chartRequest.query = this.globalQuery;
+        }
+      }
+
       let args = [this.widget.root, chartRequest];
 
       if (! this.widget.root) {
         args.splice(0,1);
       }
 
-      chart.service.function
-        .apply(chart.service.caller, args)
+      this.widget.chart.service.function
+        .apply(this.widget.chart.service.caller, args)
         .then(response => {
-          this.fetchData = false;
           this.results = response.data;
+          if (this.widget.chart.percent) {
+            delete chartRequest.query;
+            chartRequest.type = 'count';
+            this.widget.chart.service.function
+              .apply(this.widget.chart.service.caller, args)
+              .then(responseTotal => {
+                _.forEach(this.results.values, (value, key) => {
+                  this.results.values[key] = value + '/' + _.round((value / responseTotal.data.hits) * 100, 2);
+                });
+              }).finally(() => this.fetchData = false);
+          } else {
+            this.fetchData = false;
+          }
         });
+    };
+
+    this.delete = () => {
+      $scope.$emit('onWidgetDelete', this.widget);
+    };
+
+    this.getIconFromType = () => {
+      switch (this.widget.chart.type) {
+        case 'line':
+          return 'multiline_chart';
+        case 'map':
+          return 'map';
+        case 'pie':
+          return 'pie_chart';
+        case 'stats':
+          return 'bubble_chart';
+        case 'table':
+          return 'view_list';
+        default:
+          return 'insert_chart';
+      }
     };
   }
 };

@@ -18,7 +18,7 @@
 <section layout="column" flex>
 
   <div layout="row">
-    <div class="api-creation-steppers" flex="{{$ctrl.vm.selectedStep !== 4 ? 60: 100}}">
+    <div class="gv-creation-steppers" flex="{{$ctrl.vm.selectedStep !== 4 ? 60: 100}}">
       <md-steppers md-dynamic-height md-disable-tabs-behavior="true" md-stretch-steppers="always"
                    md-selected="$ctrl.vm.selectedStep" md-busy-text="'Processing...'"
                    md-busy="$ctrl.vm.showBusyText">
@@ -30,12 +30,12 @@
       </md-steppers>
     </div>
 
-    <div class="api-creation-timeline-wrapper" layout-padding flex ng-show="$ctrl.vm.selectedStep !== 4">
+    <div class="gv-creation-timeline-wrapper" layout-padding flex ng-show="$ctrl.vm.selectedStep !== 4">
       <div>
         <h4>Prepare your API</h4>
         <md-divider></md-divider>
       </div>
-      <div class="api-creation-timeline">
+      <div class="gv-creation-timeline">
         <timeline>
           <timeline-event ng-repeat="apiStep in $ctrl.apiSteps" side="right">
             <timeline-badge class="{{apiStep.badgeClass}}">

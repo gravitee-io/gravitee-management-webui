@@ -45,7 +45,6 @@ import HttpConfigurationComponent from '../management/api/proxy/backend/endpoint
 import AddPoliciesPathController from '../management/api/design/policies/addPoliciesPath.controller';
 import ApiResourcesController from '../management/api/design/resources/resources.controller';
 import ApiPathMappingsController from '../management/api/analytics/pathMappings/pathMappings.controller';
-import NewApiController from '../management/api/creation/newApi.controller';
 import ApiPropertiesController from '../management/api/design/properties/properties.controller';
 import ApiEventsController from '../management/api/audit/events/apiEvents.controller';
 import ApiHistoryController from '../management/api/audit/history/apiHistory.controller';
@@ -63,11 +62,13 @@ import NotificationService from '../services/notification.service';
 import PolicyService from '../services/policy.service';
 import ResourceService from '../services/resource.service';
 import FetcherService from '../services/fetcher.service';
+import NotifierService from '../services/notifier.service';
 import ServiceDiscoveryService from '../services/serviceDiscovery.service';
 import LoginController from '../user/login/login.controller';
 import DiffDirective from '../components/diff/diff.directive';
 import DialogApiImportController from '../management/api/portal/general/dialog/apiImportDialog.controller';
 import DialogApiExportController from '../management/api/portal/general/dialog/apiExportDialog.controller';
+import DialogApiDuplicateController from '../management/api/portal/general/dialog/apiDuplicateDialog.controller';
 // Sidenav
 import SidenavService from '../components/sidenav/sidenav.service';
 import {SidenavComponent} from '../components/sidenav/sidenav.component';
@@ -81,6 +82,8 @@ import ApiCreationStep2Component from '../management/api/creation/steps/api-crea
 import ApiCreationStep3Component from '../management/api/creation/steps/api-creation-step3.component';
 import ApiCreationStep4Component from '../management/api/creation/steps/api-creation-step4.component';
 import ApiCreationStep5Component from '../management/api/creation/steps/api-creation-step5.component';
+import ApiImportComponent from '../management/components/import/import-api.component';
+
 // API Plan
 import ApiPlanComponent from '../management/api/api-plan.component';
 import ApiEditPlanController from '../management/api/portal/plans/plan/edit-plan.controller';
@@ -99,7 +102,14 @@ import ApiSubscriptionComponent from '../management/api/portal/subscriptions/sub
 import ApplicationService from '../services/application.service';
 import ApplicationsComponent from './application/applications.component';
 import ApplicationsController from './application/applications.controller';
-import CreateApplicationsComponent from './application/create-application.component';
+
+import ApplicationCreationComponent from './application/creation/steps/application-creation.component';
+import ApplicationCreationController from './application/creation/steps/application-creation.controller';
+import ApplicationCreationStep1Component from './application/creation/steps/application-creation-step1.component';
+import ApplicationCreationStep2Component from './application/creation/steps/application-creation-step2.component';
+import ApplicationCreationStep3Component from './application/creation/steps/application-creation-step3.component';
+import ApplicationCreationStep4Component from './application/creation/steps/application-creation-step4.component';
+
 import ApplicationComponent from './application/details/application.component';
 import ApplicationHeaderComponent from './application/details/header/application-header.component';
 import ApplicationGeneralController from './application/details/general/application-general.controller';
@@ -129,9 +139,17 @@ import InstancesComponent from '../management/instances/instances.component';
 import InstanceComponent from '../management/instances/details/instance.component';
 // Analytics / widgets
 import WidgetComponent from '../components/widget/widget.component';
-import WidgetDataTableComponent from '../components/widget/widget-data-table.component';
-import WidgetChartLineComponent from '../components/widget/widget-chart-line.component';
-import WidgetChartPieComponent from '../components/widget/widget-chart-pie.component';
+import WidgetDataTableComponent from '../components/widget/table/widget-data-table.component';
+import WidgetChartLineComponent from '../components/widget/line/widget-chart-line.component';
+import WidgetChartPieComponent from '../components/widget/pie/widget-chart-pie.component';
+import WidgetChartMapComponent from '../components/widget/map/widget-chart-map.component';
+import WidgetDataStatsComponent from '../components/widget/stats/widget-data-stats.component';
+import WidgetDataTableConfigurationComponent from '../components/widget/table/widget-data-table-configuration.component';
+import WidgetChartLineConfigurationComponent from '../components/widget/line/widget-chart-line-configuration.component';
+import WidgetChartMapConfigurationComponent from '../components/widget/map/widget-chart-map-configuration.component';
+import WidgetChartPieConfigurationComponent from '../components/widget/pie/widget-chart-pie-configuration.component';
+import WidgetDataStatsConfigurationComponent from '../components/widget/stats/widget-data-stats-configuration.component';
+
 import DashboardComponent from '../components/dashboard/dashboard.component';
 import DashboardFilterComponent from '../components/dashboard/dashboard-filter.component';
 import DashboardFilterController from '../components/dashboard/dashboard-filter.controller';
@@ -175,7 +193,6 @@ import DialogSubscriptionCreateController
 import DialogSubscriptionTransferController
   from '../management/api/portal/subscriptions/subscription.transfer.dialog.controller';
 import EmptyStateDirective from '../components/emptystate/emptystate.directive';
-import DialogClosePlanController from '../management/api/portal/plans/closePlanDialog.controller';
 import DialogPublishPlanController from '../management/api/portal/plans/publishPlanDialog.controller';
 import TagsController from '../management/configuration/tags/tags.controller';
 import TagService from '../services/tag.service';
@@ -190,6 +207,7 @@ import UpdateMetadataDialogController
 import ChartDirective from '../components/chart/chart.directive';
 import UserAvatarDirective from '../components/avatar/user-avatar.directive';
 import DialogConfirmController from '../components/dialog/confirmDialog.controller';
+import DialogConfirmAndValidateController from "../components/dialog/confirmAndValidateDialog.controller";
 import DialogDynamicProviderHttpController
   from '../management/api/design/properties/dynamic-provider-http-dialog.controller';
 import TenantsController from '../management/configuration/tenants/tenants.controller';
@@ -265,6 +283,8 @@ import DialogAssertionInformationController
 import ApiHealthCheckController from '../management/api/proxy/backend/healthcheck/healthcheck.controller';
 import ProgressBarComponent from '../components/progressbar/progress-bar.component';
 import ApiHealthCheckLogController from '../management/api/proxy/backend/healthcheck/healthcheck-log.controller';
+import HealthCheckMetricComponent from '../components/healthcheckmetric/healthcheck-metric.component';
+
 // Ticket
 import TicketService from '../services/ticket.service';
 import SupportTicketController from '../support/ticket.controller';
@@ -342,6 +362,7 @@ import apisMessagesRouterConfig from "./api/messages/apis.messages.route";
 
 import ApiPortalHeaderComponent from "../management/configuration/api-portal-header/api-portal-header.component";
 import ApiHeaderService from "../services/apiHeader.service";
+
 import UpdateApiPortalHeaderDialogController
   from "./configuration/api-portal-header/update.api-portal-header.dialog.controller";
 import NewApiPortalHeaderDialogController
@@ -349,8 +370,25 @@ import NewApiPortalHeaderDialogController
 import Base64Service from "../services/base64.service";
 // Alerts
 import AlertService from "../services/alert.service";
-import AlertComponent from "./components/notifications/alert/alert.component";
-import DialogAddAlertController from "./components/notifications/alert/addAlert.dialog.controller";
+import AlertsComponent from "./components/alerts/alerts.component";
+import AlertComponent from "./components/alerts/alert/alert.component";
+import AlertNotificationsComponent from "./components/alerts/alert/notifications/alert-notifications";
+import AlertNotificationComponent from "./components/alerts/alert/notifications/alert-notification";
+import AlertTriggerDampeningComponent from "./components/alerts/alert/triggers/trigger-dampening.component";
+import AlertTriggerWindowComponent from "./components/alerts/alert/triggers/trigger-window.component";
+import AlertTriggerFiltersComponent from "./components/alerts/alert/triggers/trigger-filters.component";
+import AlertTriggerFilterComponent from "./components/alerts/alert/triggers/trigger-filter.component";
+import AlertTriggerConditionComponent from "./components/alerts/alert/triggers/trigger-condition.component";
+import AlertTriggerConditionThresholdComponent from "./components/alerts/alert/triggers/conditions/trigger-condition-threshold.component";
+import AlertTriggerConditionThresholdRangeComponent from "./components/alerts/alert/triggers/conditions/trigger-condition-threshold-range.component";
+import AlertTriggerConditionStringComponent from "./components/alerts/alert/triggers/conditions/trigger-condition-string.component";
+import AlertTriggerConditionCompareComponent from "./components/alerts/alert/triggers/conditions/trigger-condition-compare.component";
+import AlertTriggerMetricsSimpleConditionComponent from "./components/alerts/alert/triggers/trigger-metrics-simple-condition.component";
+import AlertTriggerMetricsAggregationComponent from "./components/alerts/alert/triggers/trigger-metrics-aggregation.component";
+import AlertTriggerMetricsRateComponent from "./components/alerts/alert/triggers/trigger-metrics-rate.component";
+import AlertTriggerApiHealthCheckEndpointStatusChangedComponent from "./components/alerts/alert/triggers/trigger-api-hc-endpoint-status-changed.component";
+import AlertTriggerNodeLifecycleChangedComponent from "./components/alerts/alert/triggers/trigger-node-lifecycle-changed.component";
+import AlertTriggerApplicationQuotaComponent from "./components/alerts/alert/triggers/trigger-application-quota.component";
 
 import CircularPercentageComponent from "./components/circularPercentage/circularPercentage.component";
 import CircularPercentageController from "./components/circularPercentage/circularPercentage.controller";
@@ -381,11 +419,26 @@ import ClientRegistrationProvidersComponent from '../management/configuration/ap
 import ClientRegistrationProviderComponent from '../management/configuration/application/registration/client-registration-provider.component';
 import ClientRegistrationProviderController from '../management/configuration/application/registration/client-registration-provider.controller';
 
+import DashboardService from '../services/dashboard.service';
+import AnalyticsDashboardComponent from './configuration/analytics/dashboard/dashboard.components';
+
 (<any>window).jQuery = jQuery;
 
 import angular = require('angular');
 
 import ngInfiniteScroll = require('ng-infinite-scroll');
+import DialogReviewController from "./api/review/reviewDialog.controller";
+import DialogRequestForChangesController from "./api/portal/general/dialog/requestForChanges.controller";
+import ApplicationSubscribeComponent from "./application/details/subscribe/application-subscribe.component";
+import ApplicationSubscribeController from "./application/details/subscribe/application-subscribe.controller";
+
+import QualityRuleService from "../services/qualityRule.service";
+import ApiQualityRulesComponent from "../management/configuration/api-quality-rules/api-quality-rules.component";
+import ApiQualityRuleComponent from "../management/configuration/api-quality-rules/api-quality-rule/api-quality-rule.component";
+import ApiQualityRuleController from "../management/configuration/api-quality-rules/api-quality-rule/api-quality-rule.controller";
+import DeleteApiQualityRuleDialogController from "../management/configuration/api-quality-rules/api-quality-rule/delete-api-quality-rule.dialog.controller";
+import DialogQueryFilterInformationController
+  from "./configuration/analytics/dashboard/query-filter-information.dialog.controller";
 
 (<any>window).traverse = traverse;
 
@@ -456,13 +509,18 @@ require('angular-loading-bar');
 // Highcharts
 
 const Highcharts = require('highcharts');
+(<any>window).Highcharts = Highcharts;
 const HighchartsMore = require('../../node_modules/highcharts/js/highcharts-more.js');
 const SolidGauge = require('../../node_modules/highcharts/js/modules/solid-gauge.js');
 const NoDataToDisplay = require('../../node_modules/highcharts/js/modules/no-data-to-display.js');
+const Map = require('../../node_modules/highcharts/js/modules/map.js');
 
 HighchartsMore(Highcharts);
 SolidGauge(Highcharts);
 NoDataToDisplay(Highcharts);
+Map(Highcharts);
+
+require('../../node_modules/@highcharts/map-collection/custom/world.js');
 
 (<any>window).jsyaml = jsyaml;
 
@@ -543,7 +601,6 @@ angular.module('gravitee-management', [uiRouter, permission, uiPermission, 'ngMa
   .controller('ApiPathMappingsController', ApiPathMappingsController)
   .controller('DialogAddPathMappingController', DialogAddPathMappingController)
   .controller('DialogImportPathMappingController', DialogImportPathMappingController)
-  .controller('NewApiController', NewApiController)
   .controller('DialogAddPropertyController', DialogAddPropertyController)
   .controller('DialogAddMemberApiController', DialogAddMemberApiController)
   .controller('DialogTransferApiController', DialogTransferApiController)
@@ -551,6 +608,7 @@ angular.module('gravitee-management', [uiRouter, permission, uiPermission, 'ngMa
   .controller('UserController', UserController)
   .controller('DialogApiImportController', DialogApiImportController)
   .controller('DialogApiExportController', DialogApiExportController)
+  .controller('DialogApiDuplicateController', DialogApiDuplicateController)
   .controller('DialogEditPolicyController', DialogEditPolicyController)
   .controller('LoginController', LoginController)
   .controller('InstancesController', InstancesController)
@@ -574,7 +632,6 @@ angular.module('gravitee-management', [uiRouter, permission, uiPermission, 'ngMa
   .controller('DialogSubscriptionAcceptController', DialogSubscriptionAcceptController)
   .controller('DialogSubscriptionCreateController', DialogSubscriptionCreateController)
   .controller('DialogSubscriptionTransferController', DialogSubscriptionTransferController)
-  .controller('DialogClosePlanController', DialogClosePlanController)
   .controller('DialogPublishPlanController', DialogPublishPlanController)
   .controller('TagsController', TagsController)
   .controller('MetadataController', MetadataController)
@@ -587,6 +644,7 @@ angular.module('gravitee-management', [uiRouter, permission, uiPermission, 'ngMa
   .controller('UpdateApiMetadataDialogController', UpdateApiMetadataDialogController)
   .controller('DeleteApiMetadataDialogController', DeleteApiMetadataDialogController)
   .controller('DialogConfirmController', DialogConfirmController)
+  .controller('DialogConfirmAndValidateController', DialogConfirmAndValidateController)
   .controller('DialogDynamicProviderHttpController', DialogDynamicProviderHttpController)
   .controller('DialogAddUserRoleController', DialogAddUserRoleController)
   .controller('SupportTicketController', SupportTicketController)
@@ -596,12 +654,15 @@ angular.module('gravitee-management', [uiRouter, permission, uiPermission, 'ngMa
   .controller('AddTopApiDialogController', AddTopApiDialogController)
   .controller('DeleteTopApiDialogController', DeleteTopApiDialogController)
   .controller("MoveToFolderDialogController", MoveToFolderDialogController)
+  .controller('DialogReviewController', DialogReviewController)
+  .controller('DialogRequestForChangesController', DialogRequestForChangesController)
   .service('ApplicationService', ApplicationService)
   .service('ApiService', ApiService)
   .service('DocumentationService', DocumentationService)
   .service('InstancesService', InstancesService)
   .service('NotificationService', NotificationService)
   .service('PolicyService', PolicyService)
+  .service('NotifierService', NotifierService)
   .service('UserService', UserService)
   .service("Base64Service", Base64Service)
   .service('ResourceService', ResourceService)
@@ -635,8 +696,15 @@ angular.module('gravitee-management', [uiRouter, permission, uiPermission, 'ngMa
 
   .component('gvWidget', WidgetComponent)
   .component('gvWidgetDataTable', WidgetDataTableComponent)
+  .component('gvWidgetDataStats', WidgetDataStatsComponent)
   .component('gvWidgetChartPie', WidgetChartPieComponent)
   .component('gvWidgetChartLine', WidgetChartLineComponent)
+  .component('gvWidgetChartMap', WidgetChartMapComponent)
+  .component('gvWidgetDataTableConfiguration', WidgetDataTableConfigurationComponent)
+  .component('gvWidgetDataLineConfiguration', WidgetChartLineConfigurationComponent)
+  .component('gvWidgetDataMapConfiguration', WidgetChartMapConfigurationComponent)
+  .component('gvWidgetDataPieConfiguration', WidgetChartPieConfigurationComponent)
+  .component('gvWidgetDataStatsConfiguration', WidgetDataStatsConfigurationComponent)
 
   .component('views', ViewsComponent)
   .component('view', ViewComponent)
@@ -665,6 +733,7 @@ angular.module('gravitee-management', [uiRouter, permission, uiPermission, 'ngMa
   .component('apiCreationStep3', ApiCreationStep3Component)
   .component('apiCreationStep4', ApiCreationStep4Component)
   .component('apiCreationStep5', ApiCreationStep5Component)
+  .component('gvApiImport', ApiImportComponent)
   .component('apiMetadata', ApiMetadataComponent)
   .component('gvDashboard', DashboardComponent)
   .component('gvDashboardFilter', DashboardFilterComponent)
@@ -689,7 +758,17 @@ angular.module('gravitee-management', [uiRouter, permission, uiPermission, 'ngMa
 
   .component('applications', ApplicationsComponent)
   .component('application', ApplicationComponent)
-  .component('createApplication', CreateApplicationsComponent)
+
+  .component('applicationSubscribe', ApplicationSubscribeComponent)
+  .controller('ApplicationSubscribeController', ApplicationSubscribeController)
+
+  .component('createApplication', ApplicationCreationComponent)
+  .controller('ApplicationCreationController', ApplicationCreationController)
+  .component('applicationCreationStep1', ApplicationCreationStep1Component)
+  .component('applicationCreationStep2', ApplicationCreationStep2Component)
+  .component('applicationCreationStep3', ApplicationCreationStep3Component)
+  .component('applicationCreationStep4', ApplicationCreationStep4Component)
+
   .component('applicationHeader', ApplicationHeaderComponent)
   .component('applicationGeneral', ApplicationGeneralComponent)
   .component('applicationSubscriptions', ApplicationSubscriptionsComponent)
@@ -753,6 +832,7 @@ angular.module('gravitee-management', [uiRouter, permission, uiPermission, 'ngMa
   .controller('ApiHealthCheckConfigureController', ApiHealthCheckConfigureController)
   .controller('ApiHealthCheckLogController', ApiHealthCheckLogController)
   .component('progressBar', ProgressBarComponent)
+  .component('gvHealthcheckMetric', HealthCheckMetricComponent)
 
   // Response Templates
   .controller('ApiResponseTemplatesController', ApiResponseTemplatesController)
@@ -791,6 +871,12 @@ angular.module('gravitee-management', [uiRouter, permission, uiPermission, 'ngMa
   .controller("NewApiPortalHeaderDialogController", NewApiPortalHeaderDialogController)
   .controller("UpdateApiPortalHeaderDialogController", UpdateApiPortalHeaderDialogController)
 
+  .component('configApiQuality', ApiQualityRulesComponent)
+  .component('qualityRule', ApiQualityRuleComponent)
+  .controller("ApiQualityRuleController", ApiQualityRuleController)
+  .controller("DeleteApiQualityRuleDialogController", DeleteApiQualityRuleDialogController)
+  .service('QualityRuleService', QualityRuleService)
+
   // Settings: Identity provider
   .component('identityProviders', IdentityProvidersComponent)
   .component('identityProvider', IdentityProviderComponent)
@@ -809,8 +895,25 @@ angular.module('gravitee-management', [uiRouter, permission, uiPermission, 'ngMa
 
   // Alerts
   .service('AlertService', AlertService)
+  .component('alertsComponent', AlertsComponent)
   .component('alertComponent', AlertComponent)
-  .controller('DialogAddAlertController', DialogAddAlertController)
+  .component('gvAlertNotification', AlertNotificationComponent)
+  .component('gvAlertNotifications', AlertNotificationsComponent)
+  .component('gvAlertTriggerWindow', AlertTriggerWindowComponent)
+  .component('gvAlertTriggerDampening', AlertTriggerDampeningComponent)
+  .component('gvAlertTriggerCondition', AlertTriggerConditionComponent)
+  .component('gvAlertTriggerFilters', AlertTriggerFiltersComponent)
+  .component('gvAlertTriggerFilter', AlertTriggerFilterComponent)
+  .component('gvAlertTriggerConditionThreshold', AlertTriggerConditionThresholdComponent)
+  .component('gvAlertTriggerConditionThresholdRange', AlertTriggerConditionThresholdRangeComponent)
+  .component('gvAlertTriggerConditionString', AlertTriggerConditionStringComponent)
+  .component('gvAlertTriggerConditionCompare', AlertTriggerConditionCompareComponent)
+  .component('gvAlertTriggerMetricsSimpleCondition', AlertTriggerMetricsSimpleConditionComponent)
+  .component('gvAlertTriggerMetricsAggregation', AlertTriggerMetricsAggregationComponent)
+  .component('gvAlertTriggerMetricsRate', AlertTriggerMetricsRateComponent)
+  .component('gvAlertTriggerApiHealthCheckStatusChanged', AlertTriggerApiHealthCheckEndpointStatusChangedComponent)
+  .component('gvAlertTriggerNodeLifecycleChanged', AlertTriggerNodeLifecycleChangedComponent)
+  .component('gvAlertTriggerApplicationQuota', AlertTriggerApplicationQuotaComponent)
 
   // CircularPercentageComponent
   .component("circularPercentage", CircularPercentageComponent)
@@ -822,6 +925,10 @@ angular.module('gravitee-management', [uiRouter, permission, uiPermission, 'ngMa
   .controller('DeleteEntrypointDialogController', DeleteEntrypointDialogController)
   .component('tag', TagComponent)
   .controller('TagController', TagController)
+
+  .service('DashboardService', DashboardService)
+  .component('dashboard', AnalyticsDashboardComponent)
+  .controller('DialogQueryFilterInformationController', DialogQueryFilterInformationController)
 
   .filter('humanDateFilter', function () {
     return function (input) {
@@ -844,5 +951,10 @@ angular.module('gravitee-management', [uiRouter, permission, uiPermission, 'ngMa
   .filter('apiKeyFilter', function () {
     return function (keys) {
       return keys;
+    };
+  })
+  .filter('floor', function() {
+    return function (input) {
+      return Math.floor(input);
     };
   });

@@ -34,7 +34,7 @@ const ClientRegistrationProvidersComponent: ng.IComponentOptions = {
   ) {
     'ngInject';
 
-    this.Constants = Constants;
+    this.settings = _.cloneDeep(Constants);
 
     this.select = (provider: ClientRegistrationProvider) => {
       $state.go('management.settings.clientregistrationproviders.clientregistrationprovider', {id: provider.id});
@@ -69,11 +69,33 @@ const ClientRegistrationProvidersComponent: ng.IComponentOptions = {
       PortalConfigService.save({
         application: {
           registration: {
-            enabled: this.Constants.application.registration.enabled
+            enabled: this.settings.application.registration.enabled
           }
         }
       }).then( response => {
-        NotificationService.show("Client registration is now " + (this.Constants.application.registration.enabled?"mandatory":"optional") );
+        NotificationService.show("Client registration is now " + (this.settings.application.registration.enabled?"mandatory":"optional") );
+        _.merge(Constants, response.data);
+      });
+    };
+
+    this.saveApplicationType = (type: string) => {
+      let appType = {
+        application: {
+          types: {
+            [type]: {
+              enabled: this.settings.application.types[type].enabled
+            }
+          }
+        }
+      };
+
+      appType['application']['types'][type] = {
+        enabled: this.settings.application.types[type].enabled
+      };
+
+      PortalConfigService.save(appType).then( response => {
+        NotificationService.show("Application type '" + type  + "' is now " + (this.settings.application.types[type].enabled?"allowed":"disallowed") );
+        _.merge(Constants, response.data);
       });
     };
   }

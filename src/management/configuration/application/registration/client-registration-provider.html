@@ -55,25 +55,87 @@
     <div class="gv-form">
       <h2>Configuration</h2>
       <div class="gv-form-content" layout="column">
-        <div layout="column">
+          <h6>OpenID Connect -  Dynamic Client Registration</h6>
+
           <md-input-container class="md-block" flex-gt-xs>
-            <label>OIDC Discovery  Endpoint</label>
+            <label>OpenID Connect Discovery Endpoint</label>
             <input ng-model="$ctrl.clientRegistrationProvider.discovery_endpoint" type="url" required>
           </md-input-container>
 
-          <md-input-container class="md-block" flex-gt-xs>
-            <label>Client Id</label>
-            <input ng-model="$ctrl.clientRegistrationProvider.client_id" type="text" required>
+          <md-input-container class="md-block">
+            <label>Initial Access Token Provider</label>
+            <md-select ng-model="$ctrl.clientRegistrationProvider.initial_access_token_type"
+                       required>
+              <md-option
+                ng-value="initialAccessTokenType.value"
+                ng-repeat="initialAccessTokenType in $ctrl.initialAccessTokenTypes">
+                {{::initialAccessTokenType.name}}
+              </md-option>
+            </md-select>
+            <div class="hint">
+              Define the way the initial access token must be provided.
+            </div>
+          </md-input-container>
+
+          <div ng-if="$ctrl.clientRegistrationProvider.initial_access_token_type === 'client_credentials'">
+            <md-input-container class="md-block" flex-gt-xs>
+              <label>Client ID</label>
+              <input ng-model="$ctrl.clientRegistrationProvider.client_id" type="text" required>
+            </md-input-container>
+
+            <md-input-container class="md-block" flex-gt-xs>
+              <label>Client Secret</label>
+              <input ng-model="$ctrl.clientRegistrationProvider.client_secret" type="text" required>
+            </md-input-container>
+
+            <md-input-container class="md-block" flex-gt-xs>
+              <label>Scopes</label>
+              <md-chips ng-model="$ctrl.clientRegistrationProvider.scopes" placeholder="Add a scope"></md-chips>
+              <div class="hint">Press Enter after writing your scope to save it.</div>
+            </md-input-container>
+
+            <md-input-container class="md-block" flex-gt-xs>
+              <label>Client Template (software_id)</label>
+              <input ng-model="$ctrl.clientRegistrationProvider.software_id" type="text">
+            </md-input-container>
+          </div>
+
+          <div ng-if="$ctrl.clientRegistrationProvider.initial_access_token_type === 'initial_access_token'">
+            <md-input-container class="md-block" flex-gt-xs>
+              <label>Initial Access Token</label>
+              <input ng-model="$ctrl.clientRegistrationProvider.initial_access_token" type="text" required>
+            </md-input-container>
+          </div>
+
+        <h6>Renew client_secret (outside DCR specification)</h6>
+        <md-input-container class="gv-input-container-dense">
+          <md-checkbox ng-model="$ctrl.clientRegistrationProvider.renew_client_secret_support" aria-label="Renew client secret support">
+            Enable renew client_secret support
+          </md-checkbox>
+        </md-input-container>
+
+        <div layout="row">
+          <md-input-container class="md-block">
+            <label>HTTP Method</label>
+            <md-select ng-model="$ctrl.clientRegistrationProvider.renew_client_secret_method"
+                       ng-required="$ctrl.clientRegistrationProvider.renew_client_secret_support">
+              <md-option
+                ng-value="method"
+                ng-repeat="method in $ctrl.renewClientSecretMethods">
+                {{::method}}
+              </md-option>
+            </md-select>
+            <div class="hint">
+              Define the HTTP method to call the renew secret endpoint
+            </div>
           </md-input-container>
 
           <md-input-container class="md-block" flex-gt-xs>
-            <label>Client Secret</label>
-            <input ng-model="$ctrl.clientRegistrationProvider.client_secret" type="text" required>
-          </md-input-container>
-
-          <md-input-container class="md-block" flex-gt-xs>
-            <label>Scopes</label>
-            <md-chips ng-model="$ctrl.clientRegistrationProvider.scopes" placeholder="Enter a scope and press Enter"></md-chips>
+            <label>Endpoint</label>
+            <input ng-model="$ctrl.clientRegistrationProvider.renew_client_secret_endpoint" type="url" ng-required="$ctrl.clientRegistrationProvider.renew_client_secret_support">
+            <div class="hint">
+              Provide an URL to reach the renew client secret endpoint, for example: http://authorization_server/oidc/dcr/{#client_id}/renew_secret
+            </div>
           </md-input-container>
         </div>
       </div>

@@ -62,12 +62,24 @@ class ApiService {
     return this.$http.get(this.apisURL + name);
   }
 
-  list(view?: string): ng.IPromise<any> {
-    return this.$http.get(this.apisURL + (view ? '?view=' + view : ''));
+  list(view?: string, portal?: boolean, opts?: any): ng.IPromise<any> {
+    let params = '';
+    if (view !== undefined && view !== null) {
+      params += '?view=' + view;
+    }
+    if (portal !== undefined) {
+      if (params === '') {
+        params += '?';
+      } else {
+        params += '&';
+      }
+      params += 'portal=' + portal;
+    }
+    return this.$http.get(this.apisURL + params, {}, opts);
   }
 
-  searchApis(query?: string): ng.IPromise<any> {
-    return this.$http.post(this.apisURL + '_search?q=' + query);
+  searchApis(query?: string, opts?: any): ng.IPromise<any> {
+    return this.$http.post(this.apisURL + '_search?q=' + query, {}, opts);
   }
 
   listTopAPIs(): ng.IPromise<any> {
@@ -103,7 +115,7 @@ class ApiService {
       {'version': api.version, 'description': api.description, 'proxy': api.proxy, 'paths': api.paths, 'private': api.private,
         'visibility': api.visibility, 'name': api.name, 'services': api.services, 'properties': api.properties, 'tags': api.tags,
         'picture': api.picture, 'resources': api.resources, 'views': api.views, 'groups': api.groups,
-        'labels': api.labels, 'path_mappings': api.path_mappings, 'response_templates': api.response_templates
+        'labels': api.labels, 'path_mappings': api.path_mappings, 'response_templates': api.response_templates, 'lifecycle_state': api.lifecycle_state
       }, {headers: {'If-Match': api.etag}}
     );
   }
@@ -132,20 +144,24 @@ class ApiService {
     return this.$http.post(this.apisURL + (apiId ? apiId + '/' : '') + 'import', apiDefinition);
   }
 
-  importSwagger(swaggerDescriptor: string): ng.IPromise<any> {
-    return this.$http.post(this.apisURL + 'import/swagger', swaggerDescriptor);
+  importSwagger(apiId: string, swaggerDescriptor: string): ng.IPromise<any> {
+    return this.$http.post(this.apisURL + (apiId ? apiId + '/' : '') + 'import/swagger', swaggerDescriptor);
   }
 
   export(apiId, exclude, exportVersion): ng.IPromise<any> {
     return this.$http.get(this.apisURL + apiId + '/export?exclude=' + exclude.join(",") + (exportVersion ? '&version=' + exportVersion : ''));
   }
 
-  verify(criteria): ng.IPromise<any> {
-    return this.$http.post(this.apisURL + 'verify', criteria);
+  verify(criteria, config?): ng.IPromise<any> {
+    return this.$http.post(this.apisURL + 'verify', criteria, config);
   }
 
   importPathMappings(apiId, page): ng.IPromise<any> {
     return this.$http.post(this.apisURL + apiId + '/import-path-mappings?page=' + page);
+  }
+
+  duplicate(apiId, config): ng.IPromise<any> {
+    return this.$http.post(this.apisURL + apiId + '/duplicate', config);
   }
 
   /*
@@ -262,7 +278,9 @@ class ApiService {
           characteristics: plan.characteristics, order: plan.order, paths: plan.paths,
           excluded_groups: plan.excludedGroups,
           comment_required: plan.comment_required,
-          comment_message: plan.comment_message
+          comment_message: plan.comment_message,
+          tags: plan.tags,
+          selection_rule: plan.selection_rule
         });
     } else {
       return this.$http.post(this.apisURL + apiId + '/plans',
@@ -272,7 +290,9 @@ class ApiService {
           characteristics: plan.characteristics, type: plan.type, paths: plan.paths,
           security: plan.security, securityDefinition: plan.securityDefinition, excluded_groups: plan.excludedGroups,
           comment_required: plan.comment_required,
-          comment_message: plan.comment_message
+          comment_message: plan.comment_message,
+          tags: plan.tags,
+          selection_rule: plan.selection_rule
         });
     }
   }
@@ -303,6 +323,15 @@ class ApiService {
     }
 
     return this.$http.get(req);
+  }
+
+  exportSubscriptionsAsCSV(apiId: string, query?: string): ng.IPromise<any> {
+    let req = this.apisURL + apiId + '/subscriptions/export';
+    if (query !== undefined) {
+      req += query;
+    }
+
+    return this.$http.get(req, {timeout: 30000});
   }
 
   getSubscribers(apiId: string): ng.IHttpPromise<any> {
@@ -513,16 +542,16 @@ class ApiService {
     return _.filter(endpointsName, (endpointName) => name === endpointName).length > (onCreate ? 0 : 1);
   }
 
-  getTagEntrypoints(api, entrypoints) {
-    if (!api.tags || api.tags.length === 0) {
-      return [this.Constants.portal.entrypoint];
-    } else {
-      let tagEntrypoints = _.filter(entrypoints, (entrypoint) => _.intersection(entrypoint.tags, api.tags).length > 0);
-      if (!tagEntrypoints || tagEntrypoints.length === 0) {
-        return [this.Constants.portal.entrypoint];
-      }
-      return _.map(tagEntrypoints, 'value');
-    }
+  askForReview(api, message?): ng.IPromise<any> {
+    return this.$http.post(this.apisURL + api.id + '/reviews?action=ASK', {message: message}, {headers: {'If-Match': api.etag}});
+  }
+
+  acceptReview(api, message): ng.IPromise<any> {
+    return this.$http.post(this.apisURL + api.id + '/reviews?action=ACCEPT', {message: message}, {headers: {'If-Match': api.etag}});
+  }
+
+  rejectReview(api, message): ng.IPromise<any> {
+    return this.$http.post(this.apisURL + api.id + '/reviews?action=REJECT', {message: message}, {headers: {'If-Match': api.etag}});
   }
 }
 

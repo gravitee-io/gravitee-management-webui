@@ -20,13 +20,14 @@ import NotificationSettingsService from '../../../../services/notificationSettin
 import NotificationService from '../../../../services/notification.service';
 import {Scope} from '../../../../entities/scope';
 import { StateService } from '@uirouter/core';
+import {IScope} from 'angular';
 
 const NotificationSettingsComponent: ng.IComponentOptions = {
   bindings: {
     resolvedHookScope: '<',
     resolvedHooks: '<',
     resolvedNotifiers: '<',
-    notificationSettings: '<'
+    notificationSettings: '='
   },
   template: require('./notificationsettings.html'),
   controller: function(
@@ -34,10 +35,12 @@ const NotificationSettingsComponent: ng.IComponentOptions = {
     NotificationSettingsService: NotificationSettingsService,
     NotificationService: NotificationService,
     $mdDialog: angular.material.IDialogService,
-    $timeout
+    $timeout: ng.ITimeoutService,
+    $rootScope: IScope
   ) {
     'ngInject';
     const vm = this;
+    this.$rootScope = $rootScope;
     vm.$mdDialog = $mdDialog;
 
     vm.$onInit = () => {
@@ -56,7 +59,7 @@ const NotificationSettingsComponent: ng.IComponentOptions = {
       }
     };
 
-    vm.selectNotificationSetting = (n) => {
+    vm.selectNotificationSetting = (n, reload) => {
       vm.selectedNotificationSetting = n;
       vm.hookStatus = {};
       _.forEach(vm.resolvedHooks,  (hook: Hook) => {
@@ -70,8 +73,8 @@ const NotificationSettingsComponent: ng.IComponentOptions = {
         vm.selectedNotifier = undefined;
       }
       $timeout(function () {
-        $state.params.notificationId = vm.selectedNotificationSetting.id;
-        $state.transitionTo($state.current, $state.params);
+        $state.params.notificationId = vm.selectedNotificationSetting.id || 'portal';
+        $state.transitionTo($state.current, $state.params, {reload: reload});
       });
     };
 
@@ -122,8 +125,8 @@ const NotificationSettingsComponent: ng.IComponentOptions = {
               vm.notificationSettings = _.filter(vm.notificationSettings, (n: any) => {
                 return vm.selectedNotificationSetting.id !== n.id;
               });
-              vm.selectNotificationSetting(vm.notificationSettings[0]);
-          })
+              vm.selectNotificationSetting(vm.notificationSettings[0], true);
+          });
         });
     };
 

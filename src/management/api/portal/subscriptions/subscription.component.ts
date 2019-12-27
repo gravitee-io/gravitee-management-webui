@@ -13,8 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import _ = require('lodash');
+
 import ApiService from '../../../../services/api.service';
 import NotificationService from '../../../../services/notification.service';
+import { StateService } from '@uirouter/core';
+import moment = require("moment");
 
 const ApiSubscriptionComponent: ng.IComponentOptions = {
   bindings: {
@@ -28,14 +32,25 @@ const ApiSubscriptionComponent: ng.IComponentOptions = {
     private keys:any[];
     private api: any;
     private plans: any[];
+    private backStateParams: any;
 
     constructor(
       private $rootScope: ng.IRootScopeService,
       private $mdDialog: angular.material.IDialogService,
       private NotificationService: NotificationService,
-      private ApiService: ApiService
+      private ApiService: ApiService,
+      private $state: StateService
     ) {
       'ngInject';
+
+      this.backStateParams = {
+        application: $state.params['application'],
+        plan: $state.params['plan'],
+        status: $state.params['status'],
+        page: $state.params['page'],
+        size: $state.params['size'],
+        api_key: $state.params['api_key']
+      };
     }
 
     $onInit() {
@@ -59,7 +74,11 @@ const ApiSubscriptionComponent: ng.IComponentOptions = {
     }
 
     close() {
-      let msg = 'The application will not be able to consume this API anymore.';
+      let msg = '<code>'
+        + this.subscription.application.name
+        + '</code> will not be able to consume <code>'
+        + this.api.name
+        + '</code> anymore.';
       if (this.subscription.plan.security === 'api_key') {
         msg += '<br/>All Api-keys associated to this subscription will be closed and could not be used.'
       }
@@ -70,9 +89,9 @@ const ApiSubscriptionComponent: ng.IComponentOptions = {
         template: require('../../../../components/dialog/confirmWarning.dialog.html'),
         clickOutsideToClose: true,
         locals: {
-          title: 'Are you sure you want to close this subscription?',
+          title: 'Are you sure you want to close this subscription to '+ this.subscription.plan.name +'?',
           msg: msg,
-          confirmButton: 'Close'
+          confirmButton: 'Close the subscription'
         }
       }).then( (response) => {
         if (response) {
@@ -232,6 +251,7 @@ const ApiSubscriptionComponent: ng.IComponentOptions = {
 
         this.ApiService.updateApiKey(this.api.id, apiKey).then(() => {
           this.NotificationService.show('An expiration date has been defined for API Key.');
+          this.listApiKeys();
         });
       });
     }
@@ -254,6 +274,10 @@ const ApiSubscriptionComponent: ng.IComponentOptions = {
         this.subscription.plan = plan;
         this.transferSubscription(this.subscription);
       });
+    }
+
+    isValid(key) {
+      return !key.revoked && !key.expired ;
     }
   }
 };
