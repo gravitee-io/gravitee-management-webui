@@ -1,0 +1,206 @@
+{
+  "common": {
+    "copyToClipboard": "클립보드로 복사",
+    "NANOSECONDS": "나노초",
+    "MICROSECONDS": "마이크로초",
+    "MILLISECONDS": "밀리초",
+    "SECONDS": "초",
+    "MINUTES": "분",
+    "HOURS": "시간",
+    "DAYS": "일",
+    "close": "닫기",
+    "create": "생성",
+    "cancel": "취소",
+    "ok": "확인",
+    "submit": "전송",
+    "answer": "답변",
+    "ratings.none": "평가 없음",
+    "paging": {
+      "first": "처음",
+      "previous": "이전",
+      "next": "다음",
+      "last": "마지막"
+    }
+  },
+  "home": {
+    "subtitle": "개발자 포탈",
+    "version": "Version: {{version}}",
+    "pages": {
+      "title": "도규먼트"
+    },
+    "apis": {
+      "search": "API 찾기...",
+      "top": "최상위 API들",
+      "all": "전체 API 목록",
+      "no.search.result": "API가 존재하지 않습니다."
+    }
+  },
+  "menu": {
+    "login": "로그인",
+    "gallery": "API 갤러리",
+    "documentation": "문서",
+    "profile": "내 계정",
+    "management": "관리",
+    "applications": "어플리케이션목록",
+    "apis": "API목록",
+    "tasks": "Task목록",
+    "logout": "로그아웃",
+    "support": "지원"
+  },
+  "apis": {
+    "filter": "API 찾기...",
+    "search": {
+      "view": "검색 결과"
+    }
+  },
+  "api": {
+    "version": "버전",
+    "endpoint": "엔드포인트",
+    "owner": "소유자",
+    "publishedAt": "배포됨",
+    "subscription": {
+      "step1": {
+        "title": "API Plan을 선택하세요",
+        "subtitle": "API Plan은 귀하와 API 간의 서비스 계약에 해당합니다.",
+        "keyless": "이 plan은 api key가 필요없으며 가입이 필요하지 않습니다."
+      },
+      "step2": {
+        "title": "어플리케이션을 선택하세요",
+        "subtitle": "어플리케이션은 귀하와 소비자 및 API 요금제 가입 간의 링크입니다.",
+        "application": {
+          "placeholder": "어플리케이션을 선택하세요..."
+        },
+        "clientIdRequired": "이 Plan에 가입하려면 clientId가 필요합니다. 어플리케이션 설정을 확인하십시오.",
+        "action": "구독",
+        "comment": {
+          "message": "API 소유자에게 코멘트 보내기"
+        }
+      },
+      "step3": {
+        "apikey": {
+          "key": "다음 API key를 사용하여 API에 액세스 할 수 있습니다:",
+          "curl": "curl을 사용하여 샘플 요청:",
+          "clipboard": "API key가 클립 보드에 복사되었습니다."
+        },
+        "oauth2": {
+          "bearer": "이 API를 사용하려면 authorization 서버에서 access_token을 가져와야합니다.",
+          "curl": "curl을 사용하여 샘플 요청:"
+        },
+        "jwt": {
+          "bearer": "이 API를 사용하려면 authorization 서버에서 access_token을 가져와야합니다.",
+          "curl": "curl을 사용하여 샘플 요청:"
+        },
+        "pending": {
+          "title": "구독 유효성 검사중",
+          "subtitle": "가입이 여전히 보류 상태에 있으며 처리가 완료되면 알림을 받게됩니다."
+        },
+        "accepted": {
+          "title": "\"{{applicationName}}\"의 \"{{apiName}}\"를 사용하십시요!"
+        },
+        "successful": "구독 요청이 제출되었습니다."
+      },
+
+	  "planInformation": "{{quotaPeriodTime}} {{quotaPeriodTimeUnit}} 마다 {{quotaLimit}} 요청 활당량"
+    },
+    "plan": {
+      "title": "Plans",
+      "subscribe": "구독",
+      "manual": "가입대상확인",
+      "empty": {
+        "title": "이 API와 연관된 Plan 없음",
+        "message": "Plan을 만들면 이 API를 구독할 수 있습니다."
+      }
+    },
+    "documentation": {
+      "title": "문서",
+      "empty": {
+        "title": "이 API와 연관된 문서 없음",
+        "message": "잠시후 사용하세요, API가 곧 완료될 예정입니다"
+      }
+    },
+    "metadata": {
+      "title": "메타데이터",
+      "name": "이름",
+      "value": "값"
+    },
+    "rating": {
+      "title": "귀하의 의견에 대한 제목 또는 요약",
+      "comment": "의견",
+      "by": "By",
+      "rate": "{{numberOfRatings}} 등급",
+      "empty": {
+        "title": "이 API와 연관된 평가 없음",
+        "message": "첫번째 평가자가 되세요",
+        "rights.message": "이 API를 평가하는 데 필요한 권한이 없습니다"
+      },
+      "messages": {
+        "1": "이 API를 싫어한다",
+        "2": "이 API를 좋아하지 않는다",
+        "3": "이 API를 좋아한다.",
+        "4": "이 API를 사랑한다",
+        "5": "이 API는 완벽하다"
+      },
+      "successCreation": "평가가 성공적으로 제출되었습니다",
+      "successCreationMessage": "평가 완료 대기중입니다. 이제 평가를 완료하기 위해 설명을 추가 할 수 있습니다",
+      "successUpdate": "평가가 갱신되었습니다.",
+      "successDeletion": "평가가 삭제되었습니다.",
+      "deletion": "평가를 삭제하시겠습니끼?",
+      "list": {
+        "title": "{{numberOfRatings}} 등급"
+      },
+      "answer": {
+        "label": "{{numberOfAnswers}} 답변",
+        "successCreation": "답변이 제출되었습니다.",
+        "successDeletion": "답변이 삭제되었습니다.",
+        "deletion": "답변을 삭제하시겠습니까?",
+        "new": {
+          "label": "답변"
+        }
+      },
+      "summary": {
+        "title": "별 5 등급중 {{averageRate}} ",
+        "link": "{{numberOfRatings}}등급을 참조하세요"
+      }
+    },
+    "header": {
+      "views": "뷰",
+      "tags": "태그"
+    }
+  },
+  "applications": {
+    "empty": "어플리케이션이 존재하지 않습니다.!",
+    "start": "첫번째 어플리케이션을 만드세요."
+  },
+  "application": {
+    "notFound": "\"{{applicationName}}\"의 어플리케이션을 찾을 수 없습니다"
+  },
+  "support": {
+    "ticket": {
+      "title": "티켓 생성 지원",
+      "subject": "주제",
+      "content": "내용",
+      "api": "API를 선택하세요",
+      "application": "어플리케이션을 선택하세요",
+      "copyToSender": "이메일 사본을 받으세요",
+      "successCreation": "티켓이 생성되었습니다.",
+      "notAuthenticated": {
+        "title": "지원 티켓 생성하기",
+        "message": "티켓을 입력하려면 로그인 하세요"
+      },
+      "userWithoutEmail": {
+        "message": "계정에 이메일이 등록되어 있지 않아 티켓을 제출할 수 없습니다 "
+      }
+    }
+  },
+  "views": {
+    "filter": "뷰 필터..."
+  },
+  "view": {
+    "defaultDescription":  "{{viewName}} 목록의 API 받기",
+    "api": {
+      "documentation": "문서",
+      "ratings": "평가"
+    },
+    "moreApis": "추가 API ..."
+  }
+}
