@@ -39,6 +39,7 @@ export class IdentityProvider {
   public scope: any;
   public userLogoutEndpoint: any;
   public syncMappings: boolean;
+  public order: number;
 
   constructor() {
     'ngInject';

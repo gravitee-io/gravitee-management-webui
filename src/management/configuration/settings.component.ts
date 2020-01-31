@@ -96,7 +96,7 @@ const SettingsComponent: ng.IComponentOptions = {
       },
       organizationIdentityProviders: {
         perm: UserService.isUserHasAllPermissions(
-          ['organization-identity_provider-r', 'organization-identity_provider_activations-r']),
+          ['organization-identity_provider-r', 'organization-identity_provider_activation-r']),
         goTo: 'management.settings.organization.identityproviders.list'
       },
 

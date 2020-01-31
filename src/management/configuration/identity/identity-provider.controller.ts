@@ -53,7 +53,11 @@ class IdentityProviderController {
       this.identityProvider.enabled = true;
       this.identityProvider.type = (this.$state.params.type as string);
       this.identityProvider.configuration = new Map<string, any>();
-      this.identityProvider.configuration.set('scopes', []);
+      if (this.isSocialProvider()) {
+        this.identityProvider.configuration.set('scopes', []);
+      } else {
+        this.identityProvider.configuration.delete('scopes');
+      }
       this.identityProvider.emailRequired = true;
 
       // Default user mapping configuration for OIDC or Gravitee.io AM providers
@@ -91,6 +95,13 @@ class IdentityProviderController {
   deleteRoleMapping(idx: number) {
     this.identityProvider.roleMappings.splice(idx, 1);
     this.$scope.formIdentityProvider.$setDirty();
+  }
+
+  isSocialProvider() {
+    return this.identityProvider.type === 'google'
+      || this.identityProvider.type === 'github'
+      || this.identityProvider.type === 'graviteeio_am'
+      || this.identityProvider.type === 'oidc';
   }
 
   reset() {

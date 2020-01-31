@@ -20,20 +20,55 @@
   <div class="gv-form">
     <h2></h2>
     <div class="gv-form-content" layout="column" ng-if="$ctrl.target === 'ENVIRONMENT'">
-      <h3>Activation on portal</h3>
-      <md-table-container ng-if="$ctrl.identityProviders.length > 0">
+      <h3>Activation on portal - Identity providers</h3>
+      <md-table-container>
         <table class="gv-table-dense" md-table>
           <thead md-head>
           <tr md-row>
             <th md-column nowrap width="1%"></th>
-            <th md-column>ID</th>
-            <th md-column>Name</th>
+            <th md-column width="10%">ID</th>
+            <th md-column width="10%">Name</th>
             <th md-column>Description</th>
             <th md-column>Activated</th>
           </tr>
           </thead>
           <tbody md-body>
-          <tr md-row ng-repeat="identityProvider in $ctrl.identityProviders | orderBy: name" ng-class="identityProvider.enabled ? '' : 'disabled'">
+          <tr md-row ng-repeat="identityProvider in $ctrl.internalIdentityProviders | orderBy: ['order', 'name']" ng-class="identityProvider.enabled ? '' : 'disabled'">
+            <td md-cell ng-switch="identityProvider.type">
+              <md-icon
+                md-svg-icon="assets/logo_{{identityProvider.type | lowercase}}-idp.svg"
+                style="fill: black;"
+              ></md-icon>
+            </td>
+            <td md-cell>{{identityProvider.id}}</td>
+            <td md-cell>{{identityProvider.name}}</td>
+            <td md-cell>{{identityProvider.description}}</td>
+            <td md-cell>
+              <ng-md-icon icon="done" ng-if="$ctrl.activatedIdps[identityProvider.id]" permission permission-except="'environment-identity_provider_activation-u'"></ng-md-icon>
+              <md-input-container class="gv-input-container-dense" permission permission-only="'environment-identity_provider_activation-u'">
+                <md-checkbox aria-label="Activated for portal" ng-disabled="!identityProvider.enabled" ng-change="$ctrl.toggleActivatedIdp(identityProvider.id)" ng-model="$ctrl.activatedIdps[identityProvider.id]">
+                </md-checkbox>
+              </md-input-container>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </md-table-container>
+
+      <h3>Activation on portal - Social providers</h3>
+      <md-table-container>
+        <table class="gv-table-dense" md-table>
+          <thead md-head>
+          <tr md-row>
+            <th md-column nowrap width="1%"></th>
+            <th md-column width="10%">ID</th>
+            <th md-column width="10%">Name</th>
+            <th md-column>Description</th>
+            <th md-column>Activated</th>
+          </tr>
+          </thead>
+          <tbody md-body>
+          <tr md-row ng-repeat="identityProvider in $ctrl.socialIdentityProviders | orderBy: ['order', 'name']" ng-class="identityProvider.enabled ? '' : 'disabled'">
             <td md-cell ng-switch="identityProvider.type">
               <md-icon
                 md-svg-icon="assets/logo_{{identityProvider.type | lowercase}}-idp.svg"
@@ -76,23 +111,26 @@
         </md-checkbox>
       </md-input-container>
 
-      <md-table-container ng-if="$ctrl.identityProviders.length > 0">
+      <h3>Identity providers</h3>
+      <md-table-container>
         <table class="gv-table-dense" md-table>
           <thead md-head>
           <tr md-row>
             <th md-column nowrap width="1%"></th>
-            <th md-column>ID</th>
-            <th md-column>Name</th>
+            <th md-column width="90px">ID</th>
+            <th md-column width="90px">Name</th>
+            <th md-column width="80px"></th>
             <th md-column>Description</th>
             <th md-column>Enabled</th>
             <th md-column style="text-align: center;">Activated <br/>for management console</th>
             <th md-column>Sync</th>
             <th md-column>Last updated at</th>
+            <th md-column></th>
             <th md-column nowrap width="48px"></th>
           </tr>
           </thead>
           <tbody md-body>
-          <tr md-row ng-repeat="identityProvider in $ctrl.identityProviders | orderBy: name">
+          <tr md-row ng-repeat="identityProvider in $ctrl.internalIdentityProviders | orderBy: ['order', 'name']">
             <td md-cell ng-switch="identityProvider.type">
               <md-icon
                 md-svg-icon="assets/logo_{{identityProvider.type | lowercase}}-idp.svg"
@@ -103,9 +141,16 @@
               <a ui-sref="management.settings.organization.identityproviders.identityprovider({id: identityProvider.id})">{{identityProvider.id}}</a>
             </td>
             <td md-cell>{{identityProvider.name}}</td>
+            <td md-cell>
+              <span ng-if="identityProvider.type === 'memory' || identityProvider.type === 'gravitee'" flex class="badge">System</span>
+            </td>
             <td md-cell>{{identityProvider.description}}</td>
             <td md-cell>
-              <ng-md-icon icon="done" ng-if="identityProvider.enabled"></ng-md-icon>
+              <ng-md-icon icon="done" ng-if="identityProvider.enabled" permission permission-except="'organization-identity_provider-u'"></ng-md-icon>
+              <md-input-container class="gv-input-container-dense" permission permission-only="'organization-identity_provider-u'">
+                <md-checkbox aria-label="Enabled" ng-change="$ctrl.changeIdentityProviderStatus(identityProvider)" ng-model="identityProvider.enabled">
+                </md-checkbox>
+              </md-input-container>
             </td>
             <td md-cell style="text-align: center;">
               <ng-md-icon icon="done" ng-if="$ctrl.activatedIdps[identityProvider.id]" permission permission-except="'organization-identity_provider_activation-u'"></ng-md-icon>
@@ -118,9 +163,84 @@
               <ng-md-icon icon="done" ng-if="identityProvider.sync"></ng-md-icon>
             </td>
             <td md-cell>{{identityProvider.updated_at | date:'MMM d, y h:mm:ss a'}}</td>
-            <td md-cell nowrap width="40">
+            <td md-cell width="76px" nowrap>
+              <ng-md-icon ng-if="!$first" icon="arrow_upwards" ng-click="$ctrl.upward(identityProvider)"
+                          permission permission-only="['organization-identity_provider-u']">
+                <md-tooltip md-direction="top" md-visible="false">Move upward</md-tooltip>
+              </ng-md-icon>
+              <span ng-if="$first" style="padding-right: 28px"></span>
+              <ng-md-icon ng-if="!$last" icon="arrow_downward" ng-click="$ctrl.downward(identityProvider)"
+                          permission permission-only="['organization-identity_provider-u']">
+                <md-tooltip md-direction="top" md-visible="false">Move downward</md-tooltip>
+              </ng-md-icon>
+            </td>
+            <td md-cell>
               <ng-md-icon icon="delete" ng-click="$ctrl.delete(identityProvider)"
-                          permission permission-only="'organization-identity_provider-d'">
+                          permission permission-only="'organization-identity_provider-d'"
+                          ng-if="identityProvider.type !== 'memory' && identityProvider.type !== 'gravitee'">
+                <md-tooltip md-direction="top" md-visible="false">Delete</md-tooltip>
+              </ng-md-icon>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </md-table-container>
+
+      <h3>Social providers</h3>
+      <md-table-container>
+        <table class="gv-table-dense" md-table>
+          <thead md-head>
+          <tr md-row>
+            <th md-column nowrap width="1%"></th>
+            <th md-column width="90px">ID</th>
+            <th md-column width="90px">Name</th>
+            <th md-column width="80px"></th>
+            <th md-column>Description</th>
+            <th md-column>Enabled</th>
+            <th md-column style="text-align: center;">Activated <br/>for management console</th>
+            <th md-column>Sync</th>
+            <th md-column>Last updated at</th>
+            <th md-column></th>
+            <th md-column nowrap width="48px"></th>
+          </tr>
+          </thead>
+          <tbody md-body>
+          <tr md-row ng-repeat="identityProvider in $ctrl.socialIdentityProviders | orderBy: ['order', 'name']">
+            <td md-cell ng-switch="identityProvider.type">
+              <md-icon
+                md-svg-icon="assets/logo_{{identityProvider.type | lowercase}}-idp.svg"
+                style="fill: black;"
+              ></md-icon>
+            </td>
+            <td md-cell>
+              <a ui-sref="management.settings.organization.identityproviders.identityprovider({id: identityProvider.id})">{{identityProvider.id}}</a>
+            </td>
+            <td md-cell>{{identityProvider.name}}</td>
+            <td md-cell></td>
+            <td md-cell>{{identityProvider.description}}</td>
+            <td md-cell>
+              <ng-md-icon icon="done" ng-if="identityProvider.enabled" permission permission-except="'organization-identity_provider-u'"></ng-md-icon>
+              <md-input-container class="gv-input-container-dense" permission permission-only="'organization-identity_provider-u'">
+                <md-checkbox aria-label="Enabled" ng-change="$ctrl.changeIdentityProviderStatus(identityProvider)" ng-model="identityProvider.enabled">
+                </md-checkbox>
+              </md-input-container>
+            </td>
+            <td md-cell style="text-align: center;">
+              <ng-md-icon icon="done" ng-if="$ctrl.activatedIdps[identityProvider.id]" permission permission-except="'organization-identity_provider_activation-u'"></ng-md-icon>
+              <md-input-container class="gv-input-container-dense" permission permission-only="'organization-identity_provider_activation-u'">
+                <md-checkbox aria-label="Activated for console" ng-change="$ctrl.toggleActivatedIdp(identityProvider.id)" ng-model="$ctrl.activatedIdps[identityProvider.id]">
+                </md-checkbox>
+              </md-input-container>
+            </td>
+            <td md-cell>
+              <ng-md-icon icon="done" ng-if="identityProvider.sync"></ng-md-icon>
+            </td>
+            <td md-cell>{{identityProvider.updated_at | date:'MMM d, y h:mm:ss a'}}</td>
+            <td md-cell width="76px"></td>
+            <td md-cell>
+              <ng-md-icon icon="delete" ng-click="$ctrl.delete(identityProvider)"
+                          permission permission-only="'organization-identity_provider-d'"
+                          ng-if="identityProvider.type !== 'memory' && identityProvider.type !== 'gravitee'">
                 <md-tooltip md-direction="top" md-visible="false">Delete</md-tooltip>
               </ng-md-icon>
             </td>

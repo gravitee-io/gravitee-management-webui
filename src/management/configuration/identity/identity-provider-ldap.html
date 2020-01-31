@@ -1,0 +1,165 @@
+<!--
+
+    Copyright (C) 2015 The Gravitee team (http://gravitee.io)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<div class="gv-form">
+  <h2>Configuration</h2>
+  <div class="gv-form-content" layout="column">
+    <div layout="column">
+      <div class="gv-form">
+        <h3>Authentication</h3>
+        <div class="gv-form-content" layout="column">
+          <div layout="column">
+            <div class="gv-form">
+              <h4>User</h4>
+              <div class="gv-form-content" layout="column">
+                <div layout="column">
+                  <md-input-container class="md-block" flex-gt-xs>
+                      <label>Base</label>
+                      <input ng-model="$ctrl.identityProvider.configuration.authentication.user.base" type="text" required>
+                  </md-input-container>
+                  <md-input-container class="md-block" flex-gt-xs>
+                      <label>Filter</label>
+                      <input ng-model="$ctrl.identityProvider.configuration.authentication.user.filter" type="text" required>
+                  </md-input-container>
+                  <md-input-container class="md-block" flex-gt-xs>
+                      <label>Photo attribute</label>
+                      <input ng-model="$ctrl.identityProvider.configuration.authentication.user['photo-attribute']" type="text" required>
+                  </md-input-container>
+                </div>
+              </div>
+            </div>
+            <div class="gv-form">
+              <h4>Group</h4>
+              <div class="gv-form-content" layout="column">
+                <md-input-container class="md-block" flex-gt-xs>
+                    <label>Base</label>
+                    <input ng-model="$ctrl.identityProvider.configuration.authentication.group.base" type="text" required>
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-xs>
+                    <label>Filter</label>
+                    <input ng-model="$ctrl.identityProvider.configuration.authentication.group.filter" type="text" required>
+                </md-input-container>
+                <h5>Role</h5>
+                <md-input-container class="md-block" flex-gt-xs>
+                    <label>Attribute</label>
+                    <input ng-model="$ctrl.identityProvider.configuration.authentication.group.role.attribute" type="text" required>
+                </md-input-container>
+                <div class="gv-form-content" layout="column">
+                  <div layout="column">
+                    <h6>Mapping</h6>
+                    <md-table-container>
+                      <table md-table class="gv-table-dense">
+                        <thead md-head>
+                          <tr md-row>
+                            <th md-column>Group name</th>
+                            <th md-column>Role name</th>
+                            <th md-column width="48px" nowrap></th>
+                          </tr>
+                        </thead>
+                        <tbody md-body>
+                          <tr md-row ng-repeat="(key, value) in $ctrl.identityProvider.configuration.authentication.group.role.mapper">
+                            <td md-cell>
+                              <md-input-container class="md-block" flex-gt-xs>
+                                <input ng-model="key" name="{{ key }}" aria-label="Group name" size="32">
+                              </md-input-container>
+                            </td>
+                            <td md-cell>
+                              <md-input-container class="md-block" flex-gt-xs>
+                                <input ng-model="value" name="{{ value }}" aria-label="Role name" size="32">
+                              </md-input-container>
+                            </td>
+                            <td md-cell width="40" nowrap>
+                              <ng-md-icon icon="delete" ng-click="$ctrl.deleteRoleMapping(key)">
+                                <md-tooltip md-direction="top">Delete</md-tooltip>
+                              </ng-md-icon>
+                            </td>
+                          </tr>
+                          <tr md-row>
+                              <td md-cell>
+                                  <md-input-container class="md-block" flex-gt-xs>
+                                    <input ng-model="$ctrl.newRoleMapping.group" aria-label="Group name" placeholder="Group" size="32">
+                                  </md-input-container>
+                              </td>
+                              <td md-cell>
+                                  <md-input-container class="md-block" flex-gt-xs>
+                                    <input ng-model="$ctrl.newRoleMapping.role" aria-label="Role name" placeholder="Role" size="32">
+                                  </md-input-container>
+                              </td>
+                              <td md-cell width="40" nowrap>
+                                <ng-md-icon icon="add" ng-click="$ctrl.addRoleMapping()">
+                                  <md-tooltip md-direction="top">Add</md-tooltip>
+                                </ng-md-icon>
+                              </td>
+                            </tr>
+                        </tbody>
+                      </table>
+                    </md-table-container>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="gv-form">
+        <h3>Context</h3>
+        <div class="gv-form-content" layout="column">
+          <md-input-container class="md-block" flex-gt-xs>
+              <label>Base</label>
+              <input ng-model="$ctrl.identityProvider.configuration.context.base" type="text" required>
+          </md-input-container>
+          <md-input-container class="md-block" flex-gt-xs>
+              <label>Password</label>
+              <input ng-model="$ctrl.identityProvider.configuration.context.password" type="text" required>
+          </md-input-container>
+          <md-input-container class="md-block" flex-gt-xs>
+              <label>Username</label>
+              <input ng-model="$ctrl.identityProvider.configuration.context.username" type="text" required>
+          </md-input-container>
+          <md-input-container class="md-block" flex-gt-xs>
+              <label>URL</label>
+              <input ng-model="$ctrl.identityProvider.configuration.context.url" type="text" required>
+          </md-input-container>
+          </div>
+      </div>
+      <div class="gv-form">
+          <h3>Lookup</h3>
+          <div class="gv-form-content" layout="column">
+            <md-input-container class="md-block" flex-gt-xs>
+              <md-checkbox aria-label="Allow Email In Search Results" ng-model="$ctrl.identityProvider.configuration.lookup.allowEmailInSearchResults">
+                  Allow search results to display the user email. Be careful, It may be contrary to the user privacy.
+                </md-checkbox>
+            </md-input-container>
+            <div class="gv-form">
+              <h4>User</h4>
+              <div class="gv-form-content" layout="column">
+                <div layout="column">
+                  <md-input-container class="md-block" flex-gt-xs>
+                      <label>Base</label>
+                      <input ng-model="$ctrl.identityProvider.configuration.lookup.user.base" type="text" required>
+                  </md-input-container>
+                  <md-input-container class="md-block" flex-gt-xs>
+                      <label>Filter</label>
+                      <input ng-model="$ctrl.identityProvider.configuration.lookup.user.filter" type="text" required>
+                  </md-input-container>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>

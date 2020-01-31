@@ -327,8 +327,10 @@ import IdentityProviderComponent from '../management/configuration/identity/iden
 import IdentityProviderController from '../management/configuration/identity/identity-provider.controller';
 import IdentityProviderGoogleComponent from '../management/configuration/identity/identity-provider-google.component';
 import IdentityProviderGitHubComponent from '../management/configuration/identity/identity-provider-github.component';
-import IdentityProviderGraviteeioAmComponent
-  from '../management/configuration/identity/identity-provider-graviteeio-am.component';
+import IdentityProviderGraviteeComponent from '../management/configuration/identity/identity-provider-gravitee.component';
+import IdentityProviderGraviteeioAmComponent from '../management/configuration/identity/identity-provider-graviteeio-am.component';
+import IdentityProviderLdapComponent from '../management/configuration/identity/identity-provider-ldap.component';
+import IdentityProviderMemoryComponent from '../management/configuration/identity/identity-provider-memory.component';
 import IdentityProviderOIDCComponent from '../management/configuration/identity/identity-provider-oidc.component';
 import IdentityProviderService from '../services/identityProvider.service';
 // Others
@@ -955,8 +957,11 @@ angular.module('gravitee-management', [uiRouter, permission, uiPermission, 'ngMa
   .component('identityProviders', IdentityProvidersComponent)
   .component('identityProvider', IdentityProviderComponent)
   .component('gvIdentityproviderGraviteeioAm', IdentityProviderGraviteeioAmComponent)
+  .component('gvIdentityproviderGravitee', IdentityProviderGraviteeComponent)
   .component('gvIdentityproviderGoogle', IdentityProviderGoogleComponent)
   .component('gvIdentityproviderGithub', IdentityProviderGitHubComponent)
+  .component('gvIdentityproviderLdap', IdentityProviderLdapComponent)
+  .component('gvIdentityproviderMemory', IdentityProviderMemoryComponent)
   .component('gvIdentityproviderOidc', IdentityProviderOIDCComponent)
   .controller('IdentityProviderController', IdentityProviderController)
   .service('IdentityProviderService', IdentityProviderService)
