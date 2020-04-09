@@ -71,6 +71,7 @@ class ApiResponseTemplateController {
       'REQUEST_CONTENT_LIMIT_LENGTH_REQUIRED',
       'REQUEST_VALIDATION_INVALID',
       'RESOURCE_FILTERING_FORBIDDEN',
+      'PLAN_UNRESOLVABLE'
     ];
 
     // In case of a new response template, initialize with default media type
