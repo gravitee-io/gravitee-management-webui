@@ -20,13 +20,13 @@
       <div class="form">
 
         <div class="gravitee-no-sidenav-header" layout="column">
-          <label>Log In</label>
+          <label>Sign In</label>
+          <label class="subtitle">to continue to the Administration Portal</label>
         </div>
 
         <form name="formUser" ng-submit="$ctrl.login()" layout="column" ng-if="!$ctrl.localLoginDisabled || $ctrl.providers.length == 0">
 
           <div layout="row">
-            <ng-md-icon icon="person" style="fill: #555"></ng-md-icon>
             <md-input-container class="md-icon-float md-block" flex>
               <label>Username</label>
               <input ng-model="$ctrl.user.username" type="text" placeholder="" required autofocus>
@@ -34,7 +34,6 @@
           </div>
 
           <div layout="row">
-            <ng-md-icon icon="vpn_key" style="fill: #555"></ng-md-icon>
             <md-input-container class="md-icon-float md-block" flex>
               <label>Password</label>
               <input ng-model="$ctrl.user.password" placeholder="" type="password" required>
@@ -42,9 +41,7 @@
           </div>
 
           <md-button type="submit" class="md-raised md-primary"
-                     ng-disabled="canBeDisabled && (formUser.$invalid || formUser.$pristine)">Log in</md-button>
-
-
+                     ng-disabled="canBeDisabled && (formUser.$invalid || formUser.$pristine)">Sign in</md-button>
           <br>
           <p class="text-center text-muted" ng-if="$ctrl.userCreationEnabled" >
             <small>Don't have an account yet? <a ui-sref="registration">Sign up</a></small>
