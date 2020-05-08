@@ -24,7 +24,7 @@
     "angular-moment-picker": "^0.10.2",
     "angular-permission": "^6.0.0",
     "angular-sanitize": "^1.7.9",
-    "angular-schema-form": "^0.8.13",
+    "angular-schema-form": "^0.8.14",
     "angular-timeline": "^1.7.0",
     "angular-translate": "^2.18.2",
     "angular-translate-loader-static-files": "^2.18.2",
