@@ -38,7 +38,7 @@
     "jdenticon": "^2.2.0",
     "jquery": "^3.5.0",
     "js-yaml": "^3.13.1",
-    "marked": "^0.7.0",
+    "marked": "^0.8.2",
     "md-color-picker": "^0.2.6",
     "md-steppers": "^0.4.1",
     "moment": "^2.24.0",
