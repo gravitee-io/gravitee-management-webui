@@ -74,6 +74,14 @@ const AuditComponent: ng.IComponentOptions = {
       return _.mapValues(properties, (v, k) => vm.metadata[k + ':' + v + ':name']);
     };
 
+    vm.onlyEnvLog = ( ) => {
+      vm.query.orgLog = false;
+    };
+
+    vm.onlyOrgLog = () => {
+      vm.query.envLog = false;
+    };
+
     vm.search = () => {
       vm.query.page = 1;
       if (vm.query.mgmt) {
