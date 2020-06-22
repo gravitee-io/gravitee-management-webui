@@ -14,18 +14,27 @@
  * limitations under the License.
  */
 
+import { IdentityProviderActivation } from '../entities/identityProvider';
+
 class EnvironmentService {
-  private environmentURL: string;
+  private environmentsURL: string;
 
   constructor(private $http, Constants, private $q) {
     'ngInject';
-    this.environmentURL = `${Constants.orgBaseURL}/environments`;
+    this.environmentsURL = `${Constants.orgBaseURL}/environments`;
   }
 
   list() {
-    return this.$http.get(this.environmentURL);
+    return this.$http.get(this.environmentsURL);
   }
 
+  listEnvironmentIdentities(envId: string) {
+    return this.$http.get(`${this.environmentsURL}/${envId}/identities`);
+  }
+
+  updateEnvironmentIdentities(envId: string, updatedIPA: IdentityProviderActivation[]) {
+    return this.$http.put(`${this.environmentsURL}/${envId}/identities`, updatedIPA);
+  }
 }
 
 export default EnvironmentService;

@@ -202,7 +202,7 @@ const UserDetailComponent: ng.IComponentOptions = {
         userEnvironments.push({
           name: env,
           roles: _.map(this.selectedUser.envRoles[env], role => role.name).join(', ')
-        })
+        });
       });
       $scope.userEnvironments = userEnvironments;
     };

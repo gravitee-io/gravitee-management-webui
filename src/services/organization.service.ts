@@ -14,20 +14,27 @@
  * limitations under the License.
  */
 
-class PortalService {
-  private portalURL: string;
-  private Constants: any;
+import { IdentityProviderActivation } from '../entities/identityProvider';
 
-  constructor(private $http, Constants) {
+class OrganizationService {
+  private organizationURL: string;
+
+  constructor(private $http, Constants, private $q) {
     'ngInject';
-    this.portalURL = `${Constants.envBaseURL}/portal/`;
-    this.Constants = Constants;
+    this.organizationURL = `${Constants.orgBaseURL}`;
   }
 
-  searchApis(query?: string, opts?: any) {
-    let url = this.portalURL + 'apis/_search?q=' + query;
-    return this.$http.post(url, {}, opts);
+  listSocialIdentityProviders() {
+    return this.$http.get(this.organizationURL + '/social-identities');
+  }
+
+  listOrganizationIdentities() {
+    return this.$http.get(`${this.organizationURL}/identities`);
+  }
+
+  updateOrganizationIdentities(updatedIPA: IdentityProviderActivation[]) {
+    return this.$http.put(`${this.organizationURL}/identities`, updatedIPA);
   }
 }
 
-export default PortalService;
+export default OrganizationService;

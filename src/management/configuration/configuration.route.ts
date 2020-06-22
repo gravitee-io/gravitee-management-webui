@@ -32,7 +32,8 @@ import EntrypointService from '../../services/entrypoint.service';
 import ClientRegistrationProviderService from '../../services/clientRegistrationProvider.service';
 import QualityRuleService from '../../services/qualityRule.service';
 import DashboardService from '../../services/dashboard.service';
-import EnvironmentService from "../../services/environment.service";
+import EnvironmentService from '../../services/environment.service';
+import OrganizationService from '../../services/organization.service';
 import _ = require('lodash');
 
 export default configurationRouterConfig;
@@ -821,16 +822,51 @@ function configurationRouterConfig($stateProvider) {
         }
       }
     })
-    .state('management.settings.identityproviders', {
+    .state('management.settings.environment', {
+      abstract: true,
+      url: '/environment'
+    })
+    .state('management.settings.environment.identityproviders', {
+      url: '/identity-providers',
+      component: 'identityProviders',
+      resolve: {
+        target: () => 'ENVIRONMENT',
+        targetId: () => 'DEFAULT',
+        identityProviders: (IdentityProviderService: IdentityProviderService) =>
+          IdentityProviderService.list().then(response => response),
+
+        identities: (EnvironmentService: EnvironmentService) =>
+          EnvironmentService.listEnvironmentIdentities('DEFAULT').then(response => response.data)
+      },
+      data: {
+        menu: null,
+        docs: {
+          page: 'management-configuration-identityproviders'
+        },
+        perms: {
+          only: ['environment-identity_provider_activation-r']
+        }
+      }
+    })
+    .state('management.settings.organization', {
+      abstract: true,
+      url: '/organization'
+    })
+    .state('management.settings.organization.identityproviders', {
       abstract: true,
       url: '/identities'
     })
-    .state('management.settings.identityproviders.list', {
+    .state('management.settings.organization.identityproviders.list', {
       url: '/',
       component: 'identityProviders',
       resolve: {
+        target: () => 'ORGANIZATION',
+        targetId: () => 'DEFAULT',
         identityProviders: (IdentityProviderService: IdentityProviderService) =>
-          IdentityProviderService.list().then(response => response)
+          IdentityProviderService.list().then(response => response),
+
+        identities: (OrganizationService: OrganizationService) =>
+          OrganizationService.listOrganizationIdentities().then(response => response.data)
       },
       data: {
         menu: null,
@@ -842,7 +878,7 @@ function configurationRouterConfig($stateProvider) {
         }
       }
     })
-    .state('management.settings.identityproviders.new', {
+    .state('management.settings.organization.identityproviders.new', {
       url: '/new?:type',
       component: 'identityProvider',
       data: {
@@ -855,7 +891,7 @@ function configurationRouterConfig($stateProvider) {
         }
       }
     })
-    .state('management.settings.identityproviders.identityprovider', {
+    .state('management.settings.organization.identityproviders.identityprovider', {
       url: '/:id',
       component: 'identityProvider',
       resolve: {
