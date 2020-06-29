@@ -28,6 +28,7 @@ const HttpConfigurationComponent: ng.IComponentOptions = {
     private proxies: any[];
     private trustStoreTypes: any[];
     private keyStoreTypes: any[];
+    private protocolVersions: any[];
 
     $onInit() {
       this.proxies = [
@@ -73,6 +74,17 @@ const HttpConfigurationComponent: ng.IComponentOptions = {
           value: 'PEM'
         }];
 
+      this.protocolVersions = [
+        {
+          name: 'HTTP 1.1',
+          value: 'HTTP_1_1'
+        },
+        {
+          name: 'HTTP 2',
+          value: 'HTTP_2'
+        }
+      ];
+
       this.initModel();
     }
 
@@ -101,6 +113,8 @@ const HttpConfigurationComponent: ng.IComponentOptions = {
           .keys(this.httpConfiguration.headers)
           .map(name => ({name, value: this.httpConfiguration.headers[name]})) : [];
 
+      this.httpConfiguration.type = this.httpConfiguration.type || 'HTTP';
+
       if (!this.httpConfiguration.http) {
         this.httpConfiguration.http = {
           connectTimeout: 5000,
@@ -110,9 +124,18 @@ const HttpConfigurationComponent: ng.IComponentOptions = {
           pipelining: false,
           maxConcurrentConnections: 100,
           useCompression: true,
-          followRedirects: false
+          followRedirects: false,
+          version: 'HTTP_2',
+          clearTextUpgrade: true
         };
       }
+
+      this.httpConfiguration.http.version = this.httpConfiguration.http.version || 'HTTP_1_1';
+
+      if (this.httpConfiguration.type === 'GRPC') {
+        this.httpConfiguration.http.version = 'HTTP_2';
+      }
+
       if (!this.httpConfiguration.ssl) {
         this.httpConfiguration.ssl = {
           trustAll: false,
@@ -126,6 +149,12 @@ const HttpConfigurationComponent: ng.IComponentOptions = {
       }
       if (!this.httpConfiguration.headers) {
         this.httpConfiguration.headers = {};
+      }
+    }
+
+    onProtocolVersionChange() {
+      if (this.httpConfiguration.http.version === 'HTTP_2') {
+        this.httpConfiguration.http.clearTextUpgrade = true;
       }
     }
 
