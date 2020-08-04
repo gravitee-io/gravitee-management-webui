@@ -40,6 +40,8 @@ class RegistrationController {
     let notificationService = this.NotificationService;
     let self = this;
 
+    this.user.confirmation_page_url = window.location.href + '/confirm';
+
     this.ReCaptchaService.execute('register').then(() => this.UserService.register(this.user).then(function () {
       scope.formRegistration.$setPristine();
       notificationService.show('Thank you for registering, you will receive an e-mail confirmation in few minutes');
