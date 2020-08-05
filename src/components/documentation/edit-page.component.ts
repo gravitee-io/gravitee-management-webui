@@ -104,6 +104,10 @@ const EditPageComponent: ng.IComponentOptions = {
       }
     };
 
+    this.usedAsGeneralConditions = () => {
+      return this.page.generalConditions;
+    };
+
     this.selectTranslation = (translation: any) => {
       this.currentTranslation = translation;
       if (!this.currentTranslation.configuration.inheritContent) {
