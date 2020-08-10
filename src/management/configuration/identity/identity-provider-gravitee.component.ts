@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-function delegatorConfig($sceDelegateProvider, Constants) {
-  'ngInject';
-  $sceDelegateProvider.resourceUrlWhitelist([
-    'self',
-    Constants.envBaseURL + '/**',
-    Constants.orgBaseURL + '/**',
-  ]);
-}
+const IdentityProviderGraviteeComponent: ng.IComponentOptions = {
+  bindings: {
+    identityProvider: '<'
+  },
+  template: require('./identity-provider-gravitee.html')
+};
 
-export default delegatorConfig;
+export default IdentityProviderGraviteeComponent;

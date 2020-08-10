@@ -40,7 +40,7 @@ class IdentityProviderController {
     private Constants,
     private $mdDialog: angular.material.IDialogService,
     private NotificationService: NotificationService,
-    private IdentityProviderService: IdentityProviderService
+    private IdentityProviderService: IdentityProviderService,
   ) {
     'ngInject';
   }
@@ -53,7 +53,11 @@ class IdentityProviderController {
       this.identityProvider.enabled = true;
       this.identityProvider.type = (this.$state.params.type as string);
       this.identityProvider.configuration = new Map<string, any>();
-      this.identityProvider.configuration.set('scopes', []);
+      if (this.isSocialProvider()) {
+        this.identityProvider.configuration.set('scopes', []);
+      } else {
+        this.identityProvider.configuration.delete('scopes');
+      }
       this.identityProvider.emailRequired = true;
 
       // Default user mapping configuration for OIDC or Gravitee.io AM providers
@@ -68,7 +72,7 @@ class IdentityProviderController {
         };
       }
     } else {
-      this.tokenExchangeEndpoint = this.Constants.baseURL + '/auth/oauth2/' + this.identityProvider.id;
+      this.tokenExchangeEndpoint = this.Constants.orgBaseURL + '/auth/oauth2/' + this.identityProvider.id;
     }
     this.initialIdentityProvider = _.cloneDeep(this.identityProvider);
   }
@@ -93,6 +97,13 @@ class IdentityProviderController {
     this.$scope.formIdentityProvider.$setDirty();
   }
 
+  isSocialProvider() {
+    return this.identityProvider.type === 'google'
+      || this.identityProvider.type === 'github'
+      || this.identityProvider.type === 'graviteeio_am'
+      || this.identityProvider.type === 'oidc';
+  }
+
   reset() {
     this.identityProvider = _.cloneDeep(this.initialIdentityProvider);
     this.$scope.formIdentityProvider.$setPristine();
@@ -102,7 +113,7 @@ class IdentityProviderController {
     if (!this.updateMode) {
       this.IdentityProviderService.create(this.identityProvider).then((response: any) => {
         this.NotificationService.show('Identity provider ' + this.identityProvider.name + ' has been created');
-        this.$state.go('management.settings.identityproviders.identityprovider', { id: response.data.id }, { reload: true });
+        this.$state.go('management.settings.organization.identityproviders.identityprovider', { id: response.data.id }, { reload: true });
       });
     } else {
       this.IdentityProviderService.update(this.identityProvider).then((response) => {

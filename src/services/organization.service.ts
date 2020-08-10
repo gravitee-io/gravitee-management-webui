@@ -13,21 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class NotifierService {
-  private notifiersURL: string;
 
-  constructor(private $http, Constants) {
+import { IdentityProviderActivation } from '../entities/identityProvider';
+
+class OrganizationService {
+  private organizationURL: string;
+
+  constructor(private $http, Constants, private $q) {
     'ngInject';
-    this.notifiersURL = `${Constants.envBaseURL}/notifiers/`;
+    this.organizationURL = `${Constants.orgBaseURL}`;
   }
 
-  list() {
-    return this.$http.get(this.notifiersURL);
+  listSocialIdentityProviders() {
+    return this.$http.get(this.organizationURL + '/social-identities');
   }
 
-  getSchema(notifier: string) {
-    return this.$http.get(this.notifiersURL + notifier + '/schema');
+  listOrganizationIdentities() {
+    return this.$http.get(`${this.organizationURL}/identities`);
+  }
+
+  updateOrganizationIdentities(updatedIPA: IdentityProviderActivation[]) {
+    return this.$http.put(`${this.organizationURL}/identities`, updatedIPA);
   }
 }
 
-export default NotifierService;
+export default OrganizationService;

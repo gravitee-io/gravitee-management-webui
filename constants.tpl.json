@@ -1,3 +1,5 @@
 {
-  "baseURL": "/management/organizations/DEFAULT/environments/DEFAULT"
+  "baseURL": "/management",
+  "orgId": "DEFAULT",
+  "envId": "DEFAULT"
 }

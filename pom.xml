@@ -208,7 +208,7 @@
               <replacements>
                 <replacement>
                   <token>"baseURL": "(.*)"</token>
-                  <value>"baseURL": "http://localhost:8083/management/organizations/DEFAULT/environments/DEFAULT"
+                  <value>"baseURL": "http://localhost:8083/management"
                   </value>
                 </replacement>
               </replacements>

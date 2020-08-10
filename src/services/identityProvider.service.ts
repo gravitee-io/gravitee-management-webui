@@ -22,7 +22,7 @@ class IdentityProviderService {
 
   constructor(private $http, Constants) {
     'ngInject';
-    this.URL = `${Constants.baseURL}/configuration/identities/`;
+    this.URL = `${Constants.orgBaseURL}/configuration/identities/`;
   }
 
   list(): IPromise<IdentityProvider[]> {
@@ -64,7 +64,8 @@ class IdentityProviderService {
         roleMappings: identityProvider.roleMappings,
         userProfileMapping: identityProvider.userProfileMapping,
         emailRequired: identityProvider.emailRequired,
-        syncMappings: identityProvider.syncMappings
+        syncMappings: identityProvider.syncMappings,
+        order: identityProvider.order
       }).then(response => {
       let identityProvider = response.data;
 

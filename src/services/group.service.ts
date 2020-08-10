@@ -34,7 +34,7 @@ class GroupService {
 
   constructor(private $http, Constants) {
     'ngInject';
-    this.groupsURL = `${Constants.baseURL}/configuration/groups`;
+    this.groupsURL = `${Constants.envBaseURL}/configuration/groups`;
   }
 
   get(groupId: string): ng.IPromise<any> {

@@ -13,21 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class NotifierService {
-  private notifiersURL: string;
 
-  constructor(private $http, Constants) {
+import { IdentityProviderActivation } from '../entities/identityProvider';
+
+class EnvironmentService {
+  private environmentsURL: string;
+
+  constructor(private $http, Constants, private $q) {
     'ngInject';
-    this.notifiersURL = `${Constants.envBaseURL}/notifiers/`;
+    this.environmentsURL = `${Constants.orgBaseURL}/environments`;
   }
 
   list() {
-    return this.$http.get(this.notifiersURL);
+    return this.$http.get(this.environmentsURL);
   }
 
-  getSchema(notifier: string) {
-    return this.$http.get(this.notifiersURL + notifier + '/schema');
+  listEnvironmentIdentities(envId: string) {
+    return this.$http.get(`${this.environmentsURL}/${envId}/identities`);
+  }
+
+  updateEnvironmentIdentities(envId: string, updatedIPA: IdentityProviderActivation[]) {
+    return this.$http.put(`${this.environmentsURL}/${envId}/identities`, updatedIPA);
   }
 }
 
-export default NotifierService;
+export default EnvironmentService;
