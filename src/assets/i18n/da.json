@@ -1,0 +1,28 @@
+{
+  "menu": {
+    "portal": "Udviklerportal",
+    "profile": "Min konto",
+    "tasks": "Opgaver",
+    "logout": "Log ud",
+    "support": "Support"
+  },
+  "support": {
+    "ticket": {
+      "create": "Opret",
+      "title": "Oprettelse af supportsag",
+      "subject": "Emne",
+      "content": "Indhold",
+      "api": "Vælg et API",
+      "application": "Vælg en applikation",
+      "copyToSender": "Modtag en kopi af email",
+      "successCreation": "Supportsag blev oprettet",
+      "notAuthenticated": {
+        "title": "Oprettelse af supportsag",
+        "message": "Log in for at oprette en supportsag"
+      },
+      "userWithoutEmail": {
+        "message": "Du kan ikke oprette en sag fordi du ikke har en emailadresse knyttet til din konto"
+      }
+    }
+  }
+}
