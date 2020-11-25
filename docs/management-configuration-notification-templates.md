@@ -3,10 +3,11 @@
 Here you can find all the templates used when notifications are triggered in the platform as well as email templates used for specific actions.
 
 Templates are grouped by category:
-* API
-* Application
-* Portal
-* Templates for action
+
+- API
+- Application
+- Portal
+- Templates for action
 
 In the last category **Templates to include**, you can find all html templates that can be included in others email templates. (e.g. `header.html`)
 

@@ -5,11 +5,11 @@ Resources are used via the API policies to enhance API behavior.
 
 Differents resource types are available :
 
-* Cache
+- Cache
 
 Used to store re-usable data to avoid subsequent calls.
 
-* OAuth 2.0
+- OAuth 2.0
 
 Used to introspect an access_token via an external OAuth 2.0 authorization server.
 

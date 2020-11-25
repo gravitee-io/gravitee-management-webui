@@ -4,4 +4,4 @@ Top APIs are visible into the APIs portal home page only if one or more API belo
 
 There is no limit and an API can be added more than once.
 
-You can create a new top API by clicking on the *+* button.
+You can create a new top API by clicking on the _+_ button.

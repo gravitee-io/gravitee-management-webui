@@ -32,7 +32,7 @@ const NewPageComponent: ng.IComponentOptions = {
     systemFolders: '<',
     pageResources: '<',
     categoryResources: '<',
-    pagesToLink: '<'
+    pagesToLink: '<',
   },
   template: require('./new-page.html'),
   controller: function (
@@ -40,7 +40,7 @@ const NewPageComponent: ng.IComponentOptions = {
     DocumentationService: DocumentationService,
     PortalConfigService: PortalConfigService,
     $state: StateService,
-    $scope: IPageScope
+    $scope: IPageScope,
   ) {
     'ngInject';
     this.apiId = $state.params.apiId;
@@ -48,7 +48,7 @@ const NewPageComponent: ng.IComponentOptions = {
     this.page = {
       name: '',
       type: $state.params.type,
-      parentId: $state.params.parent
+      parentId: $state.params.parent,
     };
 
     $scope.getContentMode = 'inline';
@@ -58,9 +58,8 @@ const NewPageComponent: ng.IComponentOptions = {
       lineNumbers: true,
       allowDropFileTypes: true,
       autoCloseTags: true,
-      mode: 'javascript'
+      mode: 'javascript',
     };
-
 
     this.$onInit = () => {
       this.foldersById = _.keyBy(this.folders, 'id');
@@ -70,13 +69,13 @@ const NewPageComponent: ng.IComponentOptions = {
 
       this.fetchers = this.resolvedFetchers;
       if (DocumentationService.supportedTypes(this.getFolderSituation(this.page.parentId)).indexOf(this.page.type) < 0) {
-        $state.go('management.settings.documentation', {parent: $state.params.parent});
+        $state.go('management.settings.documentation', { parent: $state.params.parent });
       }
 
       this.emptyFetcher = {
-        'type': 'object',
-        'id': 'empty',
-        'properties': {'' : {}}
+        type: 'object',
+        id: 'empty',
+        properties: { '': {} },
       };
       $scope.fetcherJsonSchema = this.emptyFetcher;
       this.fetcherJsonSchemaForm = ['*'];
@@ -86,26 +85,29 @@ const NewPageComponent: ng.IComponentOptions = {
 
         if (this.page.type === 'SWAGGER' && settings && settings.openAPIDocViewer) {
           this.page.configuration = {
-            viewer: settings.openAPIDocViewer.openAPIDocType.defaultType
+            viewer: settings.openAPIDocViewer.openAPIDocType.defaultType,
           };
         }
       });
-
     };
 
     this.buildPageList = (pagesToFilter: any[], withRootFolder?: boolean) => {
-      let pageList = _
-        .filter(pagesToFilter, (p) => p.type === 'MARKDOWN' || p.type === 'SWAGGER' || (p.type === 'FOLDER' && this.getFolderSituation(p.id) !== FolderSituation.FOLDER_IN_SYSTEM_FOLDER))
-        .sort((a, b) => {
-          let comparison = 0;
-          const aFullPath = a.parentPath + '/' + a.name;
-          const bFullPath = b.parentPath + '/' + b.name;
-          if (aFullPath > bFullPath) {
-            comparison = 1;
-          } else if (aFullPath < bFullPath) {
-            comparison = -1;
-          }
-          return comparison;
+      let pageList = _.filter(
+        pagesToFilter,
+        (p) =>
+          p.type === 'MARKDOWN' ||
+          p.type === 'SWAGGER' ||
+          (p.type === 'FOLDER' && this.getFolderSituation(p.id) !== FolderSituation.FOLDER_IN_SYSTEM_FOLDER),
+      ).sort((a, b) => {
+        let comparison = 0;
+        const aFullPath = a.parentPath + '/' + a.name;
+        const bFullPath = b.parentPath + '/' + b.name;
+        if (aFullPath > bFullPath) {
+          comparison = 1;
+        } else if (aFullPath < bFullPath) {
+          comparison = -1;
+        }
+        return comparison;
       });
 
       if (withRootFolder) {
@@ -156,13 +158,13 @@ const NewPageComponent: ng.IComponentOptions = {
     };
 
     this.configureFetcher = (fetcher) => {
-      if (! this.page.source) {
+      if (!this.page.source) {
         this.page.source = {};
       }
 
       this.page.source = {
         type: fetcher.id,
-        configuration: {}
+        configuration: {},
       };
       $scope.fetcherJsonSchema = JSON.parse(fetcher.schema);
     };
@@ -194,19 +196,21 @@ const NewPageComponent: ng.IComponentOptions = {
     this.save = () => {
       this.error = null;
       DocumentationService.create(this.page, this.apiId)
-        .then( (response: any) => {
+        .then((response: any) => {
           const page = response.data;
           if (page.messages && page.messages.length > 0) {
-            NotificationService.showError('\'' + page.name + '\' has been created (with validation errors - check the bottom of the page for details)');
+            NotificationService.showError(
+              "'" + page.name + "' has been created (with validation errors - check the bottom of the page for details)",
+            );
           } else {
-            NotificationService.show('\'' + page.name + '\' has been created');
+            NotificationService.show("'" + page.name + "' has been created");
           }
           if (page.type === 'FOLDER') {
             this.gotoParent();
           } else {
             this.gotoEdit(page);
           }
-      })
+        })
         .catch((err) => {
           this.error = { ...err.data, title: 'Sorry, unable to create page' };
         });
@@ -215,7 +219,7 @@ const NewPageComponent: ng.IComponentOptions = {
     this.changeContentMode = (newMode) => {
       if ('fetcher' === newMode) {
         this.page.source = {
-          configuration: {}
+          configuration: {},
         };
       } else {
         delete this.page.source;
@@ -229,17 +233,17 @@ const NewPageComponent: ng.IComponentOptions = {
 
     this.gotoParent = () => {
       if (this.apiId) {
-        $state.go('management.apis.detail.portal.documentation', {apiId: this.apiId, parent: $state.params.parent});
+        $state.go('management.apis.detail.portal.documentation', { apiId: this.apiId, parent: $state.params.parent });
       } else {
-        $state.go('management.settings.documentation', {parent: $state.params.parent});
+        $state.go('management.settings.documentation', { parent: $state.params.parent });
       }
     };
 
     this.gotoEdit = (page) => {
       if (this.apiId) {
-        $state.go('management.apis.detail.portal.editdocumentation', {apiId: this.apiId, pageId: page.id, type: page.type});
+        $state.go('management.apis.detail.portal.editdocumentation', { apiId: this.apiId, pageId: page.id, type: page.type });
       } else {
-        $state.go('management.settings.editdocumentation', {pageId: page.id, type: page.type});
+        $state.go('management.settings.editdocumentation', { pageId: page.id, type: page.type });
       }
     };
 
@@ -248,7 +252,7 @@ const NewPageComponent: ng.IComponentOptions = {
         this.page.name = resourceName;
       }
     };
-  }
+  },
 };
 
 export default NewPageComponent;

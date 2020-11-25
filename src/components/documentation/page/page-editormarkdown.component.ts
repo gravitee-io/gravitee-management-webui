@@ -18,7 +18,6 @@ import * as codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highli
 import hljs from 'highlight.js';
 
 class ComponentCtrl implements ng.IComponentController {
-
   public page: any;
   public options: any;
   public pagesToLink: any[];
@@ -26,12 +25,7 @@ class ComponentCtrl implements ng.IComponentController {
   private maxSize: number;
   private tuiEditor: any;
 
-  constructor(
-    private $http,
-    private Constants,
-    private $state: StateService,
-    private $mdDialog: angular.material.IDialogService,
-  ) {
+  constructor(private $http, private Constants, private $state: StateService, private $mdDialog: angular.material.IDialogService) {
     'ngInject';
     var lastElement = Constants.portal.uploadMedia.maxSizeInOctet;
   }
@@ -63,9 +57,8 @@ class ComponentCtrl implements ng.IComponentController {
       'link',
       'divider',
       'code',
-      'codeblock'
+      'codeblock',
     ];
-
 
     let $http = this.$http;
     let Constants = this.Constants;
@@ -80,67 +73,72 @@ class ComponentCtrl implements ng.IComponentController {
     if (this.tuiEditor) {
       this.tuiEditor.remove();
     }
-    this.tuiEditor = new Editor(Object.assign({
-      el: document.querySelector('#editSection'),
-      initialEditType: 'markdown',
-      previewStyle: 'vertical',
-      initialValue: initialValue,
-      useDefaultHTMLSanitizer: false,
-      height: '500px',
-      usageStatistics: false,
-      exts: ['table', 'scrollSync'],
-      toolbarItems: toolbarItems,
-      events: {
-        change: (change) => {
-          this.page.content = this.tuiEditor.getMarkdown();
-        }
-      },
-      hooks: {
-        addImageBlobHook: function (blob, callback) {
+    this.tuiEditor = new Editor(
+      Object.assign(
+        {
+          el: document.querySelector('#editSection'),
+          initialEditType: 'markdown',
+          previewStyle: 'vertical',
+          initialValue: initialValue,
+          useDefaultHTMLSanitizer: false,
+          height: '500px',
+          usageStatistics: false,
+          exts: ['table', 'scrollSync'],
+          toolbarItems: toolbarItems,
+          events: {
+            change: (change) => {
+              this.page.content = this.tuiEditor.getMarkdown();
+            },
+          },
+          hooks: {
+            addImageBlobHook: function (blob, callback) {
+              let fd = new FormData();
+              fd.append('file', blob);
 
-          let fd = new FormData();
-          fd.append('file', blob);
+              if (blob.size > Constants.portal.uploadMedia.maxSizeInOctet) {
+                callback("file uploaded to big, you're limited at " + Constants.portal.uploadMedia.maxSizeInOctet, ' bytes');
+                return false;
+              }
 
-          if (blob.size > Constants.portal.uploadMedia.maxSizeInOctet) {
-            callback('file uploaded to big, you\'re limited at ' + Constants.portal.uploadMedia.maxSizeInOctet, ' bytes');
-            return false;
-          }
+              $http.post(mediaURL + 'upload', fd, { headers: { 'Content-Type': undefined } }).then((response) => {
+                callback(mediaURL + response.data, blob.name);
+              });
 
-          $http.post(mediaURL + 'upload', fd, { headers: { 'Content-Type': undefined } })
-            .then((response) => {
-              callback(mediaURL + response.data, blob.name);
-            });
-
-          return false;
-        }
-      },
-      plugins: [[codeSyntaxHighlight, { hljs }]]
-    }, this.options));
+              return false;
+            },
+          },
+          plugins: [[codeSyntaxHighlight, { hljs }]],
+        },
+        this.options,
+      ),
+    );
 
     this.tuiEditor.eventManager.addEventType('addLinkToPage');
     const toolbar = this.tuiEditor.getUI().getToolbar();
     toolbar.insertItem(
-      (Constants.portal.uploadMedia.enabled ? 17 : 16), // index depends on image button
+      Constants.portal.uploadMedia.enabled ? 17 : 16, // index depends on image button
       {
-      type: 'button',
-      options: {
-        event: 'addLinkToPage',
-        tooltip: 'Insert page link',
-        style: 'background-image: url(\'assets/logo_file.svg\');  background-size: 20px 20px;'
-      }
-    });
+        type: 'button',
+        options: {
+          event: 'addLinkToPage',
+          tooltip: 'Insert page link',
+          style: "background-image: url('assets/logo_file.svg');  background-size: 20px 20px;",
+        },
+      },
+    );
     const that = this;
     this.tuiEditor.eventManager.listen('addLinkToPage', function () {
-      that.$mdDialog.show({
-        controller: 'SelectPageDialogController',
-        controllerAs: 'ctrl',
-        template: require('../dialog/selectpage.dialog.html'),
-        clickOutsideToClose: true,
-        locals: {
-          pages: that.pagesToLink,
-          title: 'Create a link to a page'
-        }
-      })
+      that.$mdDialog
+        .show({
+          controller: 'SelectPageDialogController',
+          controllerAs: 'ctrl',
+          template: require('../dialog/selectpage.dialog.html'),
+          clickOutsideToClose: true,
+          locals: {
+            pages: that.pagesToLink,
+            title: 'Create a link to a page',
+          },
+        })
         .then((page) => {
           if (page) {
             if (that.$state.params.apiId) {
@@ -153,7 +151,6 @@ class ComponentCtrl implements ng.IComponentController {
           }
         });
     });
-
   }
 }
 
@@ -162,9 +159,9 @@ const PageEditorMarkdownComponent: ng.IComponentOptions = {
   bindings: {
     page: '<',
     options: '<',
-    pagesToLink: '<'
+    pagesToLink: '<',
   },
-  controller: ComponentCtrl
+  controller: ComponentCtrl,
 };
 
 export default PageEditorMarkdownComponent;

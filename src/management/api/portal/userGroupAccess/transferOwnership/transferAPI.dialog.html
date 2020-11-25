@@ -19,16 +19,12 @@
   <md-dialog-content layout-padding>
     <h4>Transfer API</h4>
     <p>
-      This action cannot be undone. If you are the primary owner of this API, your role will be set to <code>{{$ctrl.newRole.name}}</code>.
+      This action cannot be undone. If you are the primary owner of this API, your role will be set to
+      <code>{{$ctrl.newRole.name}}</code>.
     </p>
   </md-dialog-content>
   <md-dialog-actions layout="row">
-    <md-button ng-click="cancel()">
-      Cancel
-    </md-button>
-    <md-button ng-click="transferOwnership()" class="md-raised md-warn">
-      I understand, transfer this API
-    </md-button>
+    <md-button ng-click="cancel()"> Cancel </md-button>
+    <md-button ng-click="transferOwnership()" class="md-raised md-warn"> I understand, transfer this API </md-button>
   </md-dialog-actions>
 </md-dialog>
-

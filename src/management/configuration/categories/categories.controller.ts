@@ -18,10 +18,9 @@ import CategoryService from '../../../services/category.service';
 import NotificationService from '../../../services/notification.service';
 import { StateService } from '@uirouter/core';
 import PortalConfigService from '../../../services/portalConfig.service';
-import {IScope} from 'angular';
+import { IScope } from 'angular';
 
 class CategoriesController {
-
   public providedConfigurationMessage = 'Configuration provided by the system';
   private categoriesToUpdate: any[];
   private categories: any[];
@@ -36,7 +35,8 @@ class CategoriesController {
     private $state: StateService,
     private PortalConfigService: PortalConfigService,
     Constants: any,
-    private $rootScope: IScope) {
+    private $rootScope: IScope,
+  ) {
     'ngInject';
     this.$rootScope = $rootScope;
     this.settings = _.cloneDeep(Constants);
@@ -66,13 +66,13 @@ class CategoriesController {
   }
 
   downward(index) {
-    if (index < _.size(this.categories) - 1 ) {
+    if (index < _.size(this.categories) - 1) {
       this.reorder(index, index + 1);
     }
   }
 
   toggleDisplayMode() {
-    this.PortalConfigService.save(this.settings).then( (response) => {
+    this.PortalConfigService.save(this.settings).then((response) => {
       _.merge(this.Constants, response.data);
       this.NotificationService.show('Display mode saved!');
     });
@@ -80,20 +80,22 @@ class CategoriesController {
 
   deleteCategory(category) {
     let that = this;
-    this.$mdDialog.show({
-      controller: 'DeleteCategoryDialogController',
-      template: require('./delete.category.dialog.html'),
-      locals: {
-        category: category
-      }
-    }).then(function (deleteCategory) {
-      if (deleteCategory) {
-        that.CategoryService.delete(category).then(function () {
-          that.NotificationService.show('Category \'' + category.name + '\' deleted with success');
-          _.remove(that.categories, category);
-        });
-      }
-    });
+    this.$mdDialog
+      .show({
+        controller: 'DeleteCategoryDialogController',
+        template: require('./delete.category.dialog.html'),
+        locals: {
+          category: category,
+        },
+      })
+      .then(function (deleteCategory) {
+        if (deleteCategory) {
+          that.CategoryService.delete(category).then(function () {
+            that.NotificationService.show("Category '" + category.name + "' deleted with success");
+            _.remove(that.categories, category);
+          });
+        }
+      });
   }
 
   isReadonlySetting(property: string): boolean {

@@ -42,36 +42,37 @@ class ApiPolicyStudioController {
   $onInit = () => {
     const propertyProviders = [
       {
-        'id': 'HTTP',
-        'name': 'Custom (HTTP)',
-        'schema': {
-          'type': 'object',
-          'properties': {
-            'url': {
-              'title': 'Http service URL',
-              'description': 'http://localhost',
-              'type': 'string',
-              'pattern': '^(http://|https://)'
+        id: 'HTTP',
+        name: 'Custom (HTTP)',
+        schema: {
+          type: 'object',
+          properties: {
+            url: {
+              title: 'Http service URL',
+              description: 'http://localhost',
+              type: 'string',
+              pattern: '^(http://|https://)',
             },
-            'specification': {
-              'title': 'Transformation (JOLT Specification)',
-              'type': 'string',
+            specification: {
+              title: 'Transformation (JOLT Specification)',
+              type: 'string',
               'x-schema-form': {
-                'type': 'codemirror',
-                'codemirrorOptions': {
-                  'lineWrapping': true,
-                  'lineNumbers': true,
-                  'allowDropFileTypes': true,
-                  'autoCloseTags': true,
-                  'mode': 'javascript'
-                }
-              }
-            }
+                type: 'codemirror',
+                codemirrorOptions: {
+                  lineWrapping: true,
+                  lineNumbers: true,
+                  allowDropFileTypes: true,
+                  autoCloseTags: true,
+                  mode: 'javascript',
+                },
+              },
+            },
           },
-          'required': ['url']
+          required: ['url'],
         },
-        'documentation': '= Custom (HTTP)\n\n=== How to ?\n\n 1. Set `Polling frequency interval` and `Time unit`\n2. Set the `HTTP service URL`\n 3. If the HTTP service doesn\'t return the expected output, add a JOLT `transformation` \n\n[source, json]\n----\n[\n  {\n    "key": 1,\n    "value": "https://north-europe.company.com/"\n  },\n  {\n    "key": 2,\n    "value": "https://north-europe.company.com/"\n  },\n  {\n    "key": 3,\n    "value": "https://south-asia.company.com/"\n  }\n]\n----\n'
-      }
+        documentation:
+          '= Custom (HTTP)\n\n=== How to ?\n\n 1. Set `Polling frequency interval` and `Time unit`\n2. Set the `HTTP service URL`\n 3. If the HTTP service doesn\'t return the expected output, add a JOLT `transformation` \n\n[source, json]\n----\n[\n  {\n    "key": 1,\n    "value": "https://north-europe.company.com/"\n  },\n  {\n    "key": 2,\n    "value": "https://north-europe.company.com/"\n  },\n  {\n    "key": 3,\n    "value": "https://south-asia.company.com/"\n  }\n]\n----\n',
+      },
     ];
 
     this.resolvedPolicies.data.sort((a, b) => {
@@ -118,21 +119,24 @@ class ApiPolicyStudioController {
     this.studio.addEventListener('gv-policy-studio:change-tab', this.onChangeTab.bind(this));
     this.studio.addEventListener('gv-policy-studio:fetch-documentation', this.fetchPolicyDocumentation.bind(this));
     this.studio.addEventListener('gv-resources:fetch-documentation', this.fetchResourceDocumentation.bind(this));
-  }
+  };
 
   setApi(api) {
     if (api !== this.api) {
       this.api = api;
       // force refresh
       this.studio.removeAttribute('definition');
-      this.studio.setAttribute('definition', JSON.stringify({
-        'name': this.api.name,
-        'version': this.api.version,
-        'flows': this.api.flows != null ? this.api.flows : [],
-        'resources': this.api.resources,
-        'plans': this.api.plans != null ? this.api.plans : [],
-        'properties': this.api.properties,
-      }));
+      this.studio.setAttribute(
+        'definition',
+        JSON.stringify({
+          name: this.api.name,
+          version: this.api.version,
+          flows: this.api.flows != null ? this.api.flows : [],
+          resources: this.api.resources,
+          plans: this.api.plans != null ? this.api.plans : [],
+          properties: this.api.properties,
+        }),
+      );
       // force refresh
       this.studio.removeAttribute('services');
       this.studio.setAttribute('services', JSON.stringify(this.api.services));
@@ -140,35 +144,37 @@ class ApiPolicyStudioController {
     }
   }
 
-  onChangeTab({detail}) {
+  onChangeTab({ detail }) {
     this.$location.hash(detail);
     this.$rootScope.$digest();
   }
 
-  onSelectFlows({detail: {flows}}) {
+  onSelectFlows({ detail: { flows } }) {
     this.$location.search('flows', flows);
     this.$rootScope.$digest();
   }
 
-  fetchPolicyDocumentation({detail}) {
+  fetchPolicyDocumentation({ detail }) {
     const policy = detail.policy;
     this.studio.setAttribute('documentation', null);
     this.PolicyService.getDocumentation(policy.id).then((response) => {
-      this.studio.setAttribute('documentation', JSON.stringify({content: response.data, image: policy.icon, id: policy.id}));
+      this.studio.setAttribute('documentation', JSON.stringify({ content: response.data, image: policy.icon, id: policy.id }));
     });
   }
 
   fetchResourceDocumentation(event) {
     this.studio.setAttribute('documentation', null);
-    const {detail: {resourceType, target}} = event;
+    const {
+      detail: { resourceType, target },
+    } = event;
     // force refresh
     target.setAttribute('documentation', null);
     this.ResourceService.getDocumentation(resourceType.id).then((response) => {
-      target.setAttribute('documentation', JSON.stringify({content: response.data, image: resourceType.icon}));
+      target.setAttribute('documentation', JSON.stringify({ content: response.data, image: resourceType.icon }));
     });
   }
 
-  onSave({detail: {definition, services}}) {
+  onSave({ detail: { definition, services } }) {
     this.api.flows = definition.flows;
     this.api.plans = definition.plans;
     this.api.resources = definition.resources;
@@ -177,10 +183,9 @@ class ApiPolicyStudioController {
     this.ApiService.update(this.api).then((updatedApi) => {
       this.NotificationService.show('Design of api has been updated');
       this.setApi(updatedApi.data);
-      this.$rootScope.$broadcast('apiChangeSuccess', {api: this.api});
+      this.$rootScope.$broadcast('apiChangeSuccess', { api: this.api });
     });
   }
-
 }
 
 export default ApiPolicyStudioController;

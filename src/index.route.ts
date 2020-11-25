@@ -23,58 +23,55 @@ import OrganizationService from './services/organization.service';
 function routerConfig($stateProvider: StateProvider, $urlServiceProvider: UrlService) {
   'ngInject';
   $stateProvider
-    .state(
-      'root',
-      {
-        abstract: true,
-        template: '<div layout=\'row\'>' +
-          '<div ui-view=\'sidenav\' class=\'gravitee-sidenav\'></div>' +
-          '<md-content ui-view layout=\'column\' flex style=\'height: 100vh\' class=\'md-content\'></md-content>' +
-          '</div>',
-        resolve: {
-          graviteeUser: (UserService: UserService) => UserService.current()
-        }
-      }
-    )
-    .state(
-      'withSidenav',
-      {
-        parent: 'root',
-        abstract: true,
-        views: {
-          'sidenav': {
-            component: 'gvSidenav'
-          },
-          '': {
-            template: '<div flex layout="row">' +
-              '<div class="gv-main-container" ui-view layout="column" flex></div>' +
-              '<gv-contextual-doc></gv-contextual-doc>' +
-              '</div>'
-          }
+    .state('root', {
+      abstract: true,
+      template:
+        "<div layout='row'>" +
+        "<div ui-view='sidenav' class='gravitee-sidenav'></div>" +
+        "<md-content ui-view layout='column' flex style='height: 100vh' class='md-content'></md-content>" +
+        '</div>',
+      resolve: {
+        graviteeUser: (UserService: UserService) => UserService.current(),
+      },
+    })
+    .state('withSidenav', {
+      parent: 'root',
+      abstract: true,
+      views: {
+        sidenav: {
+          component: 'gvSidenav',
         },
-        resolve: {
-          allMenuItems: ($state: StateService) => $state.get(),
-          menuItems: ($state: StateService, graviteeUser: User, Constants: any) => {
-            'ngInject';
-            return $state.get()
-              .filter((state: any) => !state.abstract && state.data && state.data.menu)
-              .filter(routeMenuItem => {
-                let isMenuItem = routeMenuItem.data.menu.firstLevel;
-                let isMenuAllowed = !routeMenuItem.data.perms || !routeMenuItem.data.perms.only
-                  || graviteeUser.allowedTo(routeMenuItem.data.perms.only);
-                return isMenuItem && isMenuAllowed;
-              });
-          }
-        }
-      }
-    )
+        '': {
+          template:
+            '<div flex layout="row">' +
+            '<div class="gv-main-container" ui-view layout="column" flex></div>' +
+            '<gv-contextual-doc></gv-contextual-doc>' +
+            '</div>',
+        },
+      },
+      resolve: {
+        allMenuItems: ($state: StateService) => $state.get(),
+        menuItems: ($state: StateService, graviteeUser: User, Constants: any) => {
+          'ngInject';
+          return $state
+            .get()
+            .filter((state: any) => !state.abstract && state.data && state.data.menu)
+            .filter((routeMenuItem) => {
+              let isMenuItem = routeMenuItem.data.menu.firstLevel;
+              let isMenuAllowed =
+                !routeMenuItem.data.perms || !routeMenuItem.data.perms.only || graviteeUser.allowedTo(routeMenuItem.data.perms.only);
+              return isMenuItem && isMenuAllowed;
+            });
+        },
+      },
+    })
     .state('user', {
       url: '/user',
       component: 'user',
       parent: 'withSidenav',
       resolve: {
-        user: (graviteeUser: User) => graviteeUser
-      }
+        user: (graviteeUser: User) => graviteeUser,
+      },
     })
     .state('login', {
       url: '/login?redirectUri',
@@ -87,13 +84,14 @@ function routerConfig($stateProvider: StateProvider, $urlServiceProvider: UrlSer
             $state.go('management');
           }
         },
-        identityProviders: (OrganizationService: OrganizationService) => OrganizationService.listSocialIdentityProviders().then(response => response.data)
+        identityProviders: (OrganizationService: OrganizationService) =>
+          OrganizationService.listSocialIdentityProviders().then((response) => response.data),
       },
       params: {
         redirectUri: {
-          type: 'string'
-        }
-      }
+          type: 'string',
+        },
+      },
     })
     .state('registration', {
       url: '/registration',
@@ -105,8 +103,8 @@ function routerConfig($stateProvider: StateProvider, $urlServiceProvider: UrlSer
           if (UserService.currentUser && UserService.currentUser.id) {
             $state.go('management');
           }
-        }
-      }
+        },
+      },
     })
     .state('confirm', {
       url: '/registration/confirm/:token',
@@ -123,25 +121,23 @@ function routerConfig($stateProvider: StateProvider, $urlServiceProvider: UrlSer
     .state('logout', {
       template: '<div class="gravitee-no-sidenav-container"></div>',
       controller: (UserService: UserService, $state: StateService, $rootScope: IScope, $window: ng.IWindowService) => {
-        UserService.logout().then(
-          () => {
-            $state.go('login');
-            $rootScope.$broadcast('graviteeUserRefresh', {});
-            $rootScope.$broadcast('graviteeUserCancelScheduledServices');
-            let userLogoutEndpoint = $window.localStorage.getItem('user-logout-url');
-            $window.localStorage.removeItem('user-logout-url');
-            if (userLogoutEndpoint != null) {
-              $window.location.href = userLogoutEndpoint + encodeURIComponent(window.location.origin);
-            }
+        UserService.logout().then(() => {
+          $state.go('login');
+          $rootScope.$broadcast('graviteeUserRefresh', {});
+          $rootScope.$broadcast('graviteeUserCancelScheduledServices');
+          let userLogoutEndpoint = $window.localStorage.getItem('user-logout-url');
+          $window.localStorage.removeItem('user-logout-url');
+          if (userLogoutEndpoint != null) {
+            $window.location.href = userLogoutEndpoint + encodeURIComponent(window.location.origin);
           }
-        );
-      }
+        });
+      },
     })
     .state('confirmProfile', {
       url: '/confirmProfile',
       template: require('./user/confirmProfile/confirmProfile.html'),
       controller: 'ConfirmProfileController',
-      controllerAs: '$ctrl'
+      controllerAs: '$ctrl',
     });
 
   $urlServiceProvider.rules.otherwise('/login');

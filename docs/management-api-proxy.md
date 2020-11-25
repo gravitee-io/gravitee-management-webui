@@ -4,7 +4,7 @@ Configure your connection to the backend endpoint(s).
 
 1. Endpoints
 
-Declare new endpoint by clicking on the (+) button and configure existing endpoints by clicking on the *settings* button.
+Declare new endpoint by clicking on the (+) button and configure existing endpoints by clicking on the _settings_ button.
 
 2. Load Balancing
 

@@ -28,7 +28,7 @@ const IdentityProvidersComponent: ng.IComponentOptions = {
     identityProviders: '<',
     identities: '<',
     target: '<',
-    targetId: '<'
+    targetId: '<',
   },
   template: require('./identity-providers.html'),
   controller: function (
@@ -40,7 +40,7 @@ const IdentityProvidersComponent: ng.IComponentOptions = {
     NotificationService: NotificationService,
     $state: StateService,
     Constants,
-    $rootScope: IScope
+    $rootScope: IScope,
   ) {
     'ngInject';
     this.$rootScope = $rootScope;
@@ -49,14 +49,14 @@ const IdentityProvidersComponent: ng.IComponentOptions = {
     this.providedConfigurationMessage = 'Configuration provided by the system';
 
     this.$onInit = () => {
-      this.identities.forEach((ipa: IdentityProviderActivation) => this.activatedIdps[ipa.identityProvider] = true);
+      this.identities.forEach((ipa: IdentityProviderActivation) => (this.activatedIdps[ipa.identityProvider] = true));
     };
 
     this.availableProviders = [
-      { 'name': 'Gravitee.io AM', 'icon': 'perm_identity', 'type': 'graviteeio_am' },
-      { 'name': 'Google', 'icon': 'google-plus', 'type': 'google' },
-      { 'name': 'GitHub', 'icon': 'github-circle', 'type': 'github' },
-      { 'name': 'OpenID Connect', 'icon': 'perm_identity', 'type': 'oidc' }
+      { name: 'Gravitee.io AM', icon: 'perm_identity', type: 'graviteeio_am' },
+      { name: 'Google', icon: 'google-plus', type: 'google' },
+      { name: 'GitHub', icon: 'github-circle', type: 'github' },
+      { name: 'OpenID Connect', icon: 'perm_identity', type: 'oidc' },
     ];
 
     this.create = (type) => {
@@ -65,34 +65,36 @@ const IdentityProvidersComponent: ng.IComponentOptions = {
 
     this.delete = (provider: IdentityProvider) => {
       let that = this;
-      $mdDialog.show({
-        controller: 'DialogConfirmController',
-        controllerAs: 'ctrl',
-        template: require('../dialog/confirmWarning.dialog.html'),
-        clickOutsideToClose: true,
-        locals: {
-          title: 'Are you sure you want to delete this identity provider?',
-          msg: '',
-          confirmButton: 'Delete'
-        }
-      }).then(function (response) {
-        if (response) {
-          IdentityProviderService.delete(provider).then(response => {
-            NotificationService.show('Identity provider \'' + provider.name + '\' has been deleted');
-            $state.go('management.settings.organization.identityproviders.list', {}, { reload: true });
-          });
-        }
-      });
+      $mdDialog
+        .show({
+          controller: 'DialogConfirmController',
+          controllerAs: 'ctrl',
+          template: require('../dialog/confirmWarning.dialog.html'),
+          clickOutsideToClose: true,
+          locals: {
+            title: 'Are you sure you want to delete this identity provider?',
+            msg: '',
+            confirmButton: 'Delete',
+          },
+        })
+        .then(function (response) {
+          if (response) {
+            IdentityProviderService.delete(provider).then((response) => {
+              NotificationService.show("Identity provider '" + provider.name + "' has been deleted");
+              $state.go('management.settings.organization.identityproviders.list', {}, { reload: true });
+            });
+          }
+        });
     };
 
     this.saveForceLogin = () => {
       PortalConfigService.save({
         authentication: {
           forceLogin: {
-            enabled: this.settings.authentication.forceLogin.enabled
-          }
-        }
-      }).then(response => {
+            enabled: this.settings.authentication.forceLogin.enabled,
+          },
+        },
+      }).then((response) => {
         NotificationService.show('Authentication is now ' + (this.settings.authentication.forceLogin.enabled ? 'mandatory' : 'optional'));
         Constants.authentication.forceLogin = response.data.authentication.forceLogin;
       });
@@ -102,27 +104,28 @@ const IdentityProvidersComponent: ng.IComponentOptions = {
       PortalConfigService.save({
         authentication: {
           localLogin: {
-            enabled: this.settings.authentication.localLogin.enabled
-          }
-        }
-      }).then(response => {
+            enabled: this.settings.authentication.localLogin.enabled,
+          },
+        },
+      }).then((response) => {
         NotificationService.show('Login form is now ' + (this.settings.authentication.localLogin.enabled ? 'enabled' : 'disabled'));
         Constants.authentication.localLogin = response.data.authentication.localLogin;
       });
     };
 
     this.toggleActivatedIdp = (identityProviderId: string) => {
-      const updatedIPA: IdentityProviderActivation[] =
-        _.filter(Object.keys(this.activatedIdps), idpId => this.activatedIdps[idpId] === true)
-          .map(idpId => ({ identityProvider: idpId }));
+      const updatedIPA: IdentityProviderActivation[] = _.filter(
+        Object.keys(this.activatedIdps),
+        (idpId) => this.activatedIdps[idpId] === true,
+      ).map((idpId) => ({ identityProvider: idpId }));
 
       if (this.target === 'ORGANIZATION') {
-        OrganizationService.updateOrganizationIdentities(updatedIPA).then(response =>
-          NotificationService.show(identityProviderId + ' is now ' + (this.activatedIdps[identityProviderId] ? 'enabled' : 'disabled'))
+        OrganizationService.updateOrganizationIdentities(updatedIPA).then((response) =>
+          NotificationService.show(identityProviderId + ' is now ' + (this.activatedIdps[identityProviderId] ? 'enabled' : 'disabled')),
         );
       } else if (this.target === 'ENVIRONMENT') {
-        EnvironmentService.updateEnvironmentIdentities(this.targetId, updatedIPA).then(response =>
-          NotificationService.show(identityProviderId + ' is now ' + (this.activatedIdps[identityProviderId] ? 'enabled' : 'disabled'))
+        EnvironmentService.updateEnvironmentIdentities(this.targetId, updatedIPA).then((response) =>
+          NotificationService.show(identityProviderId + ' is now ' + (this.activatedIdps[identityProviderId] ? 'enabled' : 'disabled')),
         );
       }
     };
@@ -130,7 +133,7 @@ const IdentityProvidersComponent: ng.IComponentOptions = {
     this.isReadonlySetting = (property: string): boolean => {
       return PortalConfigService.isReadonly(this.settings, property);
     };
-  }
+  },
 };
 
 export default IdentityProvidersComponent;

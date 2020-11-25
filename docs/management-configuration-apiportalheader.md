@@ -9,11 +9,11 @@ The value can also be an "hard coded" value or you can use templating like in do
 
 See following examples :
 
-Name | Value
------ | ------
-api.version | `${api.version}`
-api.endpoint | `${api.proxy.contextPath}`
-api.publishedAt | `${(api.deployedAt?date)!}`
-My hard coded name | `My hard coded value`
+| Name               | Value                       |
+| ------------------ | --------------------------- |
+| api.version        | `${api.version}`            |
+| api.endpoint       | `${api.proxy.contextPath}`  |
+| api.publishedAt    | `${(api.deployedAt?date)!}` |
+| My hard coded name | `My hard coded value`       |
 
 You are able to combine api attributes, metadata and strings.

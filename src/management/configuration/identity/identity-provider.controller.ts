@@ -27,7 +27,6 @@ interface IIdentityProviderScope extends ng.IScope {
 }
 
 class IdentityProviderController {
-
   private identityProvider: IdentityProvider;
   private initialIdentityProvider: IdentityProvider;
   private tokenExchangeEndpoint: string;
@@ -51,7 +50,7 @@ class IdentityProviderController {
       // Initialize the identity provider
       this.identityProvider = new IdentityProvider();
       this.identityProvider.enabled = true;
-      this.identityProvider.type = (this.$state.params.type as string);
+      this.identityProvider.type = this.$state.params.type as string;
       this.identityProvider.configuration = new Map<string, any>();
       this.identityProvider.configuration.set('scopes', []);
       this.identityProvider.emailRequired = true;
@@ -64,7 +63,7 @@ class IdentityProviderController {
           firstname: 'given_name',
           lastname: 'family_name',
           email: 'email',
-          picture: 'picture'
+          picture: 'picture',
         };
       }
     } else {

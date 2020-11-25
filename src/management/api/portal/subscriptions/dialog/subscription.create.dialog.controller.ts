@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import * as _ from 'lodash';
-import ApiService  from '../../../../../services/api.service';
+import ApiService from '../../../../../services/api.service';
 import ApplicationService from '../../../../../services/application.service';
 import PortalConfigService from '../../../../../services/portalConfig.service';
 
@@ -25,7 +25,8 @@ function DialogSubscriptionCreateController(
   ApplicationService: ApplicationService,
   ApiService: ApiService,
   PortalConfigService: PortalConfigService,
-  Constants: any) {
+  Constants: any,
+) {
   'ngInject';
   this.api = api;
   this.plans = plans;
@@ -45,14 +46,14 @@ function DialogSubscriptionCreateController(
   this.save = function () {
     if (this.selectedApp && this.selectedPlan) {
       $mdDialog.hide({
-          applicationId: this.selectedApp.id,
-          planId: this.selectedPlan,
-          customApiKey: this.selectedPlanCustomApiKey
+        applicationId: this.selectedApp.id,
+        planId: this.selectedPlan,
+        customApiKey: this.selectedPlanCustomApiKey,
       });
     }
   };
 
-  this.planAlreadyHaveSubscriptions = function(planId) {
+  this.planAlreadyHaveSubscriptions = function (planId) {
     return _.indexOf(this.plansWithSubscriptions, planId) > -1;
   };
 
@@ -64,10 +65,8 @@ function DialogSubscriptionCreateController(
     this.plansWithSubscriptions = [];
     this.selectedPlanApiKey = null;
     if (this.selectedApp) {
-      ApiService.getSubscriptions(
-        this.api.id,
-        '?application=' + this.selectedApp.id + '&status=pending,accepted').then((response) => {
-        this.plansWithSubscriptions = _.map(response.data.data, function(subscription) {
+      ApiService.getSubscriptions(this.api.id, '?application=' + this.selectedApp.id + '&status=pending,accepted').then((response) => {
+        this.plansWithSubscriptions = _.map(response.data.data, function (subscription) {
           return subscription.plan;
         });
         if (this.selectedPlan && this.planAlreadyHaveSubscriptions(this.selectedPlan)) {
@@ -77,10 +76,10 @@ function DialogSubscriptionCreateController(
     }
   };
 
-  this.searchApplication = function(searchedAppName) {
-      return ApplicationService.search(searchedAppName).then((response) => {
-        return response.data;
-      });
+  this.searchApplication = function (searchedAppName) {
+    return ApplicationService.search(searchedAppName).then((response) => {
+      return response.data;
+    });
   };
 
   this.hasGeneralConditions = function (plan) {

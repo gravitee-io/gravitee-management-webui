@@ -16,7 +16,8 @@
 class CorsService {
   private Constants: any;
 
-  private allowOriginPattern = '^(?:(?:[htps\\(\\)?\\|]+):\\/\\/)*(?:[\\w\\(\\)\\[\\]\\{\\}?\\|.*-](?:(?:[?+*]|\\{\\d+(?:,\\d*)?\\}))?)+(?:[a-zA-Z0-9]{2,6})?(?::\\d{1,5})?$';
+  private allowOriginPattern =
+    '^(?:(?:[htps\\(\\)?\\|]+):\\/\\/)*(?:[\\w\\(\\)\\[\\]\\{\\}?\\|.*-](?:(?:[?+*]|\\{\\d+(?:,\\d*)?\\}))?)+(?:[a-zA-Z0-9]{2,6})?(?::\\d{1,5})?$';
 
   constructor(private $mdDialog, Constants) {
     'ngInject';
@@ -29,33 +30,37 @@ class CorsService {
 
   controlAllowOrigin(chip, index, allowOriginArray) {
     if ('*' === chip) {
-      this.$mdDialog.show({
-        controller: 'DialogConfirmController',
-        controllerAs: 'ctrl',
-        template: require('../components/dialog/confirmWarning.dialog.html'),
-        clickOutsideToClose: true,
-        locals: {
-          title: 'Are you sure you want to remove all cross-origin restrictions?',
-          confirmButton: 'Yes, I want to allow all origins.'
-        }
-      }).then((response) => {
-        if (!response) {
-          allowOriginArray.splice(index, 1);
-        }
-      });
+      this.$mdDialog
+        .show({
+          controller: 'DialogConfirmController',
+          controllerAs: 'ctrl',
+          template: require('../components/dialog/confirmWarning.dialog.html'),
+          clickOutsideToClose: true,
+          locals: {
+            title: 'Are you sure you want to remove all cross-origin restrictions?',
+            confirmButton: 'Yes, I want to allow all origins.',
+          },
+        })
+        .then((response) => {
+          if (!response) {
+            allowOriginArray.splice(index, 1);
+          }
+        });
     } else {
       let validator = new RegExp(this.allowOriginPattern, 'ig');
 
       if (!validator.test(chip)) {
-        this.$mdDialog.show(
-          this.$mdDialog.alert({
-            title: 'Invalid regex',
-            textContent: `${chip} is not a valid origin`,
-            ok: 'Close'
-          })
-        ).then((response) => {
-          allowOriginArray.splice(index, 1);
-        });
+        this.$mdDialog
+          .show(
+            this.$mdDialog.alert({
+              title: 'Invalid regex',
+              textContent: `${chip} is not a valid origin`,
+              ok: 'Close',
+            }),
+          )
+          .then((response) => {
+            allowOriginArray.splice(index, 1);
+          });
       }
     }
   }
@@ -63,9 +68,8 @@ class CorsService {
   isRegexValid(allowOriginArray) {
     let isValid = true;
     if (allowOriginArray) {
-      allowOriginArray.forEach(allowOrigin => {
-        if ('*' !== allowOrigin &&
-          (allowOrigin.includes('(') || allowOrigin.includes('[') || allowOrigin.includes('*'))) {
+      allowOriginArray.forEach((allowOrigin) => {
+        if ('*' !== allowOrigin && (allowOrigin.includes('(') || allowOrigin.includes('[') || allowOrigin.includes('*'))) {
           try {
             // tslint:disable-next-line:no-unused-expression
             new RegExp(allowOrigin);
@@ -80,7 +84,7 @@ class CorsService {
 
   querySearchHeaders = (query, headers) => {
     return query ? headers.filter(this.createFilterFor(query)) : [];
-  }
+  };
 
   createFilterFor = (query: string) => {
     let lowercaseQuery = query.toLowerCase();
@@ -88,7 +92,7 @@ class CorsService {
     return function filterFn(header) {
       return header.toLowerCase().indexOf(lowercaseQuery) === 0;
     };
-  }
+  };
 }
 
 export default CorsService;

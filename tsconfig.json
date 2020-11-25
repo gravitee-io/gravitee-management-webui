@@ -7,27 +7,10 @@
     "noImplicitAny": false,
     "skipLibCheck": true,
     "typeRoots": ["node_modules/@types/"],
-    "types": [
-      "@uirouter/angularjs",
-      "angular",
-      "angular-mocks",
-      "angular-material",
-      "jquery",
-      "node",
-      "jasmine",
-      "es6-shim"
-    ],
-    "lib": [
-      "dom",
-      "es2018"
-    ]
+    "types": ["@uirouter/angularjs", "angular", "angular-mocks", "angular-material", "jquery", "node", "jasmine", "es6-shim"],
+    "lib": ["dom", "es2018"]
   },
   "compileOnSave": false,
-  "include": [
-    "src/**/*.ts",
-    "node_modules/@gravitee/ui-components"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["src/**/*.ts", "node_modules/@gravitee/ui-components"],
+  "exclude": ["node_modules"]
 }

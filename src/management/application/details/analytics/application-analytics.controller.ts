@@ -19,15 +19,11 @@ import ApplicationService from '../../../../services/application.service';
 import { StateService } from '@uirouter/core';
 
 class ApplicationAnalyticsController {
-
   private application: any;
   private dashboard: any;
   private dashboards: any;
 
-  constructor(
-    private ApplicationService: ApplicationService,
-    private $state: StateService
-  ) {
+  constructor(private ApplicationService: ApplicationService, private $state: StateService) {
     'ngInject';
   }
 
@@ -36,7 +32,7 @@ class ApplicationAnalyticsController {
 
     let dashboardId = this.$state.params.dashboard;
     if (dashboardId) {
-      this.dashboard = _.find(this.dashboards, {id: dashboardId});
+      this.dashboard = _.find(this.dashboards, { id: dashboardId });
       if (!this.dashboard) {
         delete this.$state.params.dashboard;
         this.$state.go(this.$state.current);
@@ -55,25 +51,21 @@ class ApplicationAnalyticsController {
           chart: {
             service: {
               caller: this.ApplicationService,
-              function: this.ApplicationService.analytics
-            }
-          }
+              function: this.ApplicationService.analytics,
+            },
+          },
         });
       });
     });
   }
 
   onDashboardChanged() {
-    this.$state.transitionTo(
-      this.$state.current,
-      _.merge(this.$state.params, {dashboard: this.dashboard.id}), {reload: true});
+    this.$state.transitionTo(this.$state.current, _.merge(this.$state.params, { dashboard: this.dashboard.id }), { reload: true });
   }
 
   viewLogs() {
     // update the query parameter
-    this.$state.transitionTo(
-      'management.applications.application.logs',
-      this.$state.params);
+    this.$state.transitionTo('management.applications.application.logs', this.$state.params);
   }
 }
 

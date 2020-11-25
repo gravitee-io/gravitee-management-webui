@@ -12,7 +12,7 @@ Specify you backend endpoint.
 
 . Plan **optional**
 
-To subscribe to an API, you must publish one or more Plans. 
+To subscribe to an API, you must publish one or more Plans.
 A Plan will allow you to gain access of the API operations.
 
 A Plan can be keyless (public access) or restricted with an API-Key.

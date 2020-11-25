@@ -154,12 +154,14 @@
     "node-sass": "^4.14.1",
     "phantomjs-prebuilt": "^2.1.16",
     "postcss-loader": "^2.1.6",
+    "prettier": "^2.2.0",
     "protractor": "^5.4.3",
     "require-dir": "^1.2.0",
     "sass-loader": "^7.3.1",
     "style-loader": "^0.21.0",
     "ts-loader": "^4.5.0",
     "tslint": "^5.20.1",
+    "tslint-config-prettier": "^1.18.0",
     "tslint-loader": "^3.6.0",
     "typescript": "^2.9.2",
     "url-loader": "^1.1.2",
@@ -194,6 +196,8 @@
     "lint": "gulp lint",
     "lint:fix": "gulp lint:fix",
     "compile": "gulp compile",
-    "postinstall": "rm -rf node_modules/codemirror/mode/rpm/changes"
+    "postinstall": "rm -rf node_modules/codemirror/mode/rpm/changes",
+    "prettier:check": "prettier --check \"**\"",
+    "prettier": "prettier --write \"**\""
   }
 }

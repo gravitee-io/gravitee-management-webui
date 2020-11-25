@@ -5,8 +5,8 @@ You're also able to filter them.
 
 Here is a description of an audit log :
 
-* **Date** : When the audit log was created
-* **User** : The user who has generated the audit log
-* **Event** : The event type
-* **Target** : The target of the change
-* **Patch** : The Json patch of the change
+- **Date** : When the audit log was created
+- **User** : The user who has generated the audit log
+- **Event** : The event type
+- **Target** : The target of the change
+- **Patch** : The Json patch of the change

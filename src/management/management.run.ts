@@ -17,25 +17,44 @@ import ApiService, { isV2 } from '../services/api.service';
 /* global setInterval:false, clearInterval:false, screen:false */
 import UserService from '../services/user.service';
 
-function runBlock($rootScope, $window, $http, $mdSidenav, $transitions, $state,
-                  $timeout, UserService: UserService, Constants, PermissionStrategies, ReCaptchaService, ApiService) {
+function runBlock(
+  $rootScope,
+  $window,
+  $http,
+  $mdSidenav,
+  $transitions,
+  $state,
+  $timeout,
+  UserService: UserService,
+  Constants,
+  PermissionStrategies,
+  ReCaptchaService,
+  ApiService,
+) {
   'ngInject';
 
-  $transitions.onStart({
-    to: (state) => state.name !== 'login' && state.name !== 'registration'
-      && state.name !== 'confirm' && state.name !== 'confirmProfile' && state.name !== 'resetPassword'
-  }, (trans) => {
-    let forceLogin = Constants.authentication.forceLogin.enabled;
+  $transitions.onStart(
+    {
+      to: (state) =>
+        state.name !== 'login' &&
+        state.name !== 'registration' &&
+        state.name !== 'confirm' &&
+        state.name !== 'confirmProfile' &&
+        state.name !== 'resetPassword',
+    },
+    (trans) => {
+      let forceLogin = Constants.authentication.forceLogin.enabled;
 
-    if (forceLogin && !UserService.isAuthenticated()) {
-      return trans.router.stateService.target('login');
-    }
-    if (UserService.isAuthenticated() && UserService.currentUser.firstLogin && !$window.localStorage.getItem('profileConfirmed')) {
-      return trans.router.stateService.target('confirmProfile');
-    }
-  });
+      if (forceLogin && !UserService.isAuthenticated()) {
+        return trans.router.stateService.target('login');
+      }
+      if (UserService.isAuthenticated() && UserService.currentUser.firstLogin && !$window.localStorage.getItem('profileConfirmed')) {
+        return trans.router.stateService.target('confirmProfile');
+      }
+    },
+  );
 
-  $transitions.onBefore({}, trans => {
+  $transitions.onBefore({}, (trans) => {
     const params = Object.assign({}, trans.params());
     const stateService = trans.router.stateService;
     let toState = trans.to();
@@ -49,37 +68,45 @@ function runBlock($rootScope, $window, $http, $mdSidenav, $transitions, $state,
     }
   });
 
-  $transitions.onFinish({}, function(trans) {
-
+  $transitions.onFinish({}, function (trans) {
     // Hide recaptcha badge by default (let each component decide whether it should display the recaptcha badge or not).
     ReCaptchaService.hideBadge();
 
     let fromState = trans.from();
     let toState = trans.to();
 
-    let notEligibleForUserCreation = !Constants.portal.userCreation.enabled && (fromState.name === 'registration' || fromState === 'confirm');
+    let notEligibleForUserCreation =
+      !Constants.portal.userCreation.enabled && (fromState.name === 'registration' || fromState === 'confirm');
 
     if (notEligibleForUserCreation) {
       return trans.router.stateService.target('login');
-    } else if (toState.data && toState.data.perms && toState.data.perms.only && !UserService.isUserHasPermissions(toState.data.perms.only)) {
+    } else if (
+      toState.data &&
+      toState.data.perms &&
+      toState.data.perms.only &&
+      !UserService.isUserHasPermissions(toState.data.perms.only)
+    ) {
       return trans.router.stateService.target(UserService.isAuthenticated() ? 'management.apis.list' : 'login');
     }
   });
 
-  $rootScope.$on('graviteeLogout', function(event, params) {
-    $state.go('login', {redirectUri: params.redirectUri});
+  $rootScope.$on('graviteeLogout', function (event, params) {
+    $state.go('login', { redirectUri: params.redirectUri });
   });
 
-  $rootScope.$watch(function() {
-    return $http.pendingRequests.length > 0;
-  }, function(hasPendingRequests) {
-    $rootScope.isLoading = hasPendingRequests;
-  });
+  $rootScope.$watch(
+    function () {
+      return $http.pendingRequests.length > 0;
+    },
+    function (hasPendingRequests) {
+      $rootScope.isLoading = hasPendingRequests;
+    },
+  );
 
   $rootScope.displayLoader = true;
 
   // force displayLoader value to change on a new digest cycle
-  $timeout(function() {
+  $timeout(function () {
     $rootScope.displayLoader = false;
   });
 
@@ -93,7 +120,6 @@ function runBlock($rootScope, $window, $http, $mdSidenav, $transitions, $state,
   $window.onfocus = () => {
     $rootScope.isWindowFocused = true;
   };
-
 }
 
 export default runBlock;

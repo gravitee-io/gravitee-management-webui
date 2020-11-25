@@ -22,16 +22,16 @@ import ApiService from '../../../services/api.service';
 
 const PortalSettingsComponent: ng.IComponentOptions = {
   bindings: {
-    tags: '<'
+    tags: '<',
   },
   template: require('./portal.html'),
-  controller: function(
+  controller: function (
     NotificationService: NotificationService,
     PortalConfigService: PortalConfigService,
     CorsService: CorsService,
     ApiService: ApiService,
     $state: StateService,
-    Constants: any
+    Constants: any,
   ) {
     'ngInject';
     this.settings = _.cloneDeep(Constants);
@@ -46,11 +46,11 @@ const PortalSettingsComponent: ng.IComponentOptions = {
       this.settings.cors.allowHeaders = this.settings.cors.allowHeaders || [];
       this.settings.cors.allowMethods = this.settings.cors.allowMethods || [];
       this.settings.cors.exposedHeaders = this.settings.cors.exposedHeaders || [];
-      this.settings.authentication.localLogin.enabled = (this.settings.authentication.localLogin.enabled || !this.hasIdpDefined());
+      this.settings.authentication.localLogin.enabled = this.settings.authentication.localLogin.enabled || !this.hasIdpDefined();
     };
 
     this.save = () => {
-      PortalConfigService.save(this.settings).then( (response) => {
+      PortalConfigService.save(this.settings).then((response) => {
         // We have to manually set this property because lodash's merge do not handle well the case of label deletion
         Constants.api.labelsDictionary = response.data.api.labelsDictionary;
         Constants.cors.allowOrigin = response.data.cors.allowOrigin;
@@ -67,13 +67,14 @@ const PortalSettingsComponent: ng.IComponentOptions = {
     this.reset = () => {
       this.settings = _.cloneDeep(Constants);
       this.formSettings.$setPristine();
-
     };
 
     this.hasIdpDefined = () => {
-      return this.settings.authentication.google.clientId ||
-       this.settings.authentication.github.clientId ||
-       this.settings.authentication.oauth2.clientId;
+      return (
+        this.settings.authentication.google.clientId ||
+        this.settings.authentication.github.clientId ||
+        this.settings.authentication.oauth2.clientId
+      );
     };
 
     this.toggleDocType = () => {
@@ -100,7 +101,7 @@ const PortalSettingsComponent: ng.IComponentOptions = {
     this.querySearchHeaders = (query) => {
       return CorsService.querySearchHeaders(query, this.headers);
     };
-  }
+  },
 };
 
 export default PortalSettingsComponent;

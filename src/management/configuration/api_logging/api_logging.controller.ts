@@ -17,19 +17,16 @@ import NotificationService from '../../../services/notification.service';
 import PortalConfigService from '../../../services/portalConfig.service';
 
 class ApiLoggingController {
-
   public providedConfigurationMessage = 'Configuration provided by the system';
   private formApiLogging: any;
 
-  constructor(private PortalConfigService: PortalConfigService,
-              private NotificationService: NotificationService,
-              private Constants: any) {
+  constructor(private PortalConfigService: PortalConfigService, private NotificationService: NotificationService, private Constants: any) {
     'ngInject';
     this.Constants = Constants;
   }
 
   save() {
-    this.PortalConfigService.save().then( () => {
+    this.PortalConfigService.save().then(() => {
       this.NotificationService.show('API logging saved');
       this.formApiLogging.$setPristine();
     });
