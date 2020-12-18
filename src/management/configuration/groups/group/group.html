@@ -178,6 +178,7 @@
                     <td md-cell>{{member.displayName}}</td>
                     <td md-cell>
                       <md-checkbox ng-model="member.roles['GROUP']"
+                                   ng-disabled="$ctrl.isCurrentUserMember(member) || !$ctrl.isSuperAdmin()"
                                    ng-true-value="'ADMIN'"
                                    ng-false-value="''"
                                    ng-change="$ctrl.updateRole(member)"
