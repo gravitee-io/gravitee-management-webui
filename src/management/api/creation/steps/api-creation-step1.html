@@ -72,7 +72,7 @@
           </md-input-container>
         </div>
 
-        <div layout-gt-sm="row">
+        <div layout-gt-sm="row" ng-if="$ctrl.parent.groups && $ctrl.parent.groups.length > 0">
           <md-input-container class="flex">
             <label>Groups</label>
             <md-select ng-model="$ctrl.parent.api.groups" multiple>
