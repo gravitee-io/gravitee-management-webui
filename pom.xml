@@ -52,6 +52,7 @@
             <exclude>LICENSE.txt</exclude>
             <exclude>node/**</exclude>
             <exclude>node_modules/**</exclude>
+            <exclude>.circleci/**</exclude>
             <exclude>src/libraries/**</exclude>
             <exclude>**/*.scss</exclude>
             <exclude>**/*.svg</exclude>
