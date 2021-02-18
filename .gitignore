@@ -10,3 +10,5 @@ npm-debug.log
 .DS_Store
 .project
 .settings
+# ingore the [settings.xml] which contains secrets (password to artifactory)
+settings.xml
