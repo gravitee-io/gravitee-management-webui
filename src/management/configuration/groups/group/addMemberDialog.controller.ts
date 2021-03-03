@@ -18,6 +18,7 @@ import * as _ from 'lodash';
 export class Role {
   default: boolean;
   name: string;
+  system: boolean;
 }
 
 function DialogAddGroupMemberController(
@@ -71,6 +72,16 @@ function DialogAddGroupMemberController(
   this.invalid = () => {
     return (!this.defaultApiRole && !this.defaultApplicationRole) || (this.usersSelected.length === 0);
   };
+
+  this.isApiRoleDisabled = (role: Role) => {
+    return (
+      (role.system && role.name !== 'PRIMARY_OWNER') ||
+      (role.system &&
+        role.name === 'PRIMARY_OWNER' &&
+        this.group.apiPrimaryOwner != null)
+    );
+  };
+
 }
 
 export default DialogAddGroupMemberController;

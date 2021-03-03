@@ -234,7 +234,7 @@
                       ng-change="$ctrl.updateRole(member)"
                       ng-disabled="!$ctrl.canChangeDefaultApiRole()"
                     >
-                      <md-option ng-value="role.name" ng-repeat="role in $ctrl.apiRoles" ng-disabled="role.system"
+                      <md-option ng-value="role.name" ng-repeat="role in $ctrl.apiRoles" ng-disabled="$ctrl.isApiRoleDisabled(role)"
                       >{{role.name}}</md-option
                       >
                     </md-select>
@@ -285,7 +285,7 @@
                         ng-change="$ctrl.updateInvitation(invitation)"
                         ng-disabled="!$ctrl.canChangeDefaultApiRole()"
                       >
-                        <md-option ng-value="role.name" ng-repeat="role in $ctrl.apiRoles" ng-disabled="role.system"
+                        <md-option ng-value="role.name" ng-repeat="role in $ctrl.apiRoles" ng-disabled="$ctrl.isApiRoleDisabled(role)"
                         >{{role.name}}</md-option
                         >
                       </md-select>

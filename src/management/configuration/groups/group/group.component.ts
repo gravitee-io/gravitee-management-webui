@@ -16,8 +16,8 @@
 import GroupService from '../../../../services/group.service';
 import NotificationService from '../../../../services/notification.service';
 import { StateService } from '@uirouter/core';
-import _ = require('lodash');
 import UserService from '../../../../services/user.service';
+import _ = require('lodash');
 
 interface IGroupDetailComponentScope extends ng.IScope {
   groupApis: any[];
@@ -143,9 +143,10 @@ const GroupComponent: ng.IComponentOptions = {
         if (response) {
           GroupService.deleteMember(this.group.id, member.id).then((response) => {
             NotificationService.show('Member ' + member.displayName + ' has been successfully removed');
-            GroupService.getMembers(this.group.id).then(response =>
-              this.members = response.data
-            );
+            GroupService.getMembers(this.group.id).then(response => {
+              this.members = response.data;
+              this.group.apiPrimaryOwner = this.members.find(member => member.roles.API === 'PRIMARY_OWNER').id;
+            });
           });
         }
       });
@@ -308,6 +309,16 @@ const GroupComponent: ng.IComponentOptions = {
       });
       return hasGroupAdmin;
     };
+
+    this.isApiRoleDisabled = (role) => {
+      return (
+        (role.system && role.name !== 'PRIMARY_OWNER') ||
+        (role.system &&
+          role.name === 'PRIMARY_OWNER' &&
+          this.group.apiPrimaryOwner != null)
+      );
+    };
+
   }
 };
 
