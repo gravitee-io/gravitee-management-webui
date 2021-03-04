@@ -16,7 +16,7 @@
 import * as _ from 'lodash';
 import ApiService from '../../../../services/api.service';
 import NotificationService from '../../../../services/notification.service';
-import {StateService} from '@uirouter/core';
+import { StateService } from '@uirouter/core';
 import NewApiController, {
   getDefinitionVersionDescription,
   getDefinitionVersionTitle
@@ -26,6 +26,7 @@ class ApiCreationController {
 
   api: any;
   selectedTenants: any[];
+  attachableGroups: any[];
 
   private parent: NewApiController;
   private vm: {
@@ -118,6 +119,10 @@ class ApiCreationController {
 
     // init documentation settings
     this.initDocumentationSettings();
+  }
+
+  $onInit = () => {
+    this.attachableGroups = this.groups.filter(group => group.apiPrimaryOwner == null);
   }
 
   /*
