@@ -27,6 +27,7 @@ class ApiCreationController {
   api: any;
   selectedTenants: any[];
   attachableGroups: any[];
+  poGroups: any[];
 
   private parent: NewApiController;
   private vm: {
@@ -123,6 +124,7 @@ class ApiCreationController {
 
   $onInit = () => {
     this.attachableGroups = this.groups.filter(group => group.apiPrimaryOwner == null);
+    this.poGroups = this.groups.filter(group => group.apiPrimaryOwner != null);
   }
 
   /*

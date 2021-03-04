@@ -31,6 +31,9 @@ class ApiTransferOwnershipController {
   private usersSelected = [];
   private userFilterFn;
   private defaultUsersList: string[];
+  private poGroups: any[];
+  private newPrimaryOwnerGroup: string;
+  private isGroupAsPrimaryOwner: boolean;
 
   constructor(
     private ApiService: ApiService,
@@ -48,6 +51,10 @@ class ApiTransferOwnershipController {
   ) {
     'ngInject';
     this.api = resolvedApi.data;
+    this.poGroups = this.resolvedGroups.filter(group => group.apiPrimaryOwner != null);
+    if (this.api.owner.type === 'GROUP') {
+      this.poGroups = this.poGroups.filter(group => group.id !== this.api.owner.id);
+    }
     this.members = resolvedMembers.data;
     this.groupById = _.keyBy(resolvedGroups, 'id');
     this.displayGroups = {};
@@ -93,7 +100,7 @@ class ApiTransferOwnershipController {
     };
 
     this.defaultUsersList = _.filter(this.members, (member: any) => {
-      return member.role !== 'PRIMARY_OWNER';
+      return member.role !== 'PRIMARY_OWNER' && member.type === 'USER';
     });
   }
 
@@ -126,12 +133,22 @@ class ApiTransferOwnershipController {
   }
 
   private transferOwnership(newRole: string) {
-    let ownership = {
-      id: this.usersSelected[0].id,
-      reference: this.usersSelected[0].reference,
-      role: newRole
-    };
-
+    let ownership;
+    if (this.isGroupAsPrimaryOwner) {
+      ownership = {
+        id: this.newPrimaryOwnerGroup,
+        reference: null,
+        role: newRole,
+        type: 'GROUP'
+      };
+    } else {
+      ownership = {
+        id: this.usersSelected[0].id,
+        reference: this.usersSelected[0].reference,
+        role: newRole,
+        type: 'USER'
+      };
+    }
     this.ApiService.transferOwnership(this.api.id, ownership).then(() => {
       this.NotificationService.show('API ownership changed !');
       this.$state.go('management.apis.list');
