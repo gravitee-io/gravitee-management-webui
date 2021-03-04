@@ -24,6 +24,7 @@ class ApiPortalController {
   private initialApi: any;
   private api: any;
   private groups: any;
+  private attachableGroups: any;
   private categories: any;
   private tags: any;
   private tenants: any;
@@ -113,6 +114,7 @@ class ApiPortalController {
 
     this.tags = resolvedTags;
     this.groups = resolvedGroups;
+    this.attachableGroups = resolvedGroups.filter(group => group.apiPrimaryOwner == null);
 
     this.headers = [
       'Accept', 'Accept-Charset', 'Accept-Encoding', 'Accept-Language', 'Accept-Ranges', 'Access-Control-Allow-Credentials',

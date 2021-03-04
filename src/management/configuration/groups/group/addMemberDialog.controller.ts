@@ -29,7 +29,8 @@ function DialogAddGroupMemberController(
   apiRoles: Role[],
   applicationRoles: Role[],
   canChangeDefaultApiRole,
-  canChangeDefaultApplicationRole
+  canChangeDefaultApplicationRole,
+  isApiRoleDisabled
   ) {
   'ngInject';
 
@@ -45,6 +46,7 @@ function DialogAddGroupMemberController(
 
   this.canChangeDefaultApiRole = canChangeDefaultApiRole;
   this.canChangeDefaultApplicationRole = canChangeDefaultApplicationRole;
+  this.isApiRoleDisabled = isApiRoleDisabled;
 
   this.hide = () => {
     $mdDialog.cancel();
@@ -71,15 +73,6 @@ function DialogAddGroupMemberController(
 
   this.invalid = () => {
     return (!this.defaultApiRole && !this.defaultApplicationRole) || (this.usersSelected.length === 0);
-  };
-
-  this.isApiRoleDisabled = (role: Role) => {
-    return (
-      (role.system && role.name !== 'PRIMARY_OWNER') ||
-      (role.system &&
-        role.name === 'PRIMARY_OWNER' &&
-        this.group.apiPrimaryOwner != null)
-    );
   };
 
 }
