@@ -18,6 +18,7 @@
 <md-step label="General" md-complete="$ctrl.parent.vm.stepData[0].data.completed">
   <md-step-body>
     <md-content layout-padding class="gv-creation-general-content gv-creation-content">
+      <div layout="row" layout-align="end start"><a ng-click="$ctrl.toggleAdvancedMode()">Advanced mode</a></div>
       <form name="apiGeneralForm" ng-submit="$ctrl.parent.validFirstStep($ctrl.parent.vm.stepData[0].data)">
         <div layout-gt-sm="row">
           <md-input-container class="md-block" flex-gt-sm>
@@ -78,7 +79,7 @@
           </md-input-container>
         </div>
 
-        <div layout-gt-sm="row" ng-if="$ctrl.parent.attachableGroups && $ctrl.parent.attachableGroups.length > 0">
+        <div layout-gt-sm="row" ng-if="$ctrl.advancedMode && $ctrl.parent.attachableGroups && $ctrl.parent.attachableGroups.length > 0">
           <md-input-container class="flex">
             <label>Groups</label>
             <md-select ng-model="$ctrl.parent.api.groups" multiple>
@@ -86,6 +87,22 @@
             </md-select>
             <div class="hint">Groups that will be able to access the API.</div>
           </md-input-container>
+        </div>
+
+        <div layout-gt-sm="column" ng-if="$ctrl.advancedMode && $ctrl.parent.poGroups && $ctrl.parent.poGroups.length > 0">
+          <div layout="row" class="md-block">
+            <md-input-container class="flex">
+              <md-switch ng-model="$ctrl.isGroupAsPrimaryOwner" aria-label="Use a group as primary owner" flex>
+                Use a group as the primary owner
+              </md-switch>
+            </md-input-container>
+            <md-input-container class="flex">
+              <label>Primary Owner Group</label>
+              <md-select ng-model="$ctrl.parent.api.primaryOwner" ng-disabled="!$ctrl.isGroupAsPrimaryOwner">
+                <md-option ng-repeat="group in $ctrl.parent.poGroups" ng-value="{id: group.id, type: 'GROUP'}">{{group.name}}</md-option>
+              </md-select>
+            </md-input-container>
+          </div>
         </div>
 
         <md-step-actions layout="row">
