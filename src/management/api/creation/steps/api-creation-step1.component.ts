@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import ApiCreationController from './api-creation.controller';
+import ApiPrimaryOwnerModeService from '../../../../services/apiPrimaryOwnerMode.service';
 
 const ApiCreationStep1Component: ng.IComponentOptions = {
   require: {
@@ -23,10 +24,12 @@ const ApiCreationStep1Component: ng.IComponentOptions = {
   controller: class {
     private parent: ApiCreationController;
     private advancedMode: boolean;
+    private useGroupAsPrimaryOwner: boolean;
 
-    constructor() {
+    constructor(private ApiPrimaryOwnerModeService: ApiPrimaryOwnerModeService) {
       'ngInject';
       this.advancedMode = false;
+      this.useGroupAsPrimaryOwner = this.ApiPrimaryOwnerModeService.isGroupOnly();
     }
 
     toggleAdvancedMode = () => {
@@ -35,6 +38,20 @@ const ApiCreationStep1Component: ng.IComponentOptions = {
         this.parent.api.groups = [];
       }
     }
+
+    canUseAdvancedMode = () => {
+      return (
+        (this.ApiPrimaryOwnerModeService.isHybrid() &&
+          ((this.parent.attachableGroups &&
+            this.parent.attachableGroups.length > 0) ||
+            (this.parent.poGroups && this.parent.poGroups.length > 0))) ||
+        (this.ApiPrimaryOwnerModeService.isGroupOnly() &&
+          this.parent.attachableGroups &&
+          this.parent.attachableGroups.length > 0)
+      );
+    }
+
+
   }
 };
 

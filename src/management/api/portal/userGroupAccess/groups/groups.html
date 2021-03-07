@@ -34,8 +34,8 @@
   </md-input-container>
   <div permission permission-except="'api-definition-u'" layout="column">
     <label>Groups</label>
-    <md-chips permission permission-except="'api-definition-u'" readonly="true" ng-model="portalCtrl.api.groups">
-      <md-chip-template>{{portalCtrl.getGroup($chip).name}}</md-chip-template>
+    <md-chips permission permission-except="'api-definition-u'" readonly="true" ng-model="portalCtrl.attachedGroups">
+      <md-chip-template>{{$chip.name}}</md-chip-template>
     </md-chips>
   </div>
   <div class="md-actions gravitee-api-save-button" layout="row">

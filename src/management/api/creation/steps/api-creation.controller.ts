@@ -21,6 +21,7 @@ import NewApiController, {
   getDefinitionVersionDescription,
   getDefinitionVersionTitle
 } from '../newApiPortal.controller';
+import UserService from '../../../../services/user.service';
 
 class ApiCreationController {
 
@@ -73,6 +74,7 @@ class ApiCreationController {
               private $window,
               private ApiService: ApiService,
               private NotificationService: NotificationService,
+              private UserService: UserService,
               private $state: StateService,
               private Constants: any,
               private $rootScope) {
@@ -123,8 +125,14 @@ class ApiCreationController {
   }
 
   $onInit = () => {
-    this.attachableGroups = this.groups.filter(group => group.apiPrimaryOwner == null);
-    this.poGroups = this.groups.filter(group => group.apiPrimaryOwner != null);
+    this.attachableGroups = this.groups.filter(
+      (group) => group.apiPrimaryOwner == null
+    );
+    this.UserService.getUserGroups(this.UserService.currentUser.id)
+      .then((response) => {
+        this.poGroups = this.groups.filter(
+          (group) => group.apiPrimaryOwner != null && response.data.some(userGroup => userGroup.id === group.id));
+      });
   }
 
   /*
