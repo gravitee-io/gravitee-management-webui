@@ -482,6 +482,8 @@ import angular = require('angular');
 import ngInfiniteScroll = require('ng-infinite-scroll');
 import ApiAlertsDashboardController from './api/analytics/alerts/api-alerts-dashboard.controller';
 import MovedComponent from './configuration/moved/moved.component';
+import { downgradeComponent } from '@angular/upgrade/static';
+import { Oauth2Component } from './application/details/general/oauth2.component';
 
 (<any>window).traverse = traverse;
 
@@ -937,6 +939,8 @@ graviteeManagementModule.controller('ApplicationSubscriptionsController', Applic
 graviteeManagementModule.controller('ApplicationAnalyticsController', ApplicationAnalyticsController);
 graviteeManagementModule.controller('ApplicationLogsController', ApplicationLogsController);
 graviteeManagementModule.controller('DialogTransferApplicationController', DialogTransferApplicationController);
+
+graviteeManagementModule.directive('oauth', downgradeComponent({ component: Oauth2Component }));
 
 graviteeManagementModule.component('user', UserComponent);
 

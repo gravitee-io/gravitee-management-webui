@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { UpgradeModule } from '@angular/upgrade/static';
-import './management.module.ajs';
-import { Oauth2Component } from './application/details/general/oauth2.component';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 
-@NgModule({
-  imports: [BrowserModule, UpgradeModule],
-  declarations: [Oauth2Component],
-  entryComponents: [Oauth2Component],
+const template = require('./oauth2.component.html');
+
+@Component({
+  selector: 'oauth2',
+  template,
+  // templateUrl: './oauth2.component.html'
 })
-export class AppModule {
-  constructor(private upgrade: UpgradeModule) {}
+export class Oauth2Component implements OnChanges {
+  @Input()
+  clientId: string;
 
-  ngDoBootstrap() {
-    this.upgrade.bootstrap(document.documentElement, ['gravitee-management'], { strictDi: true });
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(`change`, changes);
   }
 }
