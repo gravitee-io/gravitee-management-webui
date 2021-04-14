@@ -111,26 +111,12 @@ const WidgetChartLineComponent: ng.IComponentOptions = {
         plotLines: (this.events || []).map(event => {
             return {
               color: 'rgba(223, 169, 65, 0.4)',
-              width: 2,
+              width: 4,
               value: event.created_at,
+              zIndex: 200,
               label: {
                 useHTML: true,
-                text: `
-                  <div style="
-                        background-color: var(--gv-theme-font-color-dark, #262626);
-                        color: white;
-                        padding: 5px;
-                        border-radius: 2px;
-                        z-index: 99;
-                        visibility: hidden;">
-                    <span>Deployment #${event.properties.deployment_number}</span>
-                    <br>
-                    <span>${event.properties.deployment_label || ''}</span>
-                  </div>`,
-                rotation: 0,
-                style: {
-                  visibility: 'hidden',
-                }
+                text: `<div title="Go to events history" data-deployment_number="${event.properties.deployment_number}">#${event.properties.deployment_number} - ${event.properties.deployment_label || ''}</div>`,
               }
             };
           })
@@ -187,6 +173,11 @@ const WidgetChartLineComponent: ng.IComponentOptions = {
           mode: (add) ? 'add' : 'remove',
         });
       }
+    };
+
+    this.goToEventHistory = ({ detail: { label } }) => {
+      const d = label.dataset.deployment_number;
+      $state.go('management.apis.detail.audit.history');
     };
   }
 };
