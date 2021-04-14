@@ -43,6 +43,7 @@ class ApplicationSubscribeController {
     _.forEach(subscriptionsByAPI, (subscriptions, api) => {
       // @ts-ignore
       this.subscribedAPIs.push(
+        // @ts-ignore
         _.merge(_.find(this.apis, { id: api }), {
           plans: _.join(
             _.map(subscriptions, (sub) => this.subscriptions.metadata[sub.plan].name),
