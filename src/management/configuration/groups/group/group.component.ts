@@ -151,6 +151,10 @@ const GroupComponent: ng.IComponentOptions = {
       });
     };
 
+    this.isCurrentUserMember = (member) => {
+      return UserService.currentUser.id === member.id;
+    };
+
     this.showAddMemberModal = () => {
       $mdDialog.show({
         controller: 'DialogAddGroupMemberController',
