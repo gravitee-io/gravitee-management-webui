@@ -31,7 +31,7 @@
     "angular-timeline": "^1.7.0",
     "angular-ui-tree": "^2.22.6",
     "angular-ui-validate": "^1.2.3",
-    "asciidoctor": "^2.2.0",
+    "asciidoctor": "^2.2.3",
     "asciidoctor-highlight.js": "^0.3.0",
     "bootstrap": "3.4.1",
     "diff": "^3.5.0",
