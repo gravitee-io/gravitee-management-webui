@@ -1,4 +1,4 @@
-# Portal pages
+# Portal Pages
 
 Currently, we support four types of documentation:
 
