@@ -16,14 +16,15 @@
 
 -->
 <h2>OAuth2 Integration</h2>
-<div class="gv-form-content" layout="column">
-  <label>Client ID: {{ clientId }}</label>
-  <input ng-model="$ctrl.application.settings.app.client_id" type="text" name="clientId" minlength="1" md-maxlength="300" />
-  <div class="hint" ng-if="formApplication.clientId.$valid || formApplication.clientId.$pristine">
-    The <code>Client_id</code> of the application. This field is required to subscribe to certain type of API Plan (OAuth2, JWT).
-  </div>
-  <div ng-messages="formApplication.clientId.$error">
-    <div ng-message="minlength">The name has to be more than 1 character long.</div>
-    <div ng-message="md-maxlength">The name has to be less than 300 characters long.</div>
-  </div>
-</div>
+<mat-card>
+  <mat-form-field class="auth2-form-field" appearance="standard">
+    <mat-label>Client ID</mat-label>
+    <input #clientIdInput matInput [ngModel]="clientId" (ngModelChange)="clientIdChange.emit($event)" minlength="1" maxlength="300" />
+    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+    <mat-hint
+      >The <code>Client_id</code> of the application. This field is required to subscribe to certain type of API Plan (OAuth2,
+      JWT).</mat-hint
+    >
+    <mat-hint align="end">{{ clientIdInput.value?.length || 0 }}/300</mat-hint>
+  </mat-form-field>
+</mat-card>

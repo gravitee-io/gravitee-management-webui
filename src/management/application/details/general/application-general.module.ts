@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { UpgradeModule } from '@angular/upgrade/static';
-import './management.module.ajs';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ApplicationGeneralModule } from './application/details/general/application-general.module';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatCardModule } from '@angular/material/card';
+
+import { Oauth2Component } from './oauth2.component';
 
 @NgModule({
-  imports: [BrowserModule, BrowserAnimationsModule, UpgradeModule, ApplicationGeneralModule],
+  imports: [FormsModule, MatFormFieldModule, MatIconModule, MatInputModule, MatCardModule],
+  declarations: [Oauth2Component],
+  exports: [Oauth2Component],
+  entryComponents: [Oauth2Component],
 })
-export class AppModule {
-  constructor(private upgrade: UpgradeModule) {}
-
-  ngDoBootstrap() {
-    this.upgrade.bootstrap(document.documentElement, ['gravitee-management'], { strictDi: true });
-  }
-}
+export class ApplicationGeneralModule {}

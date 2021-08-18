@@ -66,6 +66,9 @@
 @import 'user/login/login';
 
 @import '~@fontsource/libre-franklin/scss/mixins';
+
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+
 $fontName: 'Libre Franklin';
 $fontId: 'libre-franklin';
 $style: normal;

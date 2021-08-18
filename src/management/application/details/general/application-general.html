@@ -106,7 +106,7 @@
       </div>
     </div>
 
-    <oauth [client-id]="$ctrl.application.settings.app.client_id"></oauth>
+    <oauth [(client-id)]="$ctrl.application.settings.app.client_id"></oauth>
 
     <div ng-if="$ctrl.isOAuthClient()">
       <h2>OpenID Connect Integration</h2>
