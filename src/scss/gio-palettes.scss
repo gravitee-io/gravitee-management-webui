@@ -1,0 +1,113 @@
+// ## Palette used in AM
+// $gio-primary-palette: (
+//   50: #fdfdfd,
+//   100: #cfd8dc,
+//   200: #b0bec5,
+//   300: #90a4ae,
+//   400: #78909c,
+//   500: #1b1d3c,
+//   600: #546e7a,
+//   700: #455a64,
+//   800: #37474f,
+//   900: #263238,
+//   A100: #cfd8dc,
+//   A200: #b0bec5,
+//   A400: #78909c,
+//   A700: #455a64,
+//   contrast: (
+//     50: $dark-primary-text,
+//     100: $dark-primary-text,
+//     200: $dark-primary-text,
+//     300: $dark-primary-text,
+//     400: $light-primary-text,
+//     500: $light-primary-text,
+//     600: $light-primary-text,
+//     700: $light-primary-text,
+//     800: $light-primary-text,
+//     900: $light-primary-text,
+//     A100: $dark-primary-text,
+//     A200: $dark-primary-text,
+//     A400: $light-primary-text,
+//     A700: $light-primary-text,
+//   )
+// );
+
+// $gio-accent-palette: (
+//   50: #e3f2fd,
+//   100: #bbdefb,
+//   200: #90caf9,
+//   300: #64b5f6,
+//   400: #42a5f5,
+//   500: #1ecad3,
+//   600: #1e88e5,
+//   700: #1976d2,
+//   800: #1565c0,
+//   900: #0d47a1,
+//   A100: #82b1ff,
+//   A200: #448aff,
+//   A400: #2979ff,
+//   A700: #2962ff,
+//   contrast: (
+//     50: $dark-primary-text,
+//     100: $dark-primary-text,
+//     200: $dark-primary-text,
+//     300: $dark-primary-text,
+//     400: $dark-primary-text,
+//     500: $light-primary-text,
+//     600: $light-primary-text,
+//     700: $light-primary-text,
+//     800: $light-primary-text,
+//     900: $light-primary-text,
+//     A100: $dark-primary-text,
+//     A200: $light-primary-text,
+//     A400: $light-primary-text,
+//     A700: $light-primary-text,
+//   )
+// );
+
+$gio-grey-palette: (
+  white: #fff,
+  lighter: #fbfbfd,
+  light: #f5f5fa,
+  medium: #d2d2dc,
+  dark: #6e7075,
+  black: #000,
+  contrast: (
+    white: #000,
+    lighter: #000,
+    light: #000,
+    medium: #000,
+    dark: #fff,
+    black: #fff,
+  ),
+);
+
+$gio-yellow-palette: (
+  lighter: #fff6d3,
+  light: #ffdb7d,
+  medium: #ffb527,
+  dark: #b77313,
+  darker: #7a4207,
+  contrast: (
+    lighter: #b77313,
+    light: #7a4207,
+    medium: #000,
+    dark: #000,
+    darker: #fff,
+  ),
+);
+
+$gio-red-palette: (
+  lighter: #fde1d2,
+  light: #f68f7a,
+  medium: #e32424,
+  dark: #a3122b,
+  darker: #6c062a,
+  contrast: (
+    lighter: #a3122b,
+    light: #6c062a,
+    medium: #fff,
+    dark: #fff,
+    darker: #fff,
+  ),
+);
