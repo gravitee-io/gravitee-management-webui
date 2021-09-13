@@ -150,6 +150,7 @@ class ApiDesignController {
   private readonlyPlans: any;
   private definition: any;
   private services: any;
+  private apiProxy: any;
   private propertyProviders = propertyProviders;
   private debugResponse: {
     isLoading: boolean;
@@ -198,6 +199,7 @@ class ApiDesignController {
         properties: this.api.properties,
         'flow-mode': this.api.flow_mode,
       };
+      this.apiProxy = this.api.proxy;
       this.services = this.api.services;
     }
   }
@@ -240,6 +242,7 @@ class ApiDesignController {
       path: request.path,
       method: request.method,
       headers: headersAsMap,
+      virtualHost: request.virtualHost,
     };
 
     this.debugResponse = {

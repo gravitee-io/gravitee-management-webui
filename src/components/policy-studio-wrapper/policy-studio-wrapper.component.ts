@@ -39,6 +39,7 @@ const PolicyStudioWrapperComponent: ng.IComponentOptions = {
     policies: '<',
     dynamicPropertySchema: '<',
     debugResponse: '<',
+    apiProxy: '<',
   },
   template: require('./policy-studio-wrapper.html'),
   controller: function (
