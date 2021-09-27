@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Meta, moduleMetadata, Story } from '@storybook/angular';
+import { Meta, moduleMetadata, StoryObj } from '@storybook/angular';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -72,19 +72,19 @@ export default {
   render: () => ({}),
 } as Meta;
 
-export const Typography: Story = {
+export const Typography: StoryObj = {
   render: () => ({
     component: ShowcaseTypographyComponent,
   }),
 };
 
-export const Material: Story = {
+export const Material: StoryObj = {
   render: () => ({
     component: ShowcaseMaterialComponent,
   }),
 };
 
-export const Color: Story = {
+export const Color: StoryObj = {
   render: () => ({
     component: ShowcaseColorComponent,
   }),

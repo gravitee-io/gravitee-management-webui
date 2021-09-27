@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Meta, moduleMetadata, Story } from '@storybook/angular';
+import { Meta, moduleMetadata, StoryObj } from '@storybook/angular';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -34,13 +34,13 @@ export default {
   render: () => ({}),
 } as Meta;
 
-export const OnlyToggle: Story = {
+export const OnlyToggle: StoryObj = {
   render: () => ({
     template: '<gio-form-slide-toggle><mat-slide-toggle gioFormSlideToggle></mat-slide-toggle></gio-form-slide-toggle>',
   }),
 };
 
-export const WithLabel1: Story = {
+export const WithLabel1: StoryObj = {
   render: () => ({
     template: `
       <gio-form-slide-toggle>
@@ -51,7 +51,7 @@ export const WithLabel1: Story = {
   }),
 };
 
-export const WithLabel2: Story = {
+export const WithLabel2: StoryObj = {
   render: () => ({
     template: `
       <gio-form-slide-toggle>
@@ -62,7 +62,7 @@ export const WithLabel2: Story = {
   }),
 };
 
-export const WithLabel1AndLabel2: Story = {
+export const WithLabel1AndLabel2: StoryObj = {
   render: () => ({
     template: `
       <gio-form-slide-toggle>
@@ -74,7 +74,7 @@ export const WithLabel1AndLabel2: Story = {
   }),
 };
 
-export const SimilarToMatFormField: Story = {
+export const SimilarToMatFormField: StoryObj = {
   render: ({ appearance }) => ({
     template: `
       <p>
@@ -105,7 +105,7 @@ export const SimilarToMatFormField: Story = {
   },
 };
 
-export const SimilarToMatFormFieldWithIcon: Story = {
+export const SimilarToMatFormFieldWithIcon: StoryObj = {
   render: ({ appearance }) => ({
     template: `
       <p class="mat-body">
@@ -138,7 +138,7 @@ export const SimilarToMatFormFieldWithIcon: Story = {
   },
 };
 
-export const SimilarToMatFormFieldDisabled: Story = {
+export const SimilarToMatFormFieldDisabled: StoryObj = {
   render: ({ disabled, appearance }) => ({
     template: `
       <p>
@@ -175,7 +175,7 @@ export const SimilarToMatFormFieldDisabled: Story = {
   },
 };
 
-export const FullWidth: Story = {
+export const FullWidth: StoryObj = {
   render: ({ disabled, appearance }) => ({
     template: `
       <p>

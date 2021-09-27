@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { APP_INITIALIZER } from '@angular/core';
-import { Meta, moduleMetadata, Story } from '@storybook/angular';
+import { Meta, moduleMetadata, StoryObj } from '@storybook/angular';
 
 import { GioTableOfContentsComponent } from './gio-table-of-contents.component';
 import { GioTableOfContentsModule } from './gio-table-of-contents.module';
@@ -30,7 +30,7 @@ export default {
   ],
 } as Meta;
 
-export const Default: Story = {
+export const Default: StoryObj = {
   render: () => ({
     template: `
     <div style="display: flex;justify-content: space-between; align-items: flex-start;">
@@ -68,7 +68,7 @@ export const Default: Story = {
   }),
 };
 
-export const Multiple: Story = {
+export const Multiple: StoryObj = {
   render: () => ({
     template: `
     <div style="display: flex;justify-content: space-between; align-items: flex-start;">
@@ -110,7 +110,7 @@ export const Multiple: Story = {
   }),
 };
 
-export const AddAndRemoveDynamically: Story = {
+export const AddAndRemoveDynamically: StoryObj = {
   render: () => ({
     template: `
     <div style="display: flex;justify-content: space-between; align-items: flex-start;">
@@ -160,7 +160,7 @@ export const AddAndRemoveDynamically: Story = {
   }),
 };
 
-export const scrollingContainer: Story = {
+export const scrollingContainer: StoryObj = {
   render: () => ({
     template: `
     <div style="height:24px"> The TopBar 🍻 <button *ngIf="moreLinks" (click)="moreLinks = false">- Remove</button> <button *ngIf="!moreLinks" (click)="moreLinks = true">+ Add</button></div>

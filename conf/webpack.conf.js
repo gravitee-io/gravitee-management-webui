@@ -49,7 +49,7 @@ module.exports = {
       { test: /\.css$/, use: ['style-loader', 'css-loader'] },
       {
         test: /\.ts$/,
-        exclude: /node_modules/,
+        exclude: /node_modules|.*stories.ts/,
         use: ['ng-annotate-loader', 'ts-loader'],
       },
       {
@@ -59,6 +59,7 @@ module.exports = {
       },
       {
         test: /.html$/,
+        exclude: /index\.html/,
         use: ['html-loader'],
       },
       {

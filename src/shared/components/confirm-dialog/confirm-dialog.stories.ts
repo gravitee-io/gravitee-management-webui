@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Meta, moduleMetadata, Story } from '@storybook/angular';
+import { Meta, moduleMetadata, StoryObj } from '@storybook/angular';
 
 import { GioConfirmDialogComponent, GioConfirmDialogData } from './confirm-dialog.component';
 import { GioConfirmDialogModule } from './confirm-dialog.module';
@@ -65,9 +65,9 @@ export default {
   }),
 } as Meta;
 
-export const Default: Story = {};
+export const Default: StoryObj = {};
 
-export const Custom: Story<GioConfirmDialogData> = {};
+export const Custom: StoryObj<GioConfirmDialogData> = {};
 Custom.args = {
   title: 'Are you sure you want to remove all cats ?',
   content: '🙀😿',
