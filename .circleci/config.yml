@@ -3,7 +3,7 @@ version: 2.1
 parameters:
   gio_action:
     type: enum
-    enum: [release, standalone_release, standalone_release_replay, nexus_staging, vm_nexus_staging, pull_requests, snyk_test, env_Test]
+    enum: [release, standalone_release, standalone_release_replay, nexus_staging, vm_nexus_staging, pull_requests, snyk_test, env_test]
     default: pull_requests
   dry_run:
     type: boolean
