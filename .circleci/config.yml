@@ -388,7 +388,7 @@ workflows:
             -  package_bundle_secrets_resolution
           dry_run: true
           docker_latest: << pipeline.parameters.docker_latest >>
-          docker_tag: << pipeline.parameters.replayed_release >
+          docker_tag: << pipeline.parameters.replayed_release >>
           repo_test: << pipeline.parameters.repo_test >>
 
 
