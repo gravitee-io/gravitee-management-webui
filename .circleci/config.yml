@@ -3,7 +3,7 @@ version: 2.1
 parameters:
   gio_action:
     type: enum
-    enum: [release, standalone_release, standalone_release_replay, nexus_staging, vm_nexus_staging, pull_requests, snyk_test, Docker_Env_Test]
+    enum: [release, standalone_release, standalone_release_replay, nexus_staging, vm_nexus_staging, pull_requests, snyk_test, env_Test]
     default: pull_requests
   dry_run:
     type: boolean
@@ -45,7 +45,7 @@ parameters:
 orbs:
   slack: circleci/slack@4.2.1
   gravitee: gravitee-io/gravitee@1.0
-  apim: gravitee-io/gravitee-apim@1.0
+  apim: gravitee-io/gravitee-apim@dev:1.0.4
   # gravitee: gravitee-io/gravitee@dev:1.0.4
   secrethub: secrethub/cli@1.1.0
   # secrethub: secrethub/cli@1.0.0
@@ -388,8 +388,7 @@ workflows:
             -  package_bundle_secrets_resolution
           dry_run: true
           docker_latest: << pipeline.parameters.docker_latest >>
-          docker_tag: << pipeline.parameters.replayed_release >>
-          snyk_test: << pipeline.parameters.snyk_test >>
+          docker_tag: << pipeline.parameters.replayed_release >
           repo_test: << pipeline.parameters.repo_test >>
 
 
