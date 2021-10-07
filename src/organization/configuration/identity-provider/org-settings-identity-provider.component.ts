@@ -17,8 +17,8 @@ import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, ViewChild } fr
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { StateService } from '@uirouter/angularjs';
 import { cloneDeep, isEmpty } from 'lodash';
-import { Subject } from 'rxjs';
-import { takeUntil, tap } from 'rxjs/operators';
+import { EMPTY, Subject } from 'rxjs';
+import { catchError, distinctUntilChanged, takeUntil, tap } from 'rxjs/operators';
 
 import { UIRouterState, UIRouterStateParams } from '../../../ajs-upgraded-providers';
 import { IdentityProvider } from '../../../entities/identity-provider';
@@ -37,6 +37,7 @@ export class OrgSettingsIdentityProviderComponent implements OnInit, OnDestroy {
   isLoading = true;
 
   identityProviderFormGroup: FormGroup;
+  identityProviderFormInitialValues: unknown;
 
   mode: 'new' | 'edit' = 'new';
 
@@ -79,9 +80,10 @@ export class OrgSettingsIdentityProviderComponent implements OnInit, OnDestroy {
 
     this.identityProviderFormGroup
       .get('type')
-      .valueChanges.pipe(takeUntil(this.unsubscribe$))
+      .valueChanges.pipe(takeUntil(this.unsubscribe$), distinctUntilChanged())
       .subscribe((type) => {
         this.identityProviderType = type;
+        this.identityProviderFormGroup.markAsUntouched();
       });
 
     if (this.ajsStateParams.id) {
@@ -98,9 +100,11 @@ export class OrgSettingsIdentityProviderComponent implements OnInit, OnDestroy {
 
             // Initializes the form value
             this.identityProviderFormGroup.patchValue(this.initialIdentityProviderValue, { emitEvent: false });
+            this.changeDetectorRef.detectChanges();
             this.identityProviderFormGroup.markAsPristine();
             this.identityProviderFormGroup.markAsUntouched();
-            this.changeDetectorRef.detectChanges();
+            this.identityProviderFormInitialValues = this.identityProviderFormGroup.getRawValue();
+            console.log(`identityProviderFormInitialValues ${this.identityProviderFormInitialValues}`);
           }),
         )
         .subscribe();
@@ -144,6 +148,9 @@ export class OrgSettingsIdentityProviderComponent implements OnInit, OnDestroy {
       this.identityProviderFormGroup.markAsPristine();
       this.identityProviderFormGroup.markAsUntouched();
       this.changeDetectorRef.detectChanges();
+
+      this.identityProviderFormInitialValues = this.identityProviderFormGroup.getRawValue();
+      console.log(`identityProviderFormInitialValues ${this.identityProviderFormInitialValues}`);
     }
   }
 
@@ -162,11 +169,20 @@ export class OrgSettingsIdentityProviderComponent implements OnInit, OnDestroy {
     upsertIdentityProvider$
       .pipe(
         takeUntil(this.unsubscribe$),
-        tap((identityProvider) => {
+        tap(() => {
           this.snackBarService.success('Identity provider successfully saved!');
-          this.ajsState.go('organization.settings.ng-identityprovider-edit', { id: identityProvider.id });
+        }),
+        catchError(({ error }) => {
+          this.snackBarService.error(error.message);
+          return EMPTY;
         }),
       )
-      .subscribe();
+      .subscribe((identityProvider) => {
+        if (this.mode === 'new') {
+          this.ajsState.go('organization.settings.ng-identityprovider-edit', { id: identityProvider.id });
+        } else {
+          this.ngOnInit();
+        }
+      });
   }
 }

@@ -72,6 +72,7 @@ export class GioSaveBarComponent {
     if (this.form) {
       this.form.reset(this.formInitialValues);
       this.form.markAsPristine();
+      this.form.markAsUntouched();
     }
     this.reset.emit();
   }
