@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 import { animate, style, transition, trigger } from '@angular/animations';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { DOCUMENT } from '@angular/common';
+import { Component, ElementRef, EventEmitter, Inject, Input, Output } from '@angular/core';
+import { AbstractControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'gio-save-bar',
@@ -52,7 +53,7 @@ export class GioSaveBarComponent {
 
   @Output()
   submit = new EventEmitter();
-
+  constructor(private el: ElementRef, @Inject(DOCUMENT) private document: Document) {}
   isOpen() {
     if (this.creationMode) {
       return true;
@@ -77,6 +78,35 @@ export class GioSaveBarComponent {
   }
 
   onSubmitClicked(): void {
+    if (this.isSubmitDisabled()) {
+      this.form.markAllAsTouched();
+
+      const listaElementos = this.document.querySelectorAll<HTMLElement>('input.ng-invalid, mat-select.ng-invalid');
+      console.log(listaElementos);
+
+      if (listaElementos.length > 0) {
+        listaElementos[0].focus();
+      }
+
+      return;
+    }
     this.submit.emit();
+  }
+}
+
+function isFormGroup(control: AbstractControl): control is FormGroup {
+  return !!(<FormGroup>control).controls;
+}
+function collectErrors(control: AbstractControl): any | null {
+  if (isFormGroup(control)) {
+    return Object.entries(control.controls).reduce((acc, [key, childControl]) => {
+      const childErrors = collectErrors(childControl);
+      if (childErrors) {
+        acc = { ...acc, [key]: childErrors };
+      }
+      return acc;
+    }, null);
+  } else {
+    return control.errors;
   }
 }
