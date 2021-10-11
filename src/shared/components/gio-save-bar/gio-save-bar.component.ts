@@ -15,7 +15,7 @@
  */
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { AbstractControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'gio-save-bar',
@@ -77,6 +77,29 @@ export class GioSaveBarComponent {
   }
 
   onSubmitClicked(): void {
+    if (this.isSubmitDisabled()) {
+      this.form.markAllAsTouched();
+      console.log(collectErrors(this.form));
+
+      return;
+    }
     this.submit.emit();
+  }
+}
+
+function isFormGroup(control: AbstractControl): control is FormGroup {
+  return !!(<FormGroup>control).controls;
+}
+function collectErrors(control: AbstractControl): any | null {
+  if (isFormGroup(control)) {
+    return Object.entries(control.controls).reduce((acc, [key, childControl]) => {
+      const childErrors = collectErrors(childControl);
+      if (childErrors) {
+        acc = { ...acc, [key]: childErrors };
+      }
+      return acc;
+    }, null);
+  } else {
+    return control.errors;
   }
 }
