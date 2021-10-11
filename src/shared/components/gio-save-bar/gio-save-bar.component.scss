@@ -34,11 +34,19 @@ $typography: map.get(gio.$gio-theme, typography);
     }
 
     &__submit-button {
-      background-color: mat.get-color-from-palette(gio-palettes.$gio-success-palette, 'medium');
+      // background-color: mat.get-color-from-palette(gio-palettes.$gio-success-palette, 'medium');
 
-      &:hover:enabled {
-        background-color: mat.get-color-from-palette(gio-palettes.$gio-success-palette, 'dark');
-      }
+      // &:hover:enabled {
+      //   background-color: mat.get-color-from-palette(gio-palettes.$gio-success-palette, 'dark');
+      // }
+
+      // &.error {
+      //   background-color: mat.get-color-from-palette(gio-palettes.$gio-error-palette, 'medium');
+      // }
+
+      // &.error:hover:enabled {
+      //   background-color: mat.get-color-from-palette(gio-palettes.$gio-error-palette, 'dark');
+      // }
     }
   }
 }

@@ -24,12 +24,24 @@
         Reset
       </button>
       <button
+        *ngIf="isSubmitDisabled()"
         class="save-bar__content__submit-button"
+        [class.error]="isSubmitDisabled()"
+        mat-stroked-button
+        color="primary"
+        [type]="form ? 'submit' : 'button'"
+        (click)="onSubmitClicked()"
+      >
+        {{ creationMode ? 'Create' : 'Save Changes' }}
+      </button>
+      <button
+        *ngIf="!isSubmitDisabled()"
+        class="save-bar__content__submit-button"
+        [class.error]="isSubmitDisabled()"
         mat-flat-button
         color="primary"
         [type]="form ? 'submit' : 'button'"
         (click)="onSubmitClicked()"
-        [disabled]="isSubmitDisabled()"
       >
         {{ creationMode ? 'Create' : 'Save Changes' }}
       </button>
