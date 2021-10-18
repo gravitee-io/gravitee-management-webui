@@ -15,10 +15,11 @@
  */
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { shareReplay, takeUntil } from 'rxjs/operators';
 
 import { UIRouterStateParams } from '../../../../ajs-upgraded-providers';
 import { User } from '../../../../entities/user/user';
+import { RoleService } from '../../../../services-ngx/role.service';
 import { UsersService } from '../../../../services-ngx/users.service';
 
 interface UserDisplayable {
@@ -34,11 +35,15 @@ interface UserDisplayable {
 export class OrgSettingsUserDetailComponent implements OnInit, OnDestroy {
   user: User & UserDisplayable;
 
-  userAvatar$: Observable<string>;
+  organizationRoles$ = this.roleService.list('ORGANIZATION').pipe(shareReplay());
 
   private unsubscribe$ = new Subject<boolean>();
 
-  constructor(private readonly usersService: UsersService, @Inject(UIRouterStateParams) private readonly ajsStateParams) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly roleService: RoleService,
+    @Inject(UIRouterStateParams) private readonly ajsStateParams,
+  ) {}
 
   ngOnInit(): void {
     this.usersService
