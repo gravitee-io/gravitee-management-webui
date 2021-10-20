@@ -1,7 +1,10 @@
-= Gravitee Management Webui
+= ⚠️ DEPRECATED
 
-image:https://circleci.com/gh/gravitee-io/gravitee-management-webui.svg?style=shield["CircleCI", link="https://circleci.com/gh/gravitee-io/gravitee-management-webui"]
-image:https://badges.gitter.im/Join Chat.svg["Gitter", link="https://gitter.im/gravitee-io/gravitee-io?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge"]
+This repository is no longer active, all the sources have been moved to https://github.com/gravitee-io/gravitee-api-management/tree/master/gravitee-apim-repository/gravitee-apim-repository-mongodb[APIM monorepo].
+
+The new repository will be become the single GitHub repository for everything related to Gravitee.io API Management.
+
+== Gravitee Management Webui
 
 == Description
 
